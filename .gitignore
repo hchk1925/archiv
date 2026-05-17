@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data_orig/
+data_test/
+# generované artefakty (znovu vytvoř: python3 build_db.py && python3 health.py)
+almanach.sqlite
+export/
