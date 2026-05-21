@@ -1,23 +1,23 @@
 # Health report — hokejový almanach DB
 
-_2026-05-20 19:01_
+_2026-05-21 04:20_
 
 ## Souhrn
 
 - **Sezóny:** 65  (S1949_50 – S2013_14)
-- **Klub-záznamů:** 32714
-- **Unikátních řetězů klubů (chain_id):** 9734
+- **Klub-záznamů:** 32662
+- **Unikátních řetězů klubů (chain_id):** 9676
 - **Soutěžních uzlů:** 7390
-- **Tabulkových řádků:** 23441
+- **Tabulkových řádků:** 23392
 
 ## Návaznost klubů (prev_club_id)
 
-- S nastaveným prev: **25445** / 32714 (77.8 %)
+- S nastaveným prev: **25405** / 32662 (77.8 %)
 - **Rozbitých linků:** 0 (odkaz na neexistující ID v předchozí sezóně)
 
 ## Řetězy klubů
 
-- Řetězů celkem: **9734**, z toho jednosezónních: 4579
+- Řetězů celkem: **9676**, z toho jednosezónních: 4525
 - Nejdelší řetěz: **65** sezón
 
 | sezón | rozsah | klub (poslední název) |
@@ -37,7 +37,7 @@ _2026-05-20 19:01_
 
 ## Datová kvalita: větvení prev_club_id
 
-- Předchůdců s **víc než 1 ne-B nástupcem** (možný chybný prev nebo split): **1609**
+- Předchůdců s **víc než 1 ne-B nástupcem** (možný chybný prev nebo split): **1584**
 
 <details><summary>Top 20</summary>
 
@@ -49,8 +49,6 @@ _2026-05-20 19:01_
 - CLUB_S1949_50_0086 -> CLUB_S1950_51_0103 'Sokol Voděrady – Luštěnice'; CLUB_S1950_51_0166 'Sokol Voděrady'; CLUB_S1950_51_0167 'Sokol Voděrady – Sokol Davle'; CLUB_S1950_51_0168 'Pivovar Velké Popovice – Sokol Voděrady'
 - CLUB_S1951_52_0005 -> CLUB_S1952_53_0004 'DSO Dynamo Karlovy Vary'; CLUB_S1952_53_0158 'Doprava Karlovy Vary'; CLUB_S1952_53_0171 'JNV Karlovy Vary'; CLUB_S1952_53_0174 'Stavba Karlovy Vary'
 - CLUB_S1951_52_0003 -> CLUB_S1952_53_0008 'DSO Slavoj České Budějovice'; CLUB_S1952_53_0099 'ZSJ Slavia České Budějovice'; CLUB_S1952_53_0100 'PDA I. České Budějovice'; CLUB_S1952_53_0104 'PDA II. České Budějovice'
-- CLUB_S1952_53_0153 -> CLUB_S1953_54_0181 'Sokol Bezdružice'; CLUB_S1953_54_0188 'Bezdružice – H. Týn 1:5'; CLUB_S1953_54_0193 'Plzeň b – Bezdružice 18:2'; CLUB_S1953_54_0199 'H. Bříza – Bezdružice 5:0'
-- CLUB_S1953_54_0168 -> CLUB_S1954_55_0225 'Tatran Horažďovice'; CLUB_S1954_55_0244 'Spartak Blatná – Tatran Horažďovice 17:6'; CLUB_S1954_55_0245 'Lokomotiva Plzeň – Tatran Horažďovice 12:6'; CLUB_S1954_55_0246 'Sokol Žákavá – Tatran Horažďovice'
 - CLUB_S1954_55_0607 -> CLUB_S1955_56_0036 'Spartak Moravia Olomouc'; CLUB_S1955_56_0052 'DSO Spartak Moravia Olomouc'; CLUB_S1955_56_0630 'DA Olomouc'; CLUB_S1955_56_0652 'Dynamo Spoje Olomouc'
 - CLUB_S1954_55_0472 -> CLUB_S1955_56_0530 'Motorpal Jihlava'; CLUB_S1955_56_0538 'Jiskra Jihlava'; CLUB_S1955_56_0553 'Tatran Jihlava'; CLUB_S1955_56_0583 'Motorpal Jihlava B(Jihlava město) – Jihlava okres)'
 - CLUB_S1965_66_0529 -> CLUB_S1966_67_0514 'Sokol Studénka'; CLUB_S1966_67_0532 'Sokol Studénka pro příští sezonu dosazen do KP.'; CLUB_S1966_67_0537 'Tatra Studénka'; CLUB_S1966_67_0587 'Tatran Studénka (NJ)'
@@ -61,15 +59,17 @@ _2026-05-20 19:01_
 - CLUB_S1949_50_0008 -> CLUB_S1950_51_0049 'ZSJ Zbrojovka Brno I-Židenice'; CLUB_S1950_51_0057 'ZSJ Zbrojovka Brno II-Židenice'; CLUB_S1950_51_0860 'Brno'
 - CLUB_S1949_50_0054 -> CLUB_S1950_51_0060 'ZSJ Slavia Přerov'; CLUB_S1950_51_0913 'Sokol Přerov'; CLUB_S1950_51_0924 'Přerov'
 - CLUB_S1949_50_0833 -> CLUB_S1950_51_0417 'Český Krumlov'; CLUB_S1950_51_0807 'Sokol Moravský Krumlov'; CLUB_S1950_51_0867 'Moravský Krumlov'
+- CLUB_S1949_50_0729 -> CLUB_S1950_51_0755 'SK Jihlava'; CLUB_S1950_51_0758 'Modeta Jihlava'; CLUB_S1950_51_0769 'Jihlava'
+- CLUB_S1949_50_0857 -> CLUB_S1950_51_0898 'Tatran Valašské Meziříčí'; CLUB_S1950_51_0909 'Valašské Klobouky'; CLUB_S1950_51_0910 'Valašské Meziříčí'
 
 </details>
 
 ## Návaznost soutěží (season_fate)
 
-- Pokrytí: **22749** / 23441 (97.0 %) tabulkových řádků
+- Pokrytí: **22714** / 23392 (97.1 %) tabulkových řádků
 - **Nekonzistencí** (1 club_id = víc fate v sezóně): **0**
 - KVAL kontaminace (fate kde má být prázdné, D30): **0**
-- Rozložení fate: `setrval`=9967, `reorganizace`=5175, `postup`=2687, `setrval?`=2580, `sestup`=2058, `zanik`=275, `slouceni`=7
+- Rozložení fate: `setrval`=9967, `reorganizace`=5175, `postup`=2687, `setrval?`=2578, `sestup`=2057, `zanik`=243, `slouceni`=7
 
 ## Pyramida soutěží (SYSTEM)
 
@@ -84,4 +84,4 @@ _2026-05-20 19:01_
 
 | sezóna | klubů | prev % | rozbité | fate % | fate nekon. | feeds |
 |---|---|---|---|---|---|---|
-| 1949_50 | 927 | 0 | 0 | 99 | 0 | 21 |
+| 1949_50 | 925 | 0 | 0 | 99 | 0 | 21 |
