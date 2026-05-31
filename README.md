@@ -5,33 +5,48 @@
 | Komponenta | Soubor / složka | Co to dělá |
 |---|---|---|
 | **Zdroj pravdy** | `data/S*_FINAL.xlsx` (65 sezón) | Per-sezónní Excel sešity. Jeden soubor = jedna sezóna. |
-| **Konsolidovaná databáze** | `almanach.sqlite` | Postavená z Excelů. Spojuje vše do queryovatelné SQL DB. |
-| **Health report** | `HEALTH.md` | Kontrolní report stavu DB (pokrytí linků, konzistence, mezery). |
-| **Viewer** (HTML) | `viewer/index.html` | Statický web. Otevři v prohlížeči. Navigace Wikipedia-style. |
-| **Printer** (HTML+PDF) | `print/html/`, `print/pdf/` | Per-sezónní tištěné výstupy. PDF A4, stránkováno. |
-| **Editor** (Flask) | `editor.py` | Lokální web editor. Spusť `python3 editor.py`, otevři localhost:5000. |
+| **App** (Viewer + Editor) | `app.py` | Jedna Flask aplikace — čte přímo z xlsx, prohlíží i edituje. |
+| **Printer** (HTML+PDF) | `print/html/`, `print/pdf/` (gen. přes `print_seasons.py`) | Per-sezónní tištěné výstupy. PDF A4, stránkováno. |
+| **Konsolidovaná DB** | `almanach.sqlite` (gen. přes `build_db.py`) | Volitelně — pro analýzu/audit, ne pro app. |
+| **Health report** | `HEALTH.md` (gen. přes `health.py`) | Kontrolní report stavu DB (pokrytí linků, mezery). |
 | **TODO** v sešitech | list `TODO` v každém S*.xlsx | Per-sezónní seznam položek k verifikaci. |
 
-## Workflow
+## Spuštění (Viewer + Editor)
 
 ```bash
-# 1. Z Excelů postavit/aktualizovat DB
-python3 build_db.py
-
-# 2. Kontrola stavu DB
-python3 health.py                # → HEALTH.md
-
-# 3. Vyrenderovat viewer
-python3 build_viewer.py          # → viewer/
-
-# 4. Vyrenderovat per-sezónní HTML + PDF
-python3 print_seasons.py         # → print/html/ + print/pdf/
-python3 print_seasons.py S1966_67           # jen jedna sezóna
-python3 print_seasons.py --html-only        # bez PDF (rychlejší)
-
-# 5. Editor (lokálně)
-python3 editor.py                # otevři http://localhost:5000
+python3 app.py
+# → otevři http://localhost:5000
 ```
+
+Funkce:
+- `/` — přehled sezón + nejdelší řetězy klubů
+- `/s/{sid}` — sezóna (pyramida + všechny tabulky, klikatelné kluby a soutěže)
+- `/club/{chain_id}` — běh klubu napříč sezónami
+- `/comp/{comp_chain_id}` — běh soutěže napříč sezónami
+- `/search?q=` — fulltext klubů
+- `/s/{sid}/edit/clubs` — editace CLUBS (clean_name, prev_club_id, city, level, change_note)
+- `/s/{sid}/edit/standings` — editace tabulkových výsledků (pos, GP/W/D/L, GF/GA, PTS, season_fate)
+
+Po uložení změny v UI se sezóna znovu načte z xlsx a chainy se přepočtou.
+
+## Tištěné výstupy
+
+```bash
+python3 print_seasons.py                  # všechny sezóny → HTML + PDF
+python3 print_seasons.py S1966_67         # jedna
+python3 print_seasons.py --html-only      # bez PDF (rychlejší)
+```
+
+Výstup do `print/html/S{sid}.html` a `print/pdf/S{sid}.pdf`.
+
+## Volitelné — analýza přes SQLite
+
+```bash
+python3 build_db.py        # postaví almanach.sqlite + export/*.csv
+python3 health.py          # → HEALTH.md (kontrolní report)
+```
+
+App ani Printer SQLite nepoužívají — jsou jen pro audit.
 
 ## Datové leštící nástroje (postupně použité)
 
@@ -47,32 +62,45 @@ python3 editor.py                # otevři http://localhost:5000
 | `apply_todo_sheets.py` | Refresh per-sezónního listu TODO ve všech sešitech |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
 
-## Datový model (`almanach.sqlite`)
+## Datový model (xlsx · per sezóna)
 
-| Tabulka | Klíč | Co obsahuje |
-|---|---|---|
-| `seasons` | season_id | Metadata sezóny (label, era, scoring system) |
-| `clubs` | (season_id, club_id) | Klub v sezóně + `chain_id` (řetěz napříč sezónami) + prev_club_id |
-| `competitions` | (season_id, node_id) | Soutěž + hierarchie (parent_node_id) + feeds_into + **prev_node_id** |
-| `standings` | tr_id | T-řádky (tabulky) — výsledky klubů |
-| `registrations` | — | R-řádky (registrovaný klub bez tabulky) |
-| `series` | series_id | Playoff série |
-| `notes` | — | Poznámky |
+Každý sešit `S{rok}_FINAL.xlsx` obsahuje:
+
+| List | Co obsahuje |
+|---|---|
+| `10_liga`, `20_*`, `30_*`, `40_*`, `KVAL` | Per-soutěžní tabulky (H/T/S/R řádky, kódy A–W) |
+| `CLUBS` | Klub v sezóně: club_id, clean_name, prev_club_id, city, level, change_note |
+| `SYSTEM` | Pyramida soutěží: node_id, name, level, parent_node_id, feeds_into, **prev_node_id** |
+| `NOTES` | Volné poznámky k uzlům + [TBD] flagy |
+| `SERIES` | Playoff série |
+| `META` | Metadata sezóny (label, era, scoring) |
+| `TODO` | Položky k ověření (generuje `apply_todo_sheets.py`) |
 
 ## Wikipedia-style navigace
 
-- **Klub → běh sezónami:** `clubs.chain_id` (řetěz prev_club_id přes všechny sezóny)
-- **Sezóna → další sezóna:** přes řazení `season_id`
-- **Soutěž → minulá sezóna soutěže:** `competitions.prev_node_id`
-- **Soutěž → vyšší/nižší tier:** `parent_node_id` (hierarchie), `feeds_into` (postup), `feeds_into_loser` (sestup, částečně)
-- **Tabulkový řádek → klub → historie:** `standings.club_id` → `clubs.chain_id`
-- **Vyhledávání klubu** přes `viewer/search.html`
+- **Klub → běh sezónami:** chain_id (řetěz prev_club_id)
+- **Sezóna → další sezóna:** šipky ← → v UI
+- **Soutěž → minulá sezóna soutěže:** prev_node_id (SYSTEM)
+- **Soutěž → vyšší/nižší tier:** parent_node_id, feeds_into
+- **Klikni na klub** v jakékoli tabulce → jeho historie
+- **Klikni na soutěž** v pyramidě → její historie
+
+## Závislosti
+
+```bash
+pip install openpyxl pandas flask weasyprint
+```
+
+- `openpyxl` — čtení/zápis xlsx
+- `flask` — webová app
+- `pandas` — pro build_db.py
+- `weasyprint` — PDF rendering (jen pro print_seasons.py)
 
 ## Generované artefakty (gitignorované)
 
-- `almanach.sqlite` (regeneruj přes `build_db.py`)
-- `export/*.csv` (regeneruj)
-- `viewer/` (regeneruj přes `build_viewer.py`)
-- `print/` (regeneruj přes `print_seasons.py`)
+- `almanach.sqlite`, `export/`
+- `print/`
+- `viewer/`, `viewer.zip` (legacy, dříve statický generátor)
 - `S*_ukazka.html` (ad-hoc náhledy)
-- `HEALTH.md` (regeneruj přes `health.py`)
+- `HEALTH.md`
+
