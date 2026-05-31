@@ -11,8 +11,6 @@
 | **Health report** | `HEALTH.md` (gen. přes `health.py`) | Kontrolní report stavu DB (pokrytí linků, mezery). |
 | **TODO** v sešitech | list `TODO` v každém S*.xlsx | Per-sezónní seznam položek k verifikaci. |
 
-## Spuštění (Viewer + Editor)
-
 ```bash
 python3 app.py
 # → otevři http://localhost:5000
@@ -100,7 +98,6 @@ pip install openpyxl pandas flask weasyprint
 
 - `almanach.sqlite`, `export/`
 - `print/`
-- `viewer/`, `viewer.zip` (legacy, dříve statický generátor)
 - `S*_ukazka.html` (ad-hoc náhledy)
 - `HEALTH.md`
 
