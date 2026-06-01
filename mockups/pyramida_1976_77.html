@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyramida soutěží 1976/77</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Cutive+Mono&display=swap');
+
+  :root {
+    --mustard: #d4a017;
+    --rust: #b5532a;
+    --rust-dark: #8a3d1e;
+    --cream: #f4ead5;
+    --cream-dark: #e8d8b8;
+    --brown: #3a2a1a;
+    --brown-soft: #5a4530;
+    --ice: #6b8e9e;
+    --ice-light: #a8c5d1;
+    --gold: #e0b53d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Oswald', sans-serif;
+    background:
+      radial-gradient(ellipse at top, #4a3826 0%, #2a1f14 60%, #1a1209 100%);
+    color: var(--cream);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+    overflow-x: hidden;
+  }
+
+  /* grain texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  .wrap { max-width: 920px; margin: 0 auto; position: relative; z-index: 2; }
+
+  /* ---- Header ---- */
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .kicker {
+    font-family: 'Cutive Mono', monospace;
+    letter-spacing: 0.45em;
+    font-size: 0.7rem;
+    color: var(--mustard);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    padding-left: 0.45em;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 8vw, 4.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--cream);
+    text-shadow: 3px 3px 0 var(--rust-dark);
+  }
+
+  h1 .year {
+    display: block;
+    color: var(--gold);
+    font-size: clamp(3.2rem, 11vw, 6rem);
+    -webkit-text-stroke: 1px var(--rust);
+  }
+
+  .subtitle {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ice-light);
+    margin-top: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---- Pyramid ---- */
+  .pyramid { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+  .tier {
+    width: 100%;
+    position: relative;
+    border-radius: 3px;
+    padding: 1rem 1.4rem;
+    animation: riseUp 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+    border: 1px solid rgba(0,0,0,0.2);
+  }
+
+  /* pyramid widths */
+  .t1 { width: 46%; }
+  .t2 { width: 60%; }
+  .t3 { width: 73%; }
+  .t4 { width: 85%; }
+  .t5 { width: 95%; }
+  .t6 { width: 100%; }
+
+  .tier:nth-child(1) { animation-delay: 0.1s; }
+  .tier:nth-child(2) { animation-delay: 0.2s; }
+  .tier:nth-child(3) { animation-delay: 0.3s; }
+  .tier:nth-child(4) { animation-delay: 0.4s; }
+  .tier:nth-child(5) { animation-delay: 0.5s; }
+  .tier:nth-child(6) { animation-delay: 0.6s; }
+
+  /* tier colors - top = gold/heat, bottom = cool ice */
+  .lvl-1 { background: linear-gradient(135deg, var(--gold), var(--mustard)); color: var(--brown); }
+  .lvl-2 { background: linear-gradient(135deg, var(--rust), var(--rust-dark)); color: var(--cream); }
+  .lvl-3 { background: linear-gradient(135deg, #a86a3d, #7d4a28); color: var(--cream); }
+  .lvl-4 { background: linear-gradient(135deg, var(--brown-soft), #46351f); color: var(--cream-dark); }
+  .lvl-5 { background: linear-gradient(135deg, #4a5e6a, #38484f); color: var(--ice-light); }
+  .lvl-6 { background: linear-gradient(135deg, #3a4750, #2a343a); color: var(--ice-light); }
+
+  .tier-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .tier-name {
+    font-weight: 600;
+    font-size: clamp(0.95rem, 3vw, 1.4rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tier-meta {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    white-space: nowrap;
+  }
+
+  .tier-lvl {
+    font-family: 'Cutive Mono', monospace;
+    font-size: 0.62rem;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  /* extraliga club list */
+  .clubs {
+    margin-top: 0.7rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.5rem;
+  }
+
+  .club {
+    font-size: 0.72rem;
+    font-weight: 400;
+    background: rgba(58,42,26,0.18);
+    border: 1px solid rgba(58,42,26,0.25);
+    padding: 0.18rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .lvl-1 .club { background: rgba(58,42,26,0.15); border-color: rgba(58,42,26,0.3); }
+
+  /* champion star */
+  .champ { position: relative; font-weight: 600; }
+  .champ::before {
+    content: '★';
+    margin-right: 0.25rem;
+    color: var(--rust-dark);
+  }
+
+  /* baraz connector */
+  .baraz {
+    width: 50%;
+    text-align: center;
+    font-family: 'Cutive Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--mustard);
+    text-transform: uppercase;
+    padding: 0.15rem 0;
+    position: relative;
+    animation: fadeIn 0.5s ease both;
+  }
+  .baraz::before, .baraz::after {
+    content: '↕';
+    margin: 0 0.5rem;
+    opacity: 0.7;
+  }
+
+  /* footer */
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-family: 'Cutive Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--brown-soft);
+    line-height: 1.8;
+  }
+  footer .div { color: var(--mustard); }
+  footer b { color: var(--ice-light); font-weight: 400; }
+
+  @keyframes riseUp {
+    from { opacity: 0; transform: translateY(30px) scaleY(0.7); }
+    to { opacity: 1; transform: translateY(0) scaleY(1); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (max-width: 600px) {
+    .t1,.t2,.t3,.t4,.t5,.t6 { width: 100%; }
+    .baraz { width: 80%; }
+    .tier-head { flex-direction: column; gap: 0.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Československý lední hokej</div>
+    <h1>Pyramida soutěží<span class="year">1976 / 77</span></h1>
+    <div class="subtitle">28. ročník · sezóna vzniku 1. ČNHL a 2. ČNHL</div>
+  </header>
+
+  <div class="pyramid">
+
+    <!-- LEVEL 1 -->
+    <div class="tier lvl-1 t1">
+      <div class="tier-head">
+        <span class="tier-name">Extraliga</span>
+        <span class="tier-meta">12 klubů</span>
+      </div>
+      <div class="tier-lvl">1. úroveň · L10</div>
+      <div class="clubs">
+        <span class="club champ">Poldi SONP Kladno</span>
+        <span class="club">Dukla Jihlava</span>
+        <span class="club">Sparta ČKD Praha</span>
+        <span class="club">Tesla Pardubice</span>
+        <span class="club">Motor České Budějovice</span>
+        <span class="club">Slovan CHZJD Bratislava</span>
+        <span class="club">TJ Vítkovice</span>
+        <span class="club">Škoda Plzeň</span>
+        <span class="club">CHZ Litvínov</span>
+        <span class="club">VSŽ Košice</span>
+        <span class="club">Zetor Brno</span>
+        <span class="club">TJ Gottwaldov</span>
+      </div>
+    </div>
+
+    <div class="baraz">baráž o extraligu</div>
+
+    <!-- LEVEL 2 -->
+    <div class="tier lvl-2 t2">
+      <div class="tier-head">
+        <span class="tier-name">1. ČNHL (Národní hokejová liga)</span>
+        <span class="tier-meta">24 klubů</span>
+      </div>
+      <div class="tier-lvl">2. úroveň · L20 · 20_1NHL</div>
+    </div>
+
+    <!-- LEVEL 3 -->
+    <div class="tier lvl-3 t3">
+      <div class="tier-head">
+        <span class="tier-name">2. ČNHL ⭐ nová</span>
+        <span class="tier-meta">24 klubů</span>
+      </div>
+      <div class="tier-lvl">3. úroveň · L30 · 30_2NHL</div>
+    </div>
+
+    <!-- LEVEL 4 -->
+    <div class="tier tier lvl-4 t4">
+      <div class="tier-head">
+        <span class="tier-name">Divize</span>
+        <span class="tier-meta">43 klubů</span>
+      </div>
+      <div class="tier-lvl">4. úroveň · L40 · 40_Divize</div>
+    </div>
+
+    <!-- LEVEL 5 -->
+    <div class="tier lvl-5 t5">
+      <div class="tier-head">
+        <span class="tier-name">Krajské přebory</span>
+        <span class="tier-meta">232 klubů · 9 krajů</span>
+      </div>
+      <div class="tier-lvl">5. úroveň · L50</div>
+      <div class="clubs">
+        <span class="club">Středočeský 48</span>
+        <span class="club">Severomoravský 36</span>
+        <span class="club">Jihomoravský 35</span>
+        <span class="club">Západočeský 26</span>
+        <span class="club">Severočeský 25</span>
+        <span class="club">Jihočeský 20</span>
+        <span class="club">SVK 19</span>
+        <span class="club">Východočeský 15</span>
+        <span class="club">Praha 8</span>
+      </div>
+    </div>
+
+    <!-- LEVEL 6 -->
+    <div class="tier lvl-6 t6">
+      <div class="tier-head">
+        <span class="tier-name">Okresní přebory</span>
+        <span class="tier-meta">240 klubů</span>
+      </div>
+      <div class="tier-lvl">6. úroveň · L60 + okresní</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span class="div">▲ vrchol = nejvyšší soutěž · ▼ základna = nejnižší</span><br>
+    Mistr ★ <b>Poldi SONP Kladno</b> · celkem <b>575</b> klubů v 6 úrovních<br>
+    Mockup pyramidy · data z Hokejového almanachu (registr D42)
+  </footer>
+</div>
+</body>
+</html>

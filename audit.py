@@ -83,13 +83,15 @@ def load_system(path):
     rows = list(ws.iter_rows(values_only=True))
     hdr = list(rows[0])
     idx = {h: i for i, h in enumerate(hdr)}
+    fi = idx.get('feeds_into')
+    fil = idx.get('feeds_into_loser')
     total = 0
     feeds = 0
     for r in rows[1:]:
         if not r or r[idx['node_id']] is None:
             continue
         total += 1
-        if r[idx.get('feeds_into')] or r[idx.get('feeds_into_loser')]:
+        if (fi is not None and r[fi]) or (fil is not None and r[fil]):
             feeds += 1
     wb.close()
     return total, feeds

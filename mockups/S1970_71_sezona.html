@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hokejová sezona 1970/71 — ČSSR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #efe6d4;
+  --paper-dark: #d8c9aa;
+  --ink: #1a1410;
+  --ink-soft: #3d342a;
+  --red: #c1281b;
+  --red-deep: #8a1a10;
+  --gold: #c89b3c;
+  --steel: #455362;
+  --rust: #a04020;
+  --teal: #2d6068;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Fraunces', serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.55;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 20% 30%, rgba(160, 64, 32, 0.04), transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(69, 83, 98, 0.05), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Grain texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 10;
+}
+
+/* ===== MASTHEAD ===== */
+.masthead {
+  border-bottom: 4px double var(--ink);
+  padding: 32px 0 20px;
+  position: relative;
+}
+
+.masthead-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+
+.masthead h1 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(72px, 14vw, 220px);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+  position: relative;
+}
+
+.masthead h1 .slash {
+  color: var(--red);
+  font-style: italic;
+}
+
+.masthead-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 24px;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.masthead-tagline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 400;
+  max-width: 600px;
+  color: var(--ink-soft);
+}
+
+.masthead-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+.masthead-meta strong { 
+  display: block; 
+  font-size: 14px; 
+  color: var(--red);
+  margin-top: 4px;
+}
+
+/* ===== STATS STRIP ===== */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 2px solid var(--ink);
+  margin: 0;
+}
+
+.stat {
+  padding: 28px 24px;
+  border-right: 1px solid var(--ink);
+  position: relative;
+}
+
+.stat:last-child { border-right: none; }
+
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-family: 'Anton', sans-serif;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.stat-value .small {
+  font-size: 28px;
+  color: var(--red);
+}
+
+.stat-note {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* ===== SECTION HEADERS ===== */
+section {
+  padding: 64px 0 32px;
+  position: relative;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 16px;
+}
+
+.section-number {
+  font-family: 'Anton', sans-serif;
+  font-size: 56px;
+  color: var(--red);
+  line-height: 1;
+}
+
+.section-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 44px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.section-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin-left: auto;
+}
+
+/* ===== I.LIGA TABLE (THE MAIN EVENT) ===== */
+.liga-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--paper);
+}
+
+.liga-table thead {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.liga-table thead th {
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.liga-table thead th:nth-child(2) { text-align: left; padding-left: 16px; }
+
+.liga-table tbody tr {
+  border-bottom: 1px solid rgba(26, 20, 16, 0.15);
+  transition: background 0.15s;
+}
+
+.liga-table tbody tr:hover {
+  background: rgba(193, 40, 27, 0.06);
+}
+
+.liga-table tbody td {
+  padding: 14px 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.liga-table .pos {
+  font-family: 'Anton', sans-serif;
+  font-size: 28px;
+  color: var(--ink-soft);
+  width: 60px;
+}
+
+.liga-table tr.gold .pos { color: var(--gold); }
+.liga-table tr.gold td:nth-child(2) { color: var(--red-deep); font-weight: 700; }
+.liga-table tr.silver .pos { color: #999; }
+.liga-table tr.bronze .pos { color: #b87333; }
+
+.liga-table .club {
+  text-align: left;
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  padding-left: 16px;
+  letter-spacing: -0.01em;
+}
+
+.liga-table .pts {
+  font-family: 'Anton', sans-serif;
+  font-size: 24px;
+  color: var(--red);
+}
+
+.liga-table .gf { color: var(--teal); }
+.liga-table .ga { color: var(--rust); }
+.liga-table .colon { color: var(--ink-soft); padding: 0 4px; }
+
+.note-badge {
+  display: inline-block;
+  background: var(--red-deep);
+  color: var(--paper);
+  font-size: 9px;
+  padding: 2px 6px;
+  margin-left: 8px;
+  letter-spacing: 0.1em;
+  vertical-align: middle;
+}
+
+/* ===== KRAJ DISTRIBUTION ===== */
+.kraj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+
+.kraj-card {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+
+.kraj-card:hover {
+  background: rgba(193, 40, 27, 0.04);
+}
+
+.kraj-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent, var(--steel));
+}
+
+.kraj-card[data-kraj="Východočeský"] { --accent: var(--red); }
+.kraj-card[data-kraj="Středočeský"] { --accent: var(--gold); }
+.kraj-card[data-kraj="Jihočeský"] { --accent: var(--teal); }
+.kraj-card[data-kraj="Severomoravský"] { --accent: var(--rust); }
+.kraj-card[data-kraj="Jihomoravský"] { --accent: var(--ink-soft); }
+.kraj-card[data-kraj="SVK"] { --accent: #6b3e8c; }
+
+.kraj-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.kraj-count {
+  font-family: 'Anton', sans-serif;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.kraj-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* ===== NEW CLUBS LIST ===== */
+.new-clubs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+
+.new-club {
+  padding: 18px 0;
+  border-bottom: 1px dashed rgba(26, 20, 16, 0.2);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.new-club-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.new-club-city {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--red);
+  white-space: nowrap;
+}
+
+.new-club-desc {
+  grid-column: 1 / -1;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* ===== CHAMPION SHOWCASE ===== */
+.champion {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--steel) 100%);
+  color: var(--paper);
+  padding: 64px 48px;
+  margin: 32px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.champion::before {
+  content: '★';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  font-size: 320px;
+  color: var(--gold);
+  opacity: 0.18;
+  line-height: 1;
+}
+
+.champion-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.champion-name {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(64px, 9vw, 140px);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.champion-name .em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.champion-meta {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 20px;
+  margin-top: 24px;
+  max-width: 600px;
+  color: rgba(239, 230, 212, 0.85);
+}
+
+.champion-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 32px;
+  font-family: 'JetBrains Mono', monospace;
+  position: relative;
+  z-index: 2;
+}
+
+.champion-stat {
+  border-left: 1px solid var(--gold);
+  padding-left: 16px;
+}
+
+.champion-stat strong {
+  display: block;
+  font-family: 'Anton', sans-serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.champion-stat span {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 212, 0.7);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  border-top: 4px double var(--ink);
+  padding: 32px 0;
+  margin-top: 48px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.masthead, .stats-strip, section { 
+  animation: slideUp 0.7s ease-out backwards; 
+}
+.stats-strip { animation-delay: 0.1s; }
+section:nth-of-type(1) { animation-delay: 0.2s; }
+section:nth-of-type(2) { animation-delay: 0.3s; }
+section:nth-of-type(3) { animation-delay: 0.4s; }
+section:nth-of-type(4) { animation-delay: 0.5s; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .container { padding: 0 20px; }
+  .stats-strip { grid-template-columns: repeat(2, 1fr); }
+  .new-clubs { grid-template-columns: 1fr; }
+  .liga-table .club { font-size: 14px; }
+  .liga-table tbody td { font-size: 12px; }
+  .section-header { flex-wrap: wrap; gap: 16px; }
+}
+
+/* Decorative element */
+.divider-mark {
+  text-align: center;
+  margin: 40px 0;
+  font-family: 'Fraunces', serif;
+  color: var(--ink-soft);
+  letter-spacing: 1em;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ============ MASTHEAD ============ -->
+<header class="masthead">
+  <div class="masthead-top">
+    <span>Československý hokej · Sezona 1970/71</span>
+    <span>Vol. XXII · Vydání 22 z 73</span>
+  </div>
+  <h1>1970<span class="slash">/</span>71</h1>
+  <div class="masthead-sub">
+    <p class="masthead-tagline">
+      Poslední titul brněnské Komety před érou Dukly Jihlavy. Liga deseti, divize šesti, sedm krajských pyramid a první kompletní rozdělení Slovenské národní ligy.
+    </p>
+    <div class="masthead-meta">
+      Záznam D42<strong>599 / 599 clubs</strong>
+      100.0% pokryti registru
+    </div>
+  </div>
+</header>
+
+<!-- ============ STATS STRIP ============ -->
+<div class="stats-strip">
+  <div class="stat">
+    <div class="stat-label">Pyramida</div>
+    <div class="stat-value">14</div>
+    <div class="stat-note">úrovní soutěží</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Kluby</div>
+    <div class="stat-value">599</div>
+    <div class="stat-note">v 1.lize až po okresní</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Krajů</div>
+    <div class="stat-value">9<span class="small">+1</span></div>
+    <div class="stat-note">8 českých + Slovensko</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Mistr</div>
+    <div class="stat-value" style="font-size:36px; padding-top:18px;">ZKL Brno</div>
+    <div class="stat-note">47 bodů, 36 zápasů</div>
+  </div>
+</div>
+
+<!-- ============ CHAMPION SHOWCASE ============ -->
+<div class="champion">
+  <div class="champion-label">★ Mistr Československa 1970/71 ★</div>
+  <div class="champion-name">ZKL <span class="em">Brno</span></div>
+  <p class="champion-meta">
+    Poslední ze 13 titulů brněnské Komety před nástupem armádní Dukly Jihlavy.
+    Před koncem rozhodla bilance: 20 výher, 7 remíz, jen 9 porážek a skóre 152:104.
+  </p>
+  <div class="champion-stats">
+    <div class="champion-stat"><strong>47</strong><span>Bodů</span></div>
+    <div class="champion-stat"><strong>20</strong><span>Výher</span></div>
+    <div class="champion-stat"><strong>+48</strong><span>Skóre</span></div>
+    <div class="champion-stat"><strong>4.22</strong><span>Goly/zápas</span></div>
+  </div>
+</div>
+
+<!-- ============ I.LIGA TABULKA ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-number">I.</span>
+    <h2 class="section-title">Liga ČSSR — Základní část</h2>
+    <span class="section-sub">36 zápasů, 10 účastníků, 2-1-0 body</span>
+  </div>
+
+  <table class="liga-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Klub</th>
+        <th>Z</th>
+        <th>V</th>
+        <th>R</th>
+        <th>P</th>
+        <th colspan="3">Skóre</th>
+        <th>B</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="gold">
+        <td class="pos">1</td>
+        <td class="club">ZKL Brno</td>
+        <td>36</td><td>20</td><td>7</td><td>9</td>
+        <td class="gf">152</td><td class="colon">:</td><td class="ga">104</td>
+        <td class="pts">47</td>
+      </tr>
+      <tr class="silver">
+        <td class="pos">2</td>
+        <td class="club">Dukla Jihlava</td>
+        <td>36</td><td>19</td><td>8</td><td>9</td>
+        <td class="gf">147</td><td class="colon">:</td><td class="ga">87</td>
+        <td class="pts">46</td>
+      </tr>
+      <tr class="bronze">
+        <td class="pos">3</td>
+        <td class="club">SONP Kladno</td>
+        <td>36</td><td>20</td><td>4</td><td>12</td>
+        <td class="gf">140</td><td class="colon">:</td><td class="ga">93</td>
+        <td class="pts">44</td>
+      </tr>
+      <tr>
+        <td class="pos">4</td>
+        <td class="club">Slovan CHZJD Bratislava</td>
+        <td>36</td><td>17</td><td>5</td><td>14</td>
+        <td class="gf">127</td><td class="colon">:</td><td class="ga">103</td>
+        <td class="pts">39</td>
+      </tr>
+      <tr>
+        <td class="pos">5</td>
+        <td class="club">VSŽ Košice</td>
+        <td>36</td><td>13</td><td>8</td><td>15</td>
+        <td class="gf">110</td><td class="colon">:</td><td class="ga">131</td>
+        <td class="pts">34</td>
+      </tr>
+      <tr>
+        <td class="pos">6</td>
+        <td class="club">Tesla Pardubice</td>
+        <td>36</td><td>14</td><td>5</td><td>17</td>
+        <td class="gf">127</td><td class="colon">:</td><td class="ga">135</td>
+        <td class="pts">33</td>
+      </tr>
+      <tr>
+        <td class="pos">7</td>
+        <td class="club">Sparta ČKD Praha</td>
+        <td>36</td><td>14</td><td>5</td><td>17</td>
+        <td class="gf">126</td><td class="colon">:</td><td class="ga">156</td>
+        <td class="pts">33</td>
+      </tr>
+      <tr>
+        <td class="pos">8</td>
+        <td class="club">CHZ Litvínov</td>
+        <td>36</td><td>13</td><td>6</td><td>17</td>
+        <td class="gf">109</td><td class="colon">:</td><td class="ga">156</td>
+        <td class="pts">32</td>
+      </tr>
+      <tr>
+        <td class="pos">9</td>
+        <td class="club">Motor České Budějovice <span class="note-badge">Nováček</span></td>
+        <td>36</td><td>10</td><td>8</td><td>18</td>
+        <td class="gf">126</td><td class="colon">:</td><td class="ga">165</td>
+        <td class="pts">28</td>
+      </tr>
+      <tr>
+        <td class="pos">10</td>
+        <td class="club">Škoda Plzeň</td>
+        <td>36</td><td>10</td><td>4</td><td>22</td>
+        <td class="gf">120</td><td class="colon">:</td><td class="ga">154</td>
+        <td class="pts">24</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="divider-mark">· · ·</div>
+
+<!-- ============ KRAJ DISTRIBUTION ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-number">II.</span>
+    <h2 class="section-title">Pyramida soutěží</h2>
+    <span class="section-sub">Od nejvyšší ligy po okresní přebory</span>
+  </div>
+
+  <div class="kraj-grid">
+    <div class="kraj-card">
+      <div class="kraj-name">I. liga</div>
+      <div class="kraj-count">10</div>
+      <div class="kraj-label">nejvyšší soutěž</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">II. liga ČNHL+SNHL</div>
+      <div class="kraj-count">44</div>
+      <div class="kraj-label">2× sk. A,B + SVK</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">Divize</div>
+      <div class="kraj-count">58</div>
+      <div class="kraj-label">6 skupin A-F</div>
+    </div>
+    <div class="kraj-card" data-kraj="Východočeský">
+      <div class="kraj-name">Východočeský</div>
+      <div class="kraj-count">96</div>
+      <div class="kraj-label">nejvíce klubů</div>
+    </div>
+    <div class="kraj-card" data-kraj="Středočeský">
+      <div class="kraj-name">Středočeský</div>
+      <div class="kraj-count">82</div>
+      <div class="kraj-label">druhý nejvyšší</div>
+    </div>
+    <div class="kraj-card" data-kraj="Jihočeský">
+      <div class="kraj-name">Jihočeský</div>
+      <div class="kraj-count">73</div>
+      <div class="kraj-label">tradičně silný</div>
+    </div>
+    <div class="kraj-card" data-kraj="Jihomoravský">
+      <div class="kraj-name">Jihomoravský</div>
+      <div class="kraj-count">52</div>
+      <div class="kraj-label">Brno + okresy</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">Severočeský</div>
+      <div class="kraj-count">45</div>
+      <div class="kraj-label">Liberecko-Děčínsko</div>
+    </div>
+    <div class="kraj-card" data-kraj="Severomoravský">
+      <div class="kraj-name">Severomoravský</div>
+      <div class="kraj-count">33</div>
+      <div class="kraj-label">Ostrava + Vsetín</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">Západočeský</div>
+      <div class="kraj-count">37</div>
+      <div class="kraj-label">Plzeňsko + Karlovarsko</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">Centrální Morava</div>
+      <div class="kraj-count">36</div>
+      <div class="kraj-label">Olomouc + Prostějov</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">Praha</div>
+      <div class="kraj-count">11</div>
+      <div class="kraj-label">městské části</div>
+    </div>
+    <div class="kraj-card" data-kraj="SVK">
+      <div class="kraj-name">Slovensko</div>
+      <div class="kraj-count">20</div>
+      <div class="kraj-label">5 krajů SSR</div>
+    </div>
+    <div class="kraj-card">
+      <div class="kraj-name">Kvalifikace</div>
+      <div class="kraj-count">2</div>
+      <div class="kraj-label">postupy</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-mark">· · ·</div>
+
+<!-- ============ NOVE KLUBY ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-number">III.</span>
+    <h2 class="section-title">Nové podnikové kluby</h2>
+    <span class="section-sub">První výskyt v sezoně 1970/71</span>
+  </div>
+
+  <div class="new-clubs">
+    <div class="new-club">
+      <span class="new-club-name">TJ DP I. ČLTK Praha</span>
+      <span class="new-club-city">Praha</span>
+      <div class="new-club-desc">První Český Lawn Tennis Club Praha — založen 1893!</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Plastimat Liberec</span>
+      <span class="new-club-city">Liberec</span>
+      <div class="new-club-desc">Plastové výrobky — Liberec klastr</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ ČSAO Liberec</span>
+      <span class="new-club-city">Liberec</span>
+      <div class="new-club-desc">Československé státní automobilové opravny</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ ČSAD Liberec</span>
+      <span class="new-club-city">Liberec</span>
+      <div class="new-club-desc">Autobusy + nákladní doprava</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Tatra Vagónka Studénka</span>
+      <span class="new-club-city">Studénka</span>
+      <div class="new-club-desc">Výrobce železničních vagónů</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Sklo Bohemia Světlá nL Sázavou</span>
+      <span class="new-club-city">Světlá nL Sáz.</span>
+      <div class="new-club-desc">Sklářství — dnes Crystalex</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Rubena Náchod</span>
+      <span class="new-club-city">Náchod</span>
+      <div class="new-club-desc">Gumové výrobky, auto-pneumatiky</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Dukla Hraničář Cheb</span>
+      <span class="new-club-city">Cheb</span>
+      <div class="new-club-desc">Pomezní vojenská jednotka — patrol s NSR/NDR</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Strojárne Martin</span>
+      <span class="new-club-city">SVK Martin</span>
+      <div class="new-club-desc">Dnes ZTS Martin — tanky a zbraně</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Iskra Partizánské</span>
+      <span class="new-club-city">SVK Partizán.</span>
+      <div class="new-club-desc">Předchůdce Bata Partizánské (dříve Bata-Šimonovany do 1948!)</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Baník Kremnica</span>
+      <span class="new-club-city">SVK Kremnica</span>
+      <div class="new-club-desc">UNESCO heritage — zlato a stříbro</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Dinas Banská Belá</span>
+      <span class="new-club-city">SVK Banská B.</span>
+      <div class="new-club-desc">Ohnivzdorná keramika</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Pokrok Turnov</span>
+      <span class="new-club-city">Turnov</span>
+      <div class="new-club-desc">Stavební podnik</div>
+    </div>
+    <div class="new-club">
+      <span class="new-club-name">TJ Tatran Rousínov</span>
+      <span class="new-club-city">Rousínov</span>
+      <div class="new-club-desc">Slavná nábytkářská tradice</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <span>Archiv D42 · ustanovení 04/2026</span>
+  <span>22. sezona z 73 · 100.0%</span>
+  <span>Mgr. Pavel Tureček</span>
+</footer>
+
+</div>
+
+</body>
+</html>
