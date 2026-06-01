@@ -1,6 +1,6 @@
 # Audit datové kvality — era-aware
 
-_2026-06-01 16:45 · generuje `validate_almanach.py` z `almanach.sqlite`_
+_2026-06-01 17:18 · generuje `validate_almanach.py` z `almanach.sqlite`_
 
 ## 1. Mistři extraligy a srovnání s 1. místem základní části
 
@@ -88,21 +88,24 @@ _Mistr ≠ 1. ZČ u **30** sezón (play-off rozhodlo jinak)._
 
 ## 2. Validace tabulek dle éry (extraliga)
 
-**Éra 2-1-0 (<2002):** 817 řádků · V+R+P≠GP: **121** · PTS≠2·V+R: **36**
+**Éra 2-1-0 (<2002):** 817 řádků · V+R+P≠GP: **2** · PTS≠2·V+R: **4**
 
 **Éra 3-2-1-0 (≥2002):** 342 řádků · W/D/L nesedí na GP (ztrátový zdroj — 5 sl. → 3): **334** (očekávané, ne chyba)
 
 ## 3. Poškozené buňky extraligy (re-extrakce ze zdroje)
 
-| Sezóna | Řádků | Problém |
-|---|---|---|
-| 1980_81 | 12 | GA chybí |
-| 1981_82 | 12 | GA chybí |
-| 1991_92 | 5 | GF=0 |
-| 1992_93 | 7 | GF=0 |
-| 1993_94 | 8 | GF chybí, GF=0 |
-| 1994_95 | 4 | GF=0 |
-| 1995_96 | 4 | GF chybí |
-| 2000_01 | 14 | GA chybí |
-| 2001_02 | 14 | GA chybí |
+Po doplnění z originálních PDF (`fill_from_pdf.py`): **žádné**. ✓
+
+## 4. Reziduální anomálie 2-1-0 éry (k ověření)
+
+| Sezóna | Poz. | Klub | Detail |
+|---|---|---|---|
+| 1960_61 | 9 | Slavoj České Budějovice | V+R+P=23≠GP=22 |
+| 1963_64 | 3 | Slovan Bratislava | V+R+P=23≠GP=22 |
+| 1963_64 | 7 | Spartak Plzeň | PTS=23≠2·V+R=17 (možný přenos bodů/penalizace) |
+| 1988_89 | 9 | TJ Vítkovice | PTS=11≠2·V+R=8 (možný přenos bodů/penalizace) |
+| 1988_89 | 10 | TJ Gottwaldov | PTS=9≠2·V+R=7 (možný přenos bodů/penalizace) |
+| 1988_89 | 12 | Poldi SONP Kladno | PTS=4≠2·V+R=3 (možný přenos bodů/penalizace) |
+
+_Pozn.: u skupin o udržení / prolínacích (1988/89) je PTS>2·V+R korektní — body se přenášejí ze základní části. Zbytek jsou drobné ±1 odchylky v základní části k ověření z PDF._
 

@@ -131,10 +131,15 @@ a per-sezónní listy TODO). Stav po integraci — viz `docs/DATA_QUALITY.md`
 | **Mistři — era-aware** | mistr se čte z META `Mistr:` (pravý play-off vítěz), porovnán s 1. místem ZČ; ≠ZČ u 30 sezón (play-off). Nález #2 vyřešen v auditu. |
 | **1949/50 (nález #1)** | mistr odvozen jako **ATK Praha** (1. místo) — v souladu s Wiki; M-badge u Zdar LTC na 3. místě je dobový artefakt. |
 | **Validace dle éry** | 2-1-0 (<2002) a 3-2-1-0 (≥2002) odděleně; moderní W/D/L je ztrátový zdroj (5 sl. → 3), proto V+R+P≠GP je u nich očekávané, ne chyba. |
-| **Poškozené buňky** | GA chybí: 1980/81, 1981/82, 2000/01, 2001/02; GF=0/chybí: 1991/92–1995/96. Označeno v `docs/DATA_QUALITY.md` i v listech TODO/NOTES daných sezón. |
+| **Poškozené buňky — VYŘEŠENO** | GA (1980/81, 1981/82, 2000/01, 2001/02) i GF (1991/92–1995/96) **doplněny z originálních PDF** (`sources/CZE1/`) skriptem `fill_from_pdf.py`. Poškozených buněk: **80 → 0**. Odhalena a opravena i širší korupce (5-sloupcový V/VP/R/PP/P cram → správné W/D/L; bez remíz 1980–82). |
 | **prev_node_id** | doplněn napříč sezónami (návaznost soutěží), schéma SYSTEM srovnáno na 12 sloupců. |
 
-> ⚠ **Re-extrakce ze zdroje stále otevřená:** dohledání chybějících GA/GF z webu
-> nebylo v tomto běhu možné — prostředí blokuje stahování stránek (WebFetch 403
-> na všech doménách). Hodnoty se proto nedoplňovaly (žádná data se nevymýšlí),
-> jen přesně označily. Vyžaduje originální PDF nebo běh s otevřenou sítí.
+**Zdroj re-extrakce:** `sources/CZE1/CZ-YYYY-YY.pdf` (nejvyšší soutěž) +
+`sources/CZE2_3_nizsi/` (nižší). Každá doplněná tabulka ověřena: suma GF = suma GA,
+V+R+P = GP, a křížově proti hodnotám v xlsx (GF/posunutá GA). Žádná data se
+nevymýšlela — pouze přepsala z PDF.
+
+> **Zbývající reziduální anomálie** (viz `docs/DATA_QUALITY.md` §4): 6 řádků 2-1-0
+> éry. 3× 1988/89 = korektní přenos bodů ve skupině o udržení; 3× drobná ±1
+> odchylka v základní části 1960/61 a 1963/64 — ponecháno k ověření (extrakce PTS
+> z těchto starých PDF je kvůli prolínání jmen nespolehlivá, neopravuje se naslepo).

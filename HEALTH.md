@@ -1,6 +1,6 @@
 # Health report — hokejový almanach DB
 
-_2026-06-01 16:47_
+_2026-06-01 17:18_
 
 ## Souhrn
 

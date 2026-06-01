@@ -6,6 +6,7 @@
 |---|---|---|
 | **Zdroj pravdy** | `data/S*_FINAL.xlsx` (73 sezón, 1948/49–2020/21) | Per-sezónní Excel sešity. Jeden soubor = jedna sezóna. |
 | **Pravidla + registry** | `docs/` (64 MD) | Ústava fází soutěží, audity, registr měst/krajů, reporty. |
+| **Originální PDF** | `sources/CZE1/`, `sources/CZE2_3_nizsi/` | Zdrojové tabulky soutěží (nejvyšší + nižší) pro re-extrakci poškozených listů. |
 | **App** (Viewer + Editor) | `app.py` | Jedna Flask aplikace — čte přímo z xlsx, prohlíží i edituje. |
 | **Printer** (HTML+PDF) | `print/html/`, `print/pdf/` (gen. přes `print_seasons.py`) | Per-sezónní tištěné výstupy. PDF A4, stránkováno. |
 | **Konsolidovaná DB** | `almanach.sqlite` (gen. přes `build_db.py`) | Volitelně — pro analýzu/audit, ne pro app. |
@@ -62,6 +63,7 @@ App ani Printer SQLite nepoužívají — jsou jen pro audit.
 | `fix_new_seasons_chain.py` | Návaznost klubů u sezón přidaných z balíku D42 (2017/18 přemapování, 1948/49→1949/50) |
 | `harmonize_schema.py` | Srovnání hlavičky listu SYSTEM na kanonických 12 sloupců napříč sezónami |
 | `validate_almanach.py` | Era-aware audit (mistr z META/SERIES vs 1. ZČ, validace 2-1-0 vs 3-2-1-0, poškozené buňky) → `docs/DATA_QUALITY.md` |
+| `fill_from_pdf.py` | Re-extrakce poškozených extraligových tabulek z `sources/CZE1/*.pdf` (GA/GF/W/D/L/PTS) s ověřením a pojistkami zarovnání |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
 
 ## Datový model (xlsx · per sezóna)

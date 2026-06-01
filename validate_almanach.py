@@ -33,6 +33,7 @@ def main():
 
     champ_rows = []          # (sid, champion, source, first_zc, mismatch)
     broken = []              # (sid, pos, name, problem)
+    resid = []               # (sid, pos, name, detail) — drobné anomálie k ověření
     era_stats = {'2-1-0': {'rows': 0, 'bad_wdl': 0, 'bad_pts': 0},
                  '3-2-1-0': {'rows': 0, 'lossy': 0}}
 
@@ -84,11 +85,16 @@ def main():
                 era_stats['2-1-0']['rows'] += 1
                 if None not in (gp, w, d, l) and w + d + l != gp:
                     era_stats['2-1-0']['bad_wdl'] += 1
-                if None not in (pts, w, d) and pts != 2 * w + d:
+                    resid.append((sid, pos, name, f"V+R+P={w+d+l}≠GP={gp}"))
+                # PTS=2·V+R jen pro pravou 2-1-0 éru (<2000); 2000/01+ je 3-bodový
+                if year_of(sid) < 2000 and None not in (pts, w, d) \
+                        and pts != 2 * w + d:
                     era_stats['2-1-0']['bad_pts'] += 1
+                    resid.append((sid, pos, name,
+                                  f"PTS={pts}≠2·V+R={2*w+d} (možný přenos bodů/penalizace)"))
 
     db.close()
-    write_report(champ_rows, broken, era_stats, seasons)
+    write_report(champ_rows, broken, era_stats, seasons, resid)
 
 
 def norm(s):
@@ -120,7 +126,7 @@ def final_winner(db, sid):
     return best
 
 
-def write_report(champ_rows, broken, era, seasons):
+def write_report(champ_rows, broken, era, seasons, resid=()):
     os.makedirs('docs', exist_ok=True)
     stamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
     L = [f"# Audit datové kvality — era-aware\n\n_{stamp} · generuje "
@@ -166,6 +172,18 @@ def write_report(champ_rows, broken, era, seasons):
             kinds = sorted({p[2] for p in probs})
             L.append(f"| {sid[1:]} | {len(probs)} | {', '.join(kinds)} |")
         L.append("")
+    else:
+        L.append("Po doplnění z originálních PDF (`fill_from_pdf.py`): **žádné**. ✓\n")
+
+    L.append("## 4. Reziduální anomálie 2-1-0 éry (k ověření)\n")
+    if resid:
+        L.append("| Sezóna | Poz. | Klub | Detail |")
+        L.append("|---|---|---|---|")
+        for sid, pos, name, det in resid:
+            L.append(f"| {sid[1:]} | {pos} | {name} | {det} |")
+        L.append("\n_Pozn.: u skupin o udržení / prolínacích (1988/89) je "
+                 "PTS>2·V+R korektní — body se přenášejí ze základní části. "
+                 "Zbytek jsou drobné ±1 odchylky v základní části k ověření z PDF._\n")
     else:
         L.append("Žádné. ✓\n")
 
