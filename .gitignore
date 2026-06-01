@@ -8,5 +8,7 @@ export/
 viewer/
 viewer.zip
 print/
+# export balíku xlsx (znovu vytvoř: cd data && zip ../hokej_almanach_xlsx.zip S*_FINAL.xlsx)
+hokej_almanach_xlsx.zip
 # ad-hoc ukázky
 S*_ukazka.html
