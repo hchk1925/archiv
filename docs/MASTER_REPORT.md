@@ -116,3 +116,25 @@ V přehledu výše je „mistr" brán z 1. místa základní části / M badge. 
 | Moderní formát parser | 19 sezón — TODO |
 | Poškozené listy | 4 — re-extrakce ze zdroje |
 | Mistři moderní éry | TODO (z play-off, ne ZČ) |
+
+---
+
+## Aktualizace po integraci balíku D42 do repozitáře
+
+Balík D42 (73 sezón) byl sloučen s repo linií (která měla navíc bohatší NOTES
+a per-sezónní listy TODO). Stav po integraci — viz `docs/DATA_QUALITY.md`
+(generuje `validate_almanach.py`):
+
+| Nález | Stav |
+|---|---|
+| **Chain klubů** | rozbité prev_club_id **0** (cross-season, health.py); doplněn chain 1948/49→1949/50 (8) a opraveno 235 linků 2017/18 (mířily na 2015/16 místo 2016/17) |
+| **Mistři — era-aware** | mistr se čte z META `Mistr:` (pravý play-off vítěz), porovnán s 1. místem ZČ; ≠ZČ u 30 sezón (play-off). Nález #2 vyřešen v auditu. |
+| **1949/50 (nález #1)** | mistr odvozen jako **ATK Praha** (1. místo) — v souladu s Wiki; M-badge u Zdar LTC na 3. místě je dobový artefakt. |
+| **Validace dle éry** | 2-1-0 (<2002) a 3-2-1-0 (≥2002) odděleně; moderní W/D/L je ztrátový zdroj (5 sl. → 3), proto V+R+P≠GP je u nich očekávané, ne chyba. |
+| **Poškozené buňky** | GA chybí: 1980/81, 1981/82, 2000/01, 2001/02; GF=0/chybí: 1991/92–1995/96. Označeno v `docs/DATA_QUALITY.md` i v listech TODO/NOTES daných sezón. |
+| **prev_node_id** | doplněn napříč sezónami (návaznost soutěží), schéma SYSTEM srovnáno na 12 sloupců. |
+
+> ⚠ **Re-extrakce ze zdroje stále otevřená:** dohledání chybějících GA/GF z webu
+> nebylo v tomto běhu možné — prostředí blokuje stahování stránek (WebFetch 403
+> na všech doménách). Hodnoty se proto nedoplňovaly (žádná data se nevymýšlí),
+> jen přesně označily. Vyžaduje originální PDF nebo běh s otevřenou sítí.

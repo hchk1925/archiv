@@ -4,7 +4,8 @@
 
 | Komponenta | Soubor / složka | Co to dělá |
 |---|---|---|
-| **Zdroj pravdy** | `data/S*_FINAL.xlsx` (65 sezón) | Per-sezónní Excel sešity. Jeden soubor = jedna sezóna. |
+| **Zdroj pravdy** | `data/S*_FINAL.xlsx` (73 sezón, 1948/49–2020/21) | Per-sezónní Excel sešity. Jeden soubor = jedna sezóna. |
+| **Pravidla + registry** | `docs/` (64 MD) | Ústava fází soutěží, audity, registr měst/krajů, reporty. |
 | **App** (Viewer + Editor) | `app.py` | Jedna Flask aplikace — čte přímo z xlsx, prohlíží i edituje. |
 | **Printer** (HTML+PDF) | `print/html/`, `print/pdf/` (gen. přes `print_seasons.py`) | Per-sezónní tištěné výstupy. PDF A4, stránkováno. |
 | **Konsolidovaná DB** | `almanach.sqlite` (gen. přes `build_db.py`) | Volitelně — pro analýzu/audit, ne pro app. |
@@ -57,7 +58,10 @@ App ani Printer SQLite nepoužívají — jsou jen pro audit.
 | `fill_remaining_fate.py` | Doplnit zbylé prázdné season_fate |
 | `add_prev_node_id.py` | Doplnit prev_node_id do SYSTEM (návaznost soutěží napříč sezónami) |
 | `revert_phase_f_falsepositives.py` | Vrátit false-positives auto-city úprav |
-| `apply_todo_sheets.py` | Refresh per-sezónního listu TODO ve všech sešitech |
+| `apply_todo_sheets.py` | Refresh per-sezónního listu TODO ve všech sešitech (vč. flagů poškozených GA/GF) |
+| `fix_new_seasons_chain.py` | Návaznost klubů u sezón přidaných z balíku D42 (2017/18 přemapování, 1948/49→1949/50) |
+| `harmonize_schema.py` | Srovnání hlavičky listu SYSTEM na kanonických 12 sloupců napříč sezónami |
+| `validate_almanach.py` | Era-aware audit (mistr z META/SERIES vs 1. ZČ, validace 2-1-0 vs 3-2-1-0, poškozené buňky) → `docs/DATA_QUALITY.md` |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
 
 ## Datový model (xlsx · per sezóna)

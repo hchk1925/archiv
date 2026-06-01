@@ -1,43 +1,43 @@
 # Health report — hokejový almanach DB
 
-_2026-05-31 08:12_
+_2026-06-01 16:44_
 
 ## Souhrn
 
-- **Sezóny:** 65  (S1949_50 – S2013_14)
-- **Klub-záznamů:** 32662
-- **Unikátních řetězů klubů (chain_id):** 9676
-- **Soutěžních uzlů:** 7390
-- **Tabulkových řádků:** 23392
+- **Sezóny:** 73  (S1948_49 – S2020_21)
+- **Klub-záznamů:** 34480
+- **Unikátních řetězů klubů (chain_id):** 10107
+- **Soutěžních uzlů:** 8861
+- **Tabulkových řádků:** 25206
 
 ## Návaznost klubů (prev_club_id)
 
-- S nastaveným prev: **25405** / 32662 (77.8 %)
+- S nastaveným prev: **27115** / 34480 (78.6 %)
 - **Rozbitých linků:** 0 (odkaz na neexistující ID v předchozí sezóně)
 
 ## Řetězy klubů
 
-- Řetězů celkem: **9676**, z toho jednosezónních: 4525
-- Nejdelší řetěz: **65** sezón
+- Řetězů celkem: **10107**, z toho jednosezónních: 4605
+- Nejdelší řetěz: **73** sezón
 
 | sezón | rozsah | klub (poslední název) |
 |---|---|---|
-| 65 | S1949_50–S2013_14 | HC Sparta Praha |
-| 65 | S1949_50–S2013_14 | HC ČSOB Pojišťovna Pardubice |
+| 73 | S1948_49–S2020_21 | HC Sparta Praha |
+| 68 | S1953_54–S2020_21 | OLH Spartak Soběslav |
+| 67 | S1949_50–S2015_16 | HC Dynamo Pardubice |
+| 65 | S1954_55–S2018_19 | HC Lední Medvědi Pelhřimov |
 | 61 | S1949_50–S2009_10 | HC Kopřivnice |
-| 61 | S1953_54–S2013_14 | OLH Spartak Soběslav |
+| 61 | S1955_56–S2015_16 | HC Dukla Jihlava |
 | 60 | S1954_55–S2013_14 | HC Verva Litvínov |
-| 60 | S1954_55–S2013_14 | HC Lední Medvědi Pelhřimov |
-| 59 | S1955_56–S2013_14 | HC Dukla Jihlava |
+| 60 | S1961_62–S2020_21 | HC Tygři Klášterec nad Ohří |
+| 59 | S1962_63–S2020_21 | HC Spartak Velká Bíteš (VYS) |
 | 56 | S1949_50–S2004_05 | Sokol Semechnice |
 | 56 | S1953_54–S2008_09 | HC ZVVZ Milevsko |
 | 56 | S1953_54–S2008_09 | RI Okna Zlín |
-| 56 | S1958_59–S2013_14 | HC Tambor Dvůr Králové nad Labem |
-| 54 | S1960_61–S2013_14 | HC Žabonosy |
 
 ## Datová kvalita: větvení prev_club_id
 
-- Předchůdců s **víc než 1 ne-B nástupcem** (možný chybný prev nebo split): **1584**
+- Předchůdců s **víc než 1 ne-B nástupcem** (možný chybný prev nebo split): **1841**
 
 <details><summary>Top 20</summary>
 
@@ -54,27 +54,27 @@ _2026-05-31 08:12_
 - CLUB_S1965_66_0529 -> CLUB_S1966_67_0514 'Sokol Studénka'; CLUB_S1966_67_0532 'Sokol Studénka pro příští sezonu dosazen do KP.'; CLUB_S1966_67_0537 'Tatra Studénka'; CLUB_S1966_67_0587 'Tatran Studénka (NJ)'
 - CLUB_S1998_99_0035 -> CLUB_S1999_00_0043 'TJ Bohemians Praha "A"'; CLUB_S1999_00_0048 'TJ Bohemians Praha "B"'; CLUB_S1999_00_0051 'TJ Bohemians Praha A'; CLUB_S1999_00_0056 'TJ Bohemians Praha "B“'
 - CLUB_S2009_10_0001 -> CLUB_S2010_11_0009 'HC Plzeň 1929'; CLUB_S2010_11_0145 'HC Plzeň 2000'; CLUB_S2010_11_0151 'HC ŽPK Plzeň'; CLUB_S2010_11_0165 'HC Panasonic Plzeň'
+- CLUB_S2016_17_0255 -> CLUB_S2017_18_0038 'BK Havlíčkův Brod'; CLUB_S2017_18_0051 'BK Havlíčkův Brod'; CLUB_S2017_18_0221 'BK Havlíčkův Brod B (VYS)'; CLUB_S2017_18_0232 'BK Havlíčkův Brod B (VYS)'
 - CLUB_S1949_50_0018 -> CLUB_S1950_51_0008 'Slavia Pardubice'; CLUB_S1950_51_0666 'SNB Pardubice'; CLUB_S1950_51_0671 'Pardubice'
 - CLUB_S1949_50_0063 -> CLUB_S1950_51_0022 'ZSJ Železničáři Louny'; CLUB_S1950_51_0911 'Veselí nad Moravou'; CLUB_S1950_51_0931 'Železničáři Bohumín'
 - CLUB_S1949_50_0008 -> CLUB_S1950_51_0049 'ZSJ Zbrojovka Brno I-Židenice'; CLUB_S1950_51_0057 'ZSJ Zbrojovka Brno II-Židenice'; CLUB_S1950_51_0860 'Brno'
 - CLUB_S1949_50_0054 -> CLUB_S1950_51_0060 'ZSJ Slavia Přerov'; CLUB_S1950_51_0913 'Sokol Přerov'; CLUB_S1950_51_0924 'Přerov'
 - CLUB_S1949_50_0833 -> CLUB_S1950_51_0417 'Český Krumlov'; CLUB_S1950_51_0807 'Sokol Moravský Krumlov'; CLUB_S1950_51_0867 'Moravský Krumlov'
 - CLUB_S1949_50_0729 -> CLUB_S1950_51_0755 'SK Jihlava'; CLUB_S1950_51_0758 'Modeta Jihlava'; CLUB_S1950_51_0769 'Jihlava'
-- CLUB_S1949_50_0857 -> CLUB_S1950_51_0898 'Tatran Valašské Meziříčí'; CLUB_S1950_51_0909 'Valašské Klobouky'; CLUB_S1950_51_0910 'Valašské Meziříčí'
 
 </details>
 
 ## Návaznost soutěží (season_fate)
 
-- Pokrytí: **22714** / 23392 (97.1 %) tabulkových řádků
+- Pokrytí: **24523** / 25206 (97.3 %) tabulkových řádků
 - **Nekonzistencí** (1 club_id = víc fate v sezóně): **0**
-- KVAL kontaminace (fate kde má být prázdné, D30): **0**
-- Rozložení fate: `setrval`=9967, `reorganizace`=5175, `postup`=2687, `setrval?`=2578, `sestup`=2057, `zanik`=243, `slouceni`=7
+- KVAL kontaminace (fate kde má být prázdné, D30): **47**
+- Rozložení fate: `setrval`=11180, `reorganizace`=5467, `setrval?`=2817, `postup`=2720, `sestup`=2063, `zanik`=269, `slouceni`=7
 
 ## Pyramida soutěží (SYSTEM)
 
-- Uzlů s `feeds_into`: **595** / 7390
-- Top-level kvalifikací **bez** feeds_into (mezera/TODO): **37**
+- Uzlů s `feeds_into`: **595** / 8861
+- Top-level kvalifikací **bez** feeds_into (mezera/TODO): **45**
 
 ## Integrita
 
@@ -84,4 +84,4 @@ _2026-05-31 08:12_
 
 | sezóna | klubů | prev % | rozbité | fate % | fate nekon. | feeds |
 |---|---|---|---|---|---|---|
-| 1949_50 | 925 | 0 | 0 | 99 | 0 | 21 |
+| 1948_49 | 12 | 0 | 0 | 100 | 0 | 0 |

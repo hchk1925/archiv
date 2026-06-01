@@ -110,6 +110,32 @@ def collect_items(wb):
         if len(fs) > 1:
             items.append(('fate', cid,
                           f"nekonzistentní fate {sorted(fs)} — sjednotit"))
+    # 5. poškozené tabulkové buňky v extralize (L10): GA chybí / GF=0
+    #    (re-extrakce ze zdroje — viz docs/DATA_QUALITY.md)
+    for sh in wb.sheetnames:
+        if sh in NON_DATA:
+            continue
+        dws = wb[sh]
+        rr = list(dws.iter_rows(values_only=True))
+        if not rr:
+            continue
+        DH = hidx(rr[0])
+        if 'row_type' not in DH or 'GA' not in DH:
+            continue
+        for r in rr[1:]:
+            if not r or r[DH['row_type']] != 'T':
+                continue
+            if lvl(r[DH.get('level')] if 'level' in DH else None) != 10:
+                continue
+            nm = r[DH.get('club_name', 3)]
+            ga = r[DH['GA']]
+            gf = r[DH['GF']] if 'GF' in DH else None
+            if ga is None or str(ga).strip() == ':':
+                items.append(('tabulka (re-extrakce)', nm,
+                              'chybí obdržené branky (GA) — doplnit ze zdroje'))
+            if gf == 0 or (gf is not None and str(gf).strip() == ':'):
+                items.append(('tabulka (re-extrakce)', nm,
+                              'vstřelené branky (GF) = 0/chybí — ověřit ze zdroje'))
     return items
 
 
