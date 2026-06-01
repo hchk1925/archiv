@@ -64,6 +64,7 @@ App ani Printer SQLite nepoužívají — jsou jen pro audit.
 | `harmonize_schema.py` | Srovnání hlavičky listu SYSTEM na kanonických 12 sloupců napříč sezónami |
 | `validate_almanach.py` | Era-aware audit (mistr z META/SERIES vs 1. ZČ, validace 2-1-0 vs 3-2-1-0, poškozené buňky) → `docs/DATA_QUALITY.md` |
 | `fill_from_pdf.py` | Re-extrakce poškozených extraligových tabulek z `sources/CZE1/*.pdf` (GA/GF/W/D/L/PTS) s ověřením a pojistkami zarovnání |
+| `verify_vs_pdf.py` | Křížová kontrola nejvyšší soutěže všech sezón proti PDF (pořadí pravdy PDF>xlsx); `--write` opraví V/R/P, PTS a překlepy GF:GA |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
 
 ## Datový model (xlsx · per sezóna)

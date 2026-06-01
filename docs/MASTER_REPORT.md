@@ -143,3 +143,24 @@ nevymýšlela — pouze přepsala z PDF.
 > éry. 3× 1988/89 = korektní přenos bodů ve skupině o udržení; 3× drobná ±1
 > odchylka v základní části 1960/61 a 1963/64 — ponecháno k ověření (extrakce PTS
 > z těchto starých PDF je kvůli prolínání jmen nespolehlivá, neopravuje se naslepo).
+
+## Křížová kontrola PDF ↔ xlsx (pořadí pravdy: PDF > xlsx)
+
+`verify_vs_pdf.py` porovnal nejvyšší soutěž všech 73 sezón proti `sources/CZE1/`.
+Join přes (GP, GF, GA), 2. průchod přes ověřené V/R/P. **Opraveno 26 buněk z PDF:**
+
+- **4× V/R/P** (1960/61 Spartak Plzeň, Slavoj ČB; 1963/64 Slovan; 1988/89 Slovan)
+- **2× PTS** (1963/64 Slovan 30→29, Spartak Plzeň 23→17 — v ZČ platí PTS=2·V+R)
+- **20× GF:GA** drobné překlepy ve skóre (např. 1962/63 ZKL Brno 139→140:41,
+  1951/52 ATK 80:12→80:13, 1960/61 Dukla Jihlava 86:98→86:88) — V/R/P jednoznačně
+  sedělo, převzato správné skóre z PDF.
+
+Po opravách: **éra 2-1-0 V+R+P≠GP = 0**, PTS≠2·V+R = 3 (jen přenos bodů 1988/89).
+
+**K ověření (4 řádky, neopraveno — V/R/P i skóre se rozcházejí, „chaotická" éra):**
+1962/63 Slovan Bratislava (xlsx 12-7-3 107:62 vs PDF 11-7-4 103:66), 1962/63 VTŽ
+Chomutov (94:87), 1963/64 Dukla Jihlava (96:75), 2003/04 HC Slavia Praha (152:121
+vs PDF 152:127). Vyžadují ruční rozhodnutí dle jmenné identifikace v PDF.
+
+> **Wikipedia:** přímé čtení wiki je v tomto prostředí blokované (WebFetch 403 na
+> všech doménách), proto cross-check běží proti PDF — v pořadí pravdy rovnocenné.
