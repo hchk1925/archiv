@@ -1,23 +1,23 @@
 # Health report — hokejový almanach DB
 
-_2026-06-01 18:03_
+_2026-06-02 10:31_
 
 ## Souhrn
 
 - **Sezóny:** 73  (S1948_49 – S2020_21)
 - **Klub-záznamů:** 34480
-- **Unikátních řetězů klubů (chain_id):** 10107
+- **Unikátních řetězů klubů (chain_id):** 10094
 - **Soutěžních uzlů:** 8861
 - **Tabulkových řádků:** 25206
 
 ## Návaznost klubů (prev_club_id)
 
-- S nastaveným prev: **27115** / 34480 (78.6 %)
+- S nastaveným prev: **27128** / 34480 (78.7 %)
 - **Rozbitých linků:** 0 (odkaz na neexistující ID v předchozí sezóně)
 
 ## Řetězy klubů
 
-- Řetězů celkem: **10107**, z toho jednosezónních: 4605
+- Řetězů celkem: **10094**, z toho jednosezónních: 4594
 - Nejdelší řetěz: **73** sezón
 
 | sezón | rozsah | klub (poslední název) |

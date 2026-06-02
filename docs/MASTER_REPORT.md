@@ -174,3 +174,12 @@ Opraveno dalších **137 buněk** (V/R/P, PTS, drobné GF:GA) v listech 20_*, 30
 pass-2 (GF:GA dle ověřeného V/R/P) jen je-li jedna půlka skóre přesná nebo
 oboustranný rozdíl ≤4 — podezřelé velké skoky se NEopravují, jen hlásí.
 **223 řádků k ověření** (xlsx bez shody v PDF — krajské finále, moderní éra, mezery).
+
+### Rozrod klubů — doplnění chybějících prev_club_id
+
+`fix_missing_links.py` doplnil **13 jednoznačných pokračování** klubů (přesná shoda
+clean_name, jediný volný ne-B předchůdce v minulé sezóně) — např. 1949/50 Sokol
+Prostějov ← 1948/49, řada 2017/18 ← 2016/17. Chybějících linků: 25 → 12 (zbytek =
+B-týmy / víceznačné, neopravuje se naslepo). prev_club_id: 27115 → 27128, řetězů
+10107 → 10094 (kluby nově navazují místo zakládání nového řetězu). Rozbité linky 0.
+Konzervativně bez fuzzy přejmenování — to vyžaduje ruční práci s registrem.
