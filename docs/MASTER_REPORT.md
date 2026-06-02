@@ -164,3 +164,13 @@ vs PDF 152:127). Vyžadují ruční rozhodnutí dle jmenné identifikace v PDF.
 
 > **Wikipedia:** přímé čtení wiki je v tomto prostředí blokované (WebFetch 403 na
 > všech doménách), proto cross-check běží proti PDF — v pořadí pravdy rovnocenné.
+
+### Rozšíření na nižší národní soutěže (1./2. liga, divize)
+
+`verify_vs_pdf.py` poolu je řádky z `sources/CZE1/` + `sources/CZE2_3_nizsi/` a
+kontroluje všechny **národní** listy (`^\d0_`, vyjma krajských `oblastni`/`Plzeňský`).
+Opraveno dalších **137 buněk** (V/R/P, PTS, drobné GF:GA) v listech 20_*, 30_2liga,
+30_2NHL, 30_/40_Divize — éra <2000. Pojistky: pass-1 jen přesná shoda (GP,GF,GA);
+pass-2 (GF:GA dle ověřeného V/R/P) jen je-li jedna půlka skóre přesná nebo
+oboustranný rozdíl ≤4 — podezřelé velké skoky se NEopravují, jen hlásí.
+**223 řádků k ověření** (xlsx bez shody v PDF — krajské finále, moderní éra, mezery).
