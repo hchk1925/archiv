@@ -17,7 +17,7 @@ import openpyxl, glob, os, re, sys
 DATA = sys.argv[1] if len(sys.argv) > 1 else 'data'
 CANON = ['node_id', 'name', 'competition_type', 'level', 'region',
          'parent_node_id', 'feeds_into', 'feeds_into_loser', 'scoring',
-         'status', 'note', 'prev_node_id']
+         'status', 'note', 'prev_node_id', 'entry', 'phase_order']
 
 
 def main():

@@ -60,7 +60,7 @@ def main():
     CREATE TABLE competitions(season_id TEXT, node_id TEXT, name TEXT,
         competition_type TEXT, level TEXT, region TEXT, parent_node_id TEXT,
         feeds_into TEXT, feeds_into_loser TEXT, scoring TEXT, status TEXT,
-        note TEXT, prev_node_id TEXT,
+        note TEXT, prev_node_id TEXT, entry TEXT, phase_order INT,
         PRIMARY KEY(season_id, node_id));
     CREATE TABLE standings(season_id TEXT, sheet TEXT, node_id TEXT,
         club_id TEXT, pos TEXT, club_name TEXT, GP INT, W INT, D INT, L INT,
@@ -116,13 +116,16 @@ def main():
             for r in rr[1:]:
                 if not r or cell(r, SH, 'node_id') is None:
                     continue
-                c.execute("INSERT OR REPLACE INTO competitions VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", (
+                ph = cell(r, SH, 'phase_order')
+                c.execute("INSERT OR REPLACE INTO competitions VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (
                     sid, cell(r, SH, 'node_id'), cell(r, SH, 'name'),
                     cell(r, SH, 'competition_type'), cell(r, SH, 'level'),
                     cell(r, SH, 'region'), cell(r, SH, 'parent_node_id'),
                     cell(r, SH, 'feeds_into'), cell(r, SH, 'feeds_into_loser'),
                     cell(r, SH, 'scoring'), cell(r, SH, 'status'),
-                    cell(r, SH, 'note'), cell(r, SH, 'prev_node_id')))
+                    cell(r, SH, 'note'), cell(r, SH, 'prev_node_id'),
+                    cell(r, SH, 'entry'),
+                    int(ph) if str(ph).strip().isdigit() else None))
 
         # SERIES
         if 'SERIES' in wb.sheetnames:

@@ -67,6 +67,7 @@ App ani Printer SQLite nepoužívají — jsou jen pro audit.
 | `verify_vs_pdf.py` | Křížová kontrola nejvyšší soutěže všech sezón proti PDF (pořadí pravdy PDF>xlsx); `--write` opraví V/R/P, PTS a překlepy GF:GA |
 | `fix_missing_links.py` | Rozrod klubů: doplní chybějící prev_club_id u jednoznačných pokračování (přesné jméno, jediný volný ne-B předchůdce) |
 | `build_1947_48.py` | Postaví S1947_48 z PDF (Státní liga 2 sk. + finále) a naváže chain dopředu na S1948_49 |
+| `phase_flow.py` | Tok fází soutěže (entry/phase_order/feeds_into): `S####` vypíše flow, `--apply` zapíše vzorové sezóny |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
 
 ## Datový model (xlsx · per sezóna)

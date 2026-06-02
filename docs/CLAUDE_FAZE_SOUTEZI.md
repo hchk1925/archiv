@@ -87,6 +87,39 @@ Týmy vyřazené v play-off hrají o konečné pořadí:
 
 ---
 
+### 3.6 Kódování TOKU fází (entry / phase_order / feeds_into)
+
+Aby šel flow soutěže přečíst strojově, má každý uzel fáze v listu **SYSTEM** tato pole:
+
+| Pole | Význam | Příklad |
+|---|---|---|
+| `phase_order` | pořadí fáze v rámci soutěže (1 = ZČ) | `1`, `2`, `3`, `4` |
+| `entry` | **kdo do fáze vstupuje** (kritérium) | `1.–8. ZČ`, `9.–12. ZČ`, `poražení ČF` |
+| `feeds_into` | kam jdou **vítězové / postupující** (node_id) | → Semifinále |
+| `feeds_into_loser` | kam padají **poražení** (node_id) | → O 5.-8.místo |
+
+Rozvětvení po základní části se zapíše dvěma cíli ze ZČ: `feeds_into` = horní větev
+(play-off), `feeds_into_loser` = dolní větev (skupina o udržení). Vícecestné rozdělení
+(např. 1.–6. → ČF, 7.–10. → předkolo, 11.–14. → play out) se popíše polem `entry`
+na cílových fázích.
+
+**Příklad — extraliga 1988/89** (`phase_flow.py S1988_89`):
+
+```
+[1] Základní část     ← 12 týmů        vítěz→ Čtvrtfinále · poražený→ Skupina o udržení
+[2] Čtvrtfinále       ← 1.–8. ZČ       vítěz→ Semifinále  · poražený→ O 5.-8.místo
+[2] Skupina o udržení ← 9.–12. ZČ      poražený→ O 9.místo
+[3] Semifinále        ← vítězové ČF    vítěz→ Finále      · poražený→ O 3.místo
+[3] O 5.-8.místo      ← poražení ČF    vítěz→ O 5.místo   · poražený→ O 7.místo
+[4] Finále            ← vítězové SF    (terminální → MISTR)
+```
+
+Generuje/čte `phase_flow.py` (populace přes deklarativní spec scopovaný na úroveň
++ jednoznačný název uzlu; report `phase_flow.py S####`). Pole protékají i do
+`almanach.sqlite` (`competitions.entry`, `competitions.phase_order`).
+
+---
+
 ## 4. KLÍČOVÝ PRINCIP — osud jen u terminální fáze
 
 > **Postup/sestup (`season_fate`) se zobrazuje POUZE u poslední (terminální) fáze, ve které k němu reálně došlo.**
