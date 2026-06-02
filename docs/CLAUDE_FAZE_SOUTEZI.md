@@ -114,9 +114,12 @@ na cílových fázích.
 [4] Finále            ← vítězové SF    (terminální → MISTR)
 ```
 
-Generuje/čte `phase_flow.py` (populace přes deklarativní spec scopovaný na úroveň
-+ jednoznačný název uzlu; report `phase_flow.py S####`). Pole protékají i do
-`almanach.sqlite` (`competitions.entry`, `competitions.phase_order`).
+Generuje/čte `phase_flow.py`. **Plošně vyplněno přes `phase_flow.py --auto`**: tok
+fází odvozen ze struktury (názvy uzlů + typy + seskupení po soutěžích přes
+`parent_node_id` + počty týmů v tabulkách → pozice „1.–8."/„9.–12.") pro **633
+soutěží / 2200 uzlů** v 73 ze 74 sezón. Pole protékají i do `almanach.sqlite`
+(`competitions.entry`, `competitions.phase_order`). Auto je heuristika — u
+exotických formátů může být `entry`/tok přibližný, dá se přepsat ručně.
 
 ---
 
