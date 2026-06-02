@@ -1,28 +1,28 @@
 # Health report — hokejový almanach DB
 
-_2026-06-02 10:31_
+_2026-06-02 11:06_
 
 ## Souhrn
 
-- **Sezóny:** 73  (S1948_49 – S2020_21)
-- **Klub-záznamů:** 34480
-- **Unikátních řetězů klubů (chain_id):** 10094
-- **Soutěžních uzlů:** 8861
-- **Tabulkových řádků:** 25206
+- **Sezóny:** 74  (S1947_48 – S2020_21)
+- **Klub-záznamů:** 34492
+- **Unikátních řetězů klubů (chain_id):** 10099
+- **Soutěžních uzlů:** 8865
+- **Tabulkových řádků:** 25218
 
 ## Návaznost klubů (prev_club_id)
 
-- S nastaveným prev: **27128** / 34480 (78.7 %)
+- S nastaveným prev: **27135** / 34492 (78.7 %)
 - **Rozbitých linků:** 0 (odkaz na neexistující ID v předchozí sezóně)
 
 ## Řetězy klubů
 
-- Řetězů celkem: **10094**, z toho jednosezónních: 4594
-- Nejdelší řetěz: **73** sezón
+- Řetězů celkem: **10099**, z toho jednosezónních: 4598
+- Nejdelší řetěz: **74** sezón
 
 | sezón | rozsah | klub (poslední název) |
 |---|---|---|
-| 73 | S1948_49–S2020_21 | HC Sparta Praha |
+| 74 | S1947_48–S2020_21 | HC Sparta Praha |
 | 68 | S1953_54–S2020_21 | OLH Spartak Soběslav |
 | 67 | S1949_50–S2015_16 | HC Dynamo Pardubice |
 | 65 | S1954_55–S2018_19 | HC Lední Medvědi Pelhřimov |
@@ -66,14 +66,14 @@ _2026-06-02 10:31_
 
 ## Návaznost soutěží (season_fate)
 
-- Pokrytí: **24523** / 25206 (97.3 %) tabulkových řádků
+- Pokrytí: **24531** / 25218 (97.3 %) tabulkových řádků
 - **Nekonzistencí** (1 club_id = víc fate v sezóně): **0**
 - KVAL kontaminace (fate kde má být prázdné, D30): **47**
-- Rozložení fate: `setrval`=11180, `reorganizace`=5467, `setrval?`=2817, `postup`=2720, `sestup`=2063, `zanik`=269, `slouceni`=7
+- Rozložení fate: `setrval`=11186, `reorganizace`=5467, `setrval?`=2817, `postup`=2720, `sestup`=2063, `zanik`=269, `slouceni`=7, `zánik`=1, `sloučení`=1
 
 ## Pyramida soutěží (SYSTEM)
 
-- Uzlů s `feeds_into`: **595** / 8861
+- Uzlů s `feeds_into`: **595** / 8865
 - Top-level kvalifikací **bez** feeds_into (mezera/TODO): **45**
 
 ## Integrita
@@ -84,4 +84,4 @@ _2026-06-02 10:31_
 
 | sezóna | klubů | prev % | rozbité | fate % | fate nekon. | feeds |
 |---|---|---|---|---|---|---|
-| 1948_49 | 12 | 0 | 0 | 100 | 0 | 0 |
+| 1947_48 | 12 | 0 | 0 | 67 | 0 | 0 |

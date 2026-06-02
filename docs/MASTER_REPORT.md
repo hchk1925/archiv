@@ -1,12 +1,13 @@
 # MASTER REPORT — stav všech sezón almanachu
 
-**Sezón:** 73 (1948/49 — 2020/21)  ·  **Chain extraligy:** 99,1 %
+**Sezón:** 74 (1947/48 — 2020/21)  ·  **Chain extraligy:** 99,1 %
 
 ## Přehled
 
 | Sezóna | Mistr | Extr | Chain | Tab✓ | Formát |
 |---|---|---:|---:|---:|---|
-| 1948/49 | LTC Praha | 8 | 0/8 | ✓ | 2-1-0 |
+| 1947/48 | LTC Praha | 12 | — | ✓ | 2-1-0 |
+| 1948/49 | LTC Praha | 8 | 7/8 | ✓ | 2-1-0 |
 | 1949/50 | Zdar LTC Praha | 8 | 8/8 | ✓ | 2-1-0 |
 | 1950/51 | ATK Praha | 8 | 8/8 | ✓ | 2-1-0 |
 | 1951/52 | SKP České Budějovice | 24 | 18/18 | ✓ | 2-1-0 |
@@ -183,3 +184,14 @@ Prostějov ← 1948/49, řada 2017/18 ← 2016/17. Chybějících linků: 25 →
 B-týmy / víceznačné, neopravuje se naslepo). prev_club_id: 27115 → 27128, řetězů
 10107 → 10094 (kluby nově navazují místo zakládání nového řetězu). Rozbité linky 0.
 Konzervativně bez fuzzy přejmenování — to vyžaduje ruční práci s registrem.
+
+### Přidána sezóna 1947/48 (nejvyšší soutěž z PDF)
+
+`build_1947_48.py` postavil **S1947_48** z `sources/CZE1/CZ-1947-48.pdf`: Státní liga,
+2 skupiny po 6 + finále. Ověřeno (sumy GF=GA: A 172=172, B 161=161; body=2·V+R).
+**Mistr LTC Praha** (finále 7:1 a 13:5 nad I. ČLTK). Rozsah PARTIAL — jako 1948/49
+jen republiková úroveň (nižší/regiony = pozdější chirurgie). Chain navázán **dopředu
+na 1948/49** u 7 doložených klubů (LTC, ŠK Bratislava, AC Sparta Bubeneč←Sparta,
+Stadion ČB, Sokol Prostějov←SK Prostějov, I. ČLTK, Židenice←Třebíč sloučení).
+DB nyní **74 sezón (1947/48–2020/21)**, nejdelší řetěz 74 sezón (LTC→…→Sparta).
+prev na 1946/47 zatím prázdný (starší sezóny přijdou později).

@@ -1,6 +1,6 @@
 # Audit datové kvality — era-aware
 
-_2026-06-02 10:28 · generuje `validate_almanach.py` z `almanach.sqlite`_
+_2026-06-02 11:06 · generuje `validate_almanach.py` z `almanach.sqlite`_
 
 ## 1. Mistři extraligy a srovnání s 1. místem základní části
 
@@ -8,6 +8,7 @@ Mistr je primárně z META (`Mistr:`). Sloupec **≠ZČ** značí, že mistr nen
 
 | Sezóna | Mistr | Zdroj | 1. ZČ | ≠ZČ |
 |---|---|---|---|:--:|
+| 1947_48 | I. ČLTK Praha | 1.ZČ | I. ČLTK Praha |  |
 | 1948_49 | LTC Praha | 1.ZČ | LTC Praha |  |
 | 1949_50 | ATK Praha | 1.ZČ | ATK Praha |  |
 | 1950_51 | SKP České Budějovice | 1.ZČ | SKP České Budějovice |  |
@@ -88,7 +89,7 @@ _Mistr ≠ 1. ZČ u **30** sezón (play-off rozhodlo jinak)._
 
 ## 2. Validace tabulek dle éry (extraliga)
 
-**Éra 2-1-0 (<2002):** 817 řádků · V+R+P≠GP: **0** · PTS≠2·V+R: **3**
+**Éra 2-1-0 (<2002):** 829 řádků · V+R+P≠GP: **0** · PTS≠2·V+R: **3**
 
 **Éra 3-2-1-0 (≥2002):** 342 řádků · W/D/L nesedí na GP (ztrátový zdroj — 5 sl. → 3): **334** (očekávané, ne chyba)
 

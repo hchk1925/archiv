@@ -4,7 +4,7 @@
 
 | Komponenta | Soubor / složka | Co to dělá |
 |---|---|---|
-| **Zdroj pravdy** | `data/S*_FINAL.xlsx` (73 sezón, 1948/49–2020/21) | Per-sezónní Excel sešity. Jeden soubor = jedna sezóna. |
+| **Zdroj pravdy** | `data/S*_FINAL.xlsx` (74 sezón, 1947/48–2020/21) | Per-sezónní Excel sešity. Jeden soubor = jedna sezóna. |
 | **Pravidla + registry** | `docs/` (64 MD) | Ústava fází soutěží, audity, registr měst/krajů, reporty. |
 | **Originální PDF** | `sources/CZE1/`, `sources/CZE2_3_nizsi/` | Zdrojové tabulky soutěží (nejvyšší + nižší) pro re-extrakci poškozených listů. |
 | **App** (Viewer + Editor) | `app.py` | Jedna Flask aplikace — čte přímo z xlsx, prohlíží i edituje. |
@@ -65,6 +65,8 @@ App ani Printer SQLite nepoužívají — jsou jen pro audit.
 | `validate_almanach.py` | Era-aware audit (mistr z META/SERIES vs 1. ZČ, validace 2-1-0 vs 3-2-1-0, poškozené buňky) → `docs/DATA_QUALITY.md` |
 | `fill_from_pdf.py` | Re-extrakce poškozených extraligových tabulek z `sources/CZE1/*.pdf` (GA/GF/W/D/L/PTS) s ověřením a pojistkami zarovnání |
 | `verify_vs_pdf.py` | Křížová kontrola nejvyšší soutěže všech sezón proti PDF (pořadí pravdy PDF>xlsx); `--write` opraví V/R/P, PTS a překlepy GF:GA |
+| `fix_missing_links.py` | Rozrod klubů: doplní chybějící prev_club_id u jednoznačných pokračování (přesné jméno, jediný volný ne-B předchůdce) |
+| `build_1947_48.py` | Postaví S1947_48 z PDF (Státní liga 2 sk. + finále) a naváže chain dopředu na S1948_49 |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
 
 ## Datový model (xlsx · per sezóna)
