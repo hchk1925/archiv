@@ -1,6 +1,6 @@
 # Audit datové kvality — era-aware
 
-_2026-06-02 11:06 · generuje `validate_almanach.py` z `almanach.sqlite`_
+_2026-06-03 04:05 · generuje `validate_almanach.py` z `almanach.sqlite`_
 
 ## 1. Mistři extraligy a srovnání s 1. místem základní části
 
@@ -9,7 +9,7 @@ Mistr je primárně z META (`Mistr:`). Sloupec **≠ZČ** značí, že mistr nen
 | Sezóna | Mistr | Zdroj | 1. ZČ | ≠ZČ |
 |---|---|---|---|:--:|
 | 1947_48 | I. ČLTK Praha | 1.ZČ | I. ČLTK Praha |  |
-| 1948_49 | LTC Praha | 1.ZČ | LTC Praha |  |
+| 1948_49 | Sokol Tatry Poprad | SERIES | LTC Praha | ⚠ |
 | 1949_50 | ATK Praha | 1.ZČ | ATK Praha |  |
 | 1950_51 | SKP České Budějovice | 1.ZČ | SKP České Budějovice |  |
 | 1951_52 | Sokol Hutě Chomutov | 1.ZČ | Sokol Hutě Chomutov |  |
@@ -83,7 +83,7 @@ Mistr je primárně z META (`Mistr:`). Sloupec **≠ZČ** značí, že mistr nen
 | 2019_20 | Bílí Tygři Liberec | 1.ZČ | Bílí Tygři Liberec |  |
 | 2020_21 | HC Oceláři Třinec | META | HC Sparta Praha | ⚠ |
 
-_Mistr ≠ 1. ZČ u **30** sezón (play-off rozhodlo jinak)._
+_Mistr ≠ 1. ZČ u **31** sezón (play-off rozhodlo jinak)._
 
 > ⚠ **K potvrzení:** u sezón 1986_87, 1989_90, 1992_93, 2019_20 chybí v META explicitní `Mistr:`, mistr je odvozen z 1. místa ZČ — v play-off éře (≥1985/86) je nutné ověřit vítěze play-off.
 
