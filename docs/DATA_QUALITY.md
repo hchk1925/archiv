@@ -1,6 +1,6 @@
 # Audit datové kvality — era-aware
 
-_2026-06-03 04:05 · generuje `validate_almanach.py` z `almanach.sqlite`_
+_2026-06-03 10:17 · generuje `validate_almanach.py` z `almanach.sqlite`_
 
 ## 1. Mistři extraligy a srovnání s 1. místem základní části
 
