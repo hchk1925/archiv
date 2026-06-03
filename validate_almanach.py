@@ -38,8 +38,10 @@ def main():
                  '3-2-1-0': {'rows': 0, 'lossy': 0}}
 
     for sid in seasons:
-        note = db.execute("SELECT note FROM seasons WHERE season_id=?",
-                          (sid,)).fetchone()[0] or ''
+        srow = db.execute("SELECT note, champion FROM seasons WHERE season_id=?",
+                          (sid,)).fetchone()
+        note = srow[0] or ''
+        mbadge = srow[1]
         ext = db.execute(
             "SELECT pos, club_name, GP, W, D, L, GF, GA, PTS, club_id "
             "FROM standings WHERE season_id=? AND sheet='10_liga' "
@@ -50,11 +52,12 @@ def main():
             except Exception: return 9999
         ext_sorted = sorted(ext, key=lambda r: posnum(r[0]))
 
-        # ── mistr ── (konec věty = '. ' následované velkým písmenem, nebo konec;
-        #    nezalomí se na tečce uvnitř závorek typu '(1. playoff)')
-        m = re.search(r'Mistr:\s*(.+?)(?:\.\s+[A-ZČŠŘŽÁÉ]|\.?$)', note)
+        # ── mistr ── primárně M badge (terminální fáze), pak META 'Mistr:'
         champion, source = (None, None)
-        if m:
+        m = re.search(r'Mistr:\s*(.+?)(?:\.\s+[A-ZČŠŘŽÁÉ]|\.?$)', note)
+        if mbadge:
+            champion, source = mbadge, 'M-badge'
+        elif m:
             champion, source = m.group(1).strip(), 'META'
         else:
             fin = final_winner(db, sid)

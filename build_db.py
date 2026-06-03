@@ -51,7 +51,7 @@ def main():
     c.executescript("""
     CREATE TABLE seasons(season_id TEXT PRIMARY KEY, season_label TEXT,
         era_note TEXT, scoring_system TEXT, source TEXT, prev_season TEXT,
-        total_clubs INT, total_nodes INT, note TEXT);
+        total_clubs INT, total_nodes INT, note TEXT, champion TEXT);
     CREATE TABLE clubs(season_id TEXT, club_id TEXT, clean_name TEXT,
         raw_name TEXT, sheet TEXT, level TEXT, district TEXT,
         prev_club_id TEXT, change_note TEXT, city TEXT,
@@ -87,13 +87,22 @@ def main():
             for r in wb['META'].iter_rows(values_only=True):
                 if r and r[0]:
                     meta[str(r[0])] = r[1]
-        c.execute("INSERT OR REPLACE INTO seasons VALUES(?,?,?,?,?,?,?,?,?)", (
+        # mistr = tým s M badge v nejvyšší soutěži (terminální fáze)
+        champion = None
+        if '10_liga' in wb.sheetnames:
+            lr = list(wb['10_liga'].iter_rows(values_only=True))
+            if lr:
+                LH = hidx(lr[0])
+                for r in lr[1:]:
+                    if r and cell(r, LH, 'row_type') == 'T' and cell(r, LH, 'note') == 'M':
+                        champion = cell(r, LH, 'club_name')
+        c.execute("INSERT OR REPLACE INTO seasons VALUES(?,?,?,?,?,?,?,?,?,?)", (
             sid, meta.get('season_label'), meta.get('era_note'),
             meta.get('scoring_system'), meta.get('source'),
             meta.get('prev_season'),
             int(meta['total_clubs']) if str(meta.get('total_clubs','')).isdigit() else None,
             int(meta['total_nodes']) if str(meta.get('total_nodes','')).isdigit() else None,
-            meta.get('note')))
+            meta.get('note'), champion))
 
         # CLUBS
         ws = wb['CLUBS']
