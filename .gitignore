@@ -12,3 +12,5 @@ print/
 hokej_almanach_xlsx.zip
 # ad-hoc ukázky
 S*_ukazka.html
+# generovaný health report (regeneruje build hook)
+HEALTH.md
