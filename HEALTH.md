@@ -1,23 +1,23 @@
 # Health report — hokejový almanach DB
 
-_2026-06-03 03:40_
+_2026-06-03 10:30_
 
 ## Souhrn
 
 - **Sezóny:** 74  (S1947_48 – S2020_21)
 - **Klub-záznamů:** 34553
-- **Unikátních řetězů klubů (chain_id):** 10160
-- **Soutěžních uzlů:** 8883
-- **Tabulkových řádků:** 25293
+- **Unikátních řetězů klubů (chain_id):** 10145
+- **Soutěžních uzlů:** 8887
+- **Tabulkových řádků:** 25304
 
 ## Návaznost klubů (prev_club_id)
 
-- S nastaveným prev: **27135** / 34553 (78.5 %)
+- S nastaveným prev: **27150** / 34553 (78.6 %)
 - **Rozbitých linků:** 0 (odkaz na neexistující ID v předchozí sezóně)
 
 ## Řetězy klubů
 
-- Řetězů celkem: **10160**, z toho jednosezónních: 4659
+- Řetězů celkem: **10145**, z toho jednosezónních: 4642
 - Nejdelší řetěz: **74** sezón
 
 | sezón | rozsah | klub (poslední název) |
@@ -66,14 +66,14 @@ _2026-06-03 03:40_
 
 ## Návaznost soutěží (season_fate)
 
-- Pokrytí: **24531** / 25293 (97.0 %) tabulkových řádků
+- Pokrytí: **24531** / 25304 (96.9 %) tabulkových řádků
 - **Nekonzistencí** (1 club_id = víc fate v sezóně): **0**
 - KVAL kontaminace (fate kde má být prázdné, D30): **47**
 - Rozložení fate: `setrval`=11186, `reorganizace`=5467, `setrval?`=2817, `postup`=2720, `sestup`=2063, `zanik`=269, `slouceni`=7, `zánik`=1, `sloučení`=1
 
 ## Pyramida soutěží (SYSTEM)
 
-- Uzlů s `feeds_into`: **1409** / 8883
+- Uzlů s `feeds_into`: **1409** / 8887
 - Top-level kvalifikací **bez** feeds_into (mezera/TODO): **47**
 
 ## Integrita
