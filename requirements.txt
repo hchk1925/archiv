@@ -1,0 +1,5 @@
+openpyxl
+flask
+pandas
+pdfminer.six
+cffi
