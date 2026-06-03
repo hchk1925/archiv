@@ -94,17 +94,13 @@
 
 Zbylé prázdné prev_club_id: jen 1948/49 (první sezóna, čeká na reverz) + Křídla vlasti (nováček).
 
-## Nálezy K OVĚŘENÍ (neopraveno — čeká na rozhodnutí)
+## Nálezy — STAV
 
-### 1. 1949/50 — mistrovský badge na nesprávném klubu
-M badge je u **Zdar LTC Praha (3. místo)**, ale dle Wikipedie i přehledu medailistů byl mistr **ATK Praha (1. místo)**. Buď chyba v datech (badge patří ATK), nebo zvláštní dobové určení mistra. → ověřit.
+### 1. 1949/50 — mistrovský badge ✅ VYŘEŠENO
+M badge přesunut na **ATK Praha** (1. místo, mistr). Ověřeno PDF + webem.
 
-### 2. Mistři v moderní éře (2002+) = 1. místo základní části, NE play-off vítěz
-V přehledu výše je „mistr" brán z 1. místa základní části / M badge. V moderní éře ale o titulu rozhoduje play-off:
-- 2020/21: tabulka ukazuje Sparta (1. ZČ), ale mistr byl **Oceláři Třinec** (play-off).
-- Podobně další moderní sezóny — skutečný mistr je vítěz play-off, který je v datech v SERIES, ne na 1. místě ZČ.
-
-→ Pro správné „mistr" v moderní éře je třeba brát vítěze finále play-off (ze SERIES), ne 1. místo ZČ.
+### 2. Mistři ✅ VYŘEŠENO (celá historie)
+M badge doplněn/opraven na **skutečného mistra** ve všech 74 sezónách — v moderní éře vítěz play-off (ne 1. ZČ). Sporné ověřeny PDF+webem: opraveno mj. 1950/51 (České Budějovice), 1951/52 (Vítkovice), 1952/53 (Spartak Praha Sokolovo), 1970/71 (Dukla Jihlava), 1972/73 (Tesla Pardubice), 1992/93 (Sparta Praha), 2008/09 (Karlovy Vary), 2009/10 (Pardubice). 2019/20 bez titulu (COVID). M badge má 73 sezón, META i tabulka MASTER_REPORTu srovnány.
 
 ### 3. Tabulková validace (z DATA_AUDIT.md)
 - 44 sezón čistých (V+R+P=Z), 19 moderní formát (3-2-1-0, parser update), 5 ke kontrole (GF=0), 4 poškozené (GA chybí: 1980/81, 1981/82, 2000/01, 2001/02).
