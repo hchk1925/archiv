@@ -1,6 +1,6 @@
 # PDF-diff worklist — řádky „k ověření"
 
-_2026-06-03 13:02 · z verify_vs_pdf.py_
+_2026-06-03 14:16 · z verify_vs_pdf.py_
 
 Řádky bez jednoznačné shody v DS PDF — typicky neúplný rozpis (tým odehrál méně zápasů než v PDF) nebo PDF řádek nemá. Nutno rozhodnout ručně. NEopravováno automaticky.
 

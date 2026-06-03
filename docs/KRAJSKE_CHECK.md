@@ -1,6 +1,6 @@
 # Krajské soutěže — worklist nekonzistencí (k ručnímu průchodu)
 
-_2026-06-03 10:31 · generuje `krajske_check.py`_
+_2026-06-03 14:13 · generuje `krajske_check.py`_
 
 Krajské nemají externí zdroj (PDF je nepokrývá) → opravit ručně dle vlastních podkladů. Hlásí jen reálné chyby (ne řídká neúplná data).
 

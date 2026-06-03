@@ -68,7 +68,11 @@ App ani Printer SQLite nepoužívají — jsou jen pro audit.
 | `fix_missing_links.py` | Rozrod klubů: doplní chybějící prev_club_id u jednoznačných pokračování (přesné jméno, jediný volný ne-B předchůdce) |
 | `build_1947_48.py` | Postaví S1947_48 z PDF (Státní liga 2 sk. + finále) a naváže chain dopředu na S1948_49 |
 | `phase_flow.py` | Tok fází soutěže (entry/phase_order/feeds_into): `--auto` plošně odvodí a zapíše všechny sezóny, `S####` vypíše flow, `--apply` vzorové |
+| `krajske_check.py` | Worklist nekonzistencí krajských soutěží (GF≠GA / PTS / V+R+P) → `docs/KRAJSKE_CHECK.md` (k ruční kontrole; krajské nejsou v PDF) |
+| `pdf_worklist.py` | Worklist oblastní/KVAL řádků „k ověření" (neúplné rozpisy vs PDF) → `docs/PDF_VERIFY_WORKLIST.md` |
 | `audit.py`, `detail.py` | Diagnostika (rychlý audit přes Excely) |
+
+Per-sezónní buildery (rané sezóny z PDF): `build_1947_48.py`, `enrich_1947_48.py`, `enrich_1948_49.py`, `build_1948_49_divize.py`, `reconcile_1948_49_kval.py`, `fix_1949_50_top.py`, `build_1949_50_oblastni_po.py`.
 
 ## Datový model (xlsx · per sezóna)
 
