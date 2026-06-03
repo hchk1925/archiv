@@ -24,6 +24,7 @@ WRITE = '--write' in sys.argv
 CZE1, CZE23 = 'sources/CZE1', 'sources/CZE2_3_nizsi'
 NAT_SHEET = re.compile(r'^\d0_')          # národní tier (podtržítko za číslem)
 REGIONAL = re.compile(r'oblast|Plzeň|kraj', re.I)   # vyloučit krajské listy
+EXTRA = {'KVAL', '20_oblastni'}           # navíc: kvalifikace + národní oblastní soutěž
 ROW_FLEX = re.compile(r'(?<!\d)(\d{1,2})\s+((?:\d{1,3}\s+){2,6}?)(\d{1,3}):(\d{1,3})(?!\d)')
 CARRY = re.compile(r'udržen|umíst|prolín|baráž|nadstavb|playoff|play-off', re.I)
 
@@ -145,7 +146,8 @@ def main():
         wb = openpyxl.load_workbook(path)
         snm, swd, sga, sfx = [], [], [], 0
         for shname in wb.sheetnames:
-            if not NAT_SHEET.match(shname) or REGIONAL.search(shname):
+            if shname not in EXTRA and (not NAT_SHEET.match(shname)
+                                        or REGIONAL.search(shname)):
                 continue
             nm, wd, ga, fx = process_sheet(wb[shname], pdf, yr)
             snm += [(shname,) + x for x in nm]
