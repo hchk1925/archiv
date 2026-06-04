@@ -138,6 +138,12 @@ def parse_zupa(sh):
             continue
 
         if name:  # ── TÝMOVÝ ŘÁDEK ──
+            # ochrana: jméno obsahující skóre (N:N) je ve skutečnosti výsledek zápasu,
+            # ne tým (zdroj místo tabulky uvedl jen pár výsledků) → poznámka
+            if re.search(r'\d+\s*:\s*\d+', name) and num(cells[2]) is None:
+                if cur_trida is not None:
+                    cur_trida['notes'].append(f"výsledek: {name}")
+                continue
             if cur_trida is None:
                 # tým bez třídy → založ implicitní I.třídu
                 cur_trida = new_trida('I.třída', 'L30')
