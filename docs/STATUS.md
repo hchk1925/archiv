@@ -22,8 +22,11 @@ Originální podklady: `sources/CZE1/` (nejvyšší soutěž) + `sources/CZE2_3_
 
 ## Co zbývá na RUČNÍ průchod (s papíry) ✋
 
-1. **Krajské soutěže** (listy 30*/20* regionální) — DS PDF je nepokrývá, 95 % OK.
+1. **Krajské soutěže** (listy 30*/20*/Z* regionální) — DS PDF je nepokrývá, 95 % OK.
    Worklist: **`docs/KRAJSKE_CHECK.md`** (1065 skupin s nálezem; krajský přebor / I. třída nejvýš).
+   - **1948/49 župní** (listy `Z*`, 15 žup, I.–III. třída, ~560 týmů) doplněny ze surového
+     XLS kolegy jako **základ úplnosti** — mnohde neúplné, hodnoty k ruční verifikaci
+     (archivy/dobový tisk). Finále/kvalifikace a prázdné sekce evidovány v `NOTES`.
 2. **Oblastní/KVAL „k ověření"** — kde data mají neúplný rozpis vs PDF (tým odehrál méně zápasů).
    Worklist: **`docs/PDF_VERIFY_WORKLIST.md`** (303 řádků po sezónách; část jsou false-positives = správně postavené play-off bloky).
 3. **Drobnosti k rozhodnutí:** 18× `season_fate = "setrval?"` (nejistota ve zdroji), 10 víceznačných chybějících chainů, `season_fate` u kvalifikací.
