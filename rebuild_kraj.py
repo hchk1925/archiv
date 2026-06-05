@@ -47,11 +47,158 @@ def blockkey(label):
     return re.sub(r'\s+', ' ', str(label)).strip().lower()
 
 
+def additive_main(season_f, kraj, coll_f, coll_sheet, do_write):
+    """Aditivní režim: zachová VŠE stávající (vč. season_fate), jen vloží týmy,
+    které u nás chybí, do odpovídajících bloků (nové bloky domintuje)."""
+    wb = openpyxl.load_workbook(season_f)
+    ws = wb[kraj]
+    rows = list(ws.iter_rows(values_only=True))
+    H = {str(v): i for i, v in enumerate(rows[0])}
+    season_id = re.search(r'S\d{4}_\d{2}', str(rows[1][H['node_id']])).group(0)
+
+    existing_names = set()
+    block_meta = {}    # blockkey -> (label, node, level)
+    for r in rows[1:]:
+        if r[H['row_type']] == 'H':
+            block_meta[blockkey(r[H['block_name']])] = (r[H['block_name']], r[H['node_id']], r[H['level']])
+        elif r[H['row_type']] == 'T':
+            existing_names.add(norm(r[H['club_name']]))
+
+    def maxid(prefix):
+        mx = 0
+        for sn in wb.sheetnames:
+            for row in wb[sn].iter_rows(values_only=True):
+                for v in row:
+                    if isinstance(v, str):
+                        for g in re.findall(prefix + r'(\d+)', v):
+                            mx = max(mx, int(g))
+        return mx
+    club_n = maxid(f'CLUB_{season_id}_'); tr_n = maxid(f'TR_{season_id}_'); node_n = maxid(f'NODE_{season_id}_')
+
+    # SYSTEM mapy pro minting nových bloků
+    sys_ws = wb['SYSTEM']
+    SH = {str(v): i for i, v in enumerate(next(sys_ws.iter_rows(values_only=True)))}
+    region = None
+    for bk, (lbl, nid, lvl) in block_meta.items():
+        for rr in list(sys_ws.iter_rows(values_only=True))[1:]:
+            if rr[SH['node_id']] == nid:
+                region = rr[SH['region']]; break
+        if region:
+            break
+    container_by_level = {}; prefix = None
+    for rr in list(sys_ws.iter_rows(values_only=True))[1:]:
+        if not rr[SH['node_id']]:
+            continue
+        mm = re.match(r'(.+) L(30|40|50)$', str(rr[SH['name']] or ''))
+        if mm and rr[SH['region']] == region:
+            container_by_level[f'L{mm.group(2)}'] = rr[SH['node_id']]; prefix = mm.group(1)
+    prefix = prefix or kraj
+    new_sys = []
+
+    def mint(name, ctype, level, parent):
+        nonlocal node_n
+        node_n += 1; nid = f"NODE_{season_id}_{node_n:04d}"
+        new_sys.append((nid, name, ctype, level, parent)); return nid
+
+    # kolega: pending týmy (které nemáme) po blocích
+    tridy = parse_zupa(load_sheet(coll_f, coll_sheet))
+    pending = {}; binfo = {}
+    for t in tridy:
+        for glabel, g in ([('', t['_implicit'])] if t['_implicit']['teams'] else []) + \
+                         [(gg['label'], gg) for gg in t['groups'] if gg['teams']]:
+            full = f"{t['label']} / {glabel}" if glabel else t['label']
+            bk = blockkey(full)
+            binfo[bk] = (full, t['label'], t['level'])
+            for tm in g['teams']:
+                if norm(tm['name']) not in existing_names:
+                    pending.setdefault(bk, []).append(tm)
+
+    new_clubs = []
+    def club_for(name, note, level):
+        nonlocal club_n
+        club_n += 1; cid = f"CLUB_{season_id}_{club_n:04d}"
+        new_clubs.append((cid, name, note, level)); return cid
+
+    def team_row(tm, label, nid, lvl):
+        nonlocal tr_n
+        cid = club_for(tm['name'], tm['note'], lvl); tr_n += 1
+        fate = tm['status'] if tm['status'] else None
+        return ['T', None, tm['rank'], tm['name'], tm['note'], tm['GP'], tm['W'],
+                tm['D'], tm['L'], tm['GF'], ':', tm['GA'], tm['PTS'], label, nid,
+                lvl, cid, None, None, None, fate, f"TR_{season_id}_{tr_n:05d}", None]
+
+    # poskládej výstup: zachovej vše, po každém bloku doplň pending
+    out = [list(rows[0])]
+    cur_bk = None; added = 0
+    flushed = set()
+
+    def flush(bk):
+        nonlocal added
+        if bk in pending and bk not in flushed:
+            lbl, nid, lvl = block_meta[bk]
+            for tm in pending[bk]:
+                out.append(team_row(tm, lbl, nid, lvl)); added += 1
+            flushed.add(bk)
+
+    for r in rows[1:]:
+        if r[H['row_type']] == 'H':
+            if cur_bk:
+                flush(cur_bk)
+            cur_bk = blockkey(r[H['block_name']])
+            out.append(list(r))
+        else:
+            out.append(list(r))
+    if cur_bk:
+        flush(cur_bk)
+
+    # bloky, které u nás vůbec nejsou → nové bloky na konec (mint uzly)
+    new_blocks = [bk for bk in pending if bk not in flushed]
+    for bk in new_blocks:
+        full, tlabel, level = binfo[bk]
+        if full == tlabel:                       # kontejnerová třída napřímo
+            nid = container_by_level.get(level) or mint(f"{prefix} {tlabel}", 'league', level, None)
+            container_by_level.setdefault(level, nid)
+        else:
+            cont = container_by_level.get(level) or mint(f"{prefix} {tlabel}", 'league', level, None)
+            container_by_level.setdefault(level, cont)
+            nid = mint(full, 'group', level, cont)
+        out.append(['H', full, None, None, None, None, None, None, None, None,
+                    None, None, None, None, nid, level, None, None, None, None,
+                    None, None, None])
+        for tm in pending[bk]:
+            out.append(team_row(tm, full, nid, level)); added += 1
+
+    print(f"== {kraj} ← {coll_sheet} (ADITIVNĚ) ==")
+    print(f"  přidáno týmů: {added}  (stávající zachovány beze změny)")
+    print(f"  nové kluby: {[c[1] for c in new_clubs]}")
+    if new_sys:
+        print(f"  nové uzly: {[(s[1], s[3]) for s in new_sys]}")
+    if not do_write:
+        print("\n(dry-run — přidej --write)"); return
+
+    shutil.copy(season_f, season_f + '.bak')
+    idx = wb.sheetnames.index(kraj); del wb[kraj]
+    nws = wb.create_sheet(kraj, idx)
+    for row in out:
+        nws.append(row)
+    for nid, name, ctype, level, parent in new_sys:
+        sys_ws.append([nid, name, ctype, level, region, parent, None, None, '2-1-0',
+                       None, 'Doplněno (aditivně z kolegova podkladu).', None, None, None])
+    cws = wb['CLUBS']
+    for cid, name, note, level in new_clubs:
+        cws.append([cid, re.sub(r'\s*\((N|S|M)\)\s*$', '', name).strip(), name, kraj,
+                    note, level, None, None, 'Doplněno aditivně z kolegova podkladu.', None])
+    wb.save(season_f)
+    print(f"\n✓ {season_f}: +{added} týmů do {kraj}, +{len(new_sys)} uzlů (záloha {season_f}.bak)")
+
+
 def main():
     if len(sys.argv) < 5:
         print(__doc__); sys.exit(1)
     season_f, kraj, coll_f, coll_sheet = sys.argv[1:5]
     do_write = '--write' in sys.argv
+    if '--add-only' in sys.argv:
+        return additive_main(season_f, kraj, coll_f, coll_sheet, do_write)
 
     wb = openpyxl.load_workbook(season_f)
     ws = wb[kraj]
