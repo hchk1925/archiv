@@ -67,15 +67,18 @@ def main():
             bn = r[H['block_name']]; nid = r[H['node_id']]; lvl = r[H['level']]
             bk_map[blockkey(bn)] = (bn, nid, lvl)
             blocks.append(blockkey(bn))
-    # stávající kluby: norm name -> (club_id, club_name)
+    # stávající kluby: norm name -> (club_id, club_name) + plné statistiky pro merge
     existing = {}
-    existing_hasstats = {}
+    existing_full = {}
     for r in rows[1:]:
         if r[H['row_type']] == 'T':
             k = norm(r[H['club_name']])
             existing[k] = (r[H['club_id']], r[H['club_name']])
-            existing_hasstats[k] = any(r[H[c]] is not None
-                                       for c in ['GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS'])
+            existing_full[k] = {c: r[H[c]] for c in
+                                ['pos', 'GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS', 'note', 'season_fate']}
+
+    def has_stats_dict(d, keys=('GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS')):
+        return any(d.get(c) is not None for c in keys)
 
     # max ids v sezoně
     def maxid(prefix):
@@ -87,28 +90,66 @@ def main():
                         for g in re.findall(prefix + r'(\d+)', v):
                             mx = max(mx, int(g))
         return mx
-    m = re.match(r'.*?(S\d{4}_\d{2})', season_f) or re.search(r'(S\d{4}_\d{2})', rows[1][H['node_id']] or '')
     season_id = re.search(r'S\d{4}_\d{2}', str(rows[1][H['node_id']])).group(0)
     club_n = maxid(f'CLUB_{season_id}_')
     tr_n = maxid(f'TR_{season_id}_')
+    node_n = maxid(f'NODE_{season_id}_')
 
-    # parse kolega
+    # ── SYSTEM: mapy uzlů ──
+    sys_ws = wb['SYSTEM']
+    SH = {str(v): i for i, v in enumerate(next(sys_ws.iter_rows(values_only=True)))}
+    sys_info = {}     # node_id -> (name, level, region)
+    for r in list(sys_ws.iter_rows(values_only=True))[1:]:
+        if r[SH['node_id']]:
+            sys_info[r[SH['node_id']]] = (r[SH['name']], r[SH['level']], r[SH['region']])
+    # region tohoto kraje + úrovňové kontejnery "{prefix} L30/L40/L50"
+    region = None
+    for bk, (bn, nid, lvl) in bk_map.items():
+        if nid in sys_info and sys_info[nid][2]:
+            region = sys_info[nid][2]; break
+    container_by_level = {}   # level -> node_id
+    prefix = None
+    for nid, (nm, lvl, reg) in sys_info.items():
+        mm = re.match(r'(.+) L(30|40|50)$', str(nm or ''))
+        if mm and reg == region:
+            container_by_level[f'L{mm.group(2)}'] = nid
+            prefix = mm.group(1)
+    if prefix is None:
+        prefix = kraj
+
+    new_sys = []     # (node_id, name, type, level, parent)
+
+    def mint_node(name, ctype, level, parent):
+        nonlocal node_n
+        node_n += 1
+        nid = f"NODE_{season_id}_{node_n:04d}"
+        new_sys.append((nid, name, ctype, level, parent))
+        sys_info[nid] = (name, level, region)
+        return nid
+
+    def resolve_container(tlabel, level):
+        bk = blockkey(tlabel)
+        if bk in bk_map:
+            _, nid, lvl = bk_map[bk]
+            return nid, lvl
+        if level in container_by_level:
+            return container_by_level[level], level
+        nid = mint_node(f"{prefix} {tlabel}", 'league', level, None)
+        container_by_level[level] = nid
+        return nid, level
+
+    def resolve_group(full, container_nid, level):
+        bk = blockkey(full)
+        if bk in bk_map:
+            _, nid, lvl = bk_map[bk]
+            return nid, lvl
+        return mint_node(full, 'group', level, container_nid), level
+
     tridy = parse_zupa(load_sheet(coll_f, coll_sheet))
-    # kolega: full block label -> list teams
-    coll_blocks = []   # (block_label, level, teams)
-    for t in tridy:
-        groups = ([('', t['_implicit'])] if t['_implicit']['teams'] else []) + \
-                 [(g['label'], g) for g in t['groups'] if g['teams']]
-        for glabel, g in groups:
-            full = f"{t['label']} / {glabel}".strip() if glabel else t['label']
-            coll_blocks.append((full, t['level'], g['teams']))
-
-    # plán
     new_clubs = []
     add_cnt = keep_cnt = 0
     out_rows = [STD_HEADER]
-    unmatched_blocks = []
-    downgrades = []
+    merged = []
 
     def club_for(name, note, level):
         nonlocal club_n
@@ -121,58 +162,74 @@ def main():
         existing[k] = (cid, name)
         return cid, True
 
-    # projdi kolegovy bloky v jeho pořadí; namapuj na náš node
-    comp_for_block = {}
-    for full, level, teams in coll_blocks:
-        bk = blockkey(full)
-        if bk in bk_map:
-            bn, nid, lvl = bk_map[bk]
-        else:
-            unmatched_blocks.append(full)
-            continue
-        out_rows.append(['H', bn, None, None, None, None, None, None, None, None,
-                         None, None, None, None, nid, lvl, None, None, None, None,
-                         None, None, None])
-        for tm in teams:
-            cid, isnew = club_for(tm['name'], tm['note'], lvl)
-            if isnew: add_cnt += 1
-            else: keep_cnt += 1
-            tm_hasstats = any(tm[c] is not None
-                              for c in ['GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS'])
-            if existing_hasstats.get(norm(tm['name'])) and not tm_hasstats:
-                downgrades.append(tm['name'])
-            tr_n += 1
-            fate = tm['status'] if tm['status'] else None
-            out_rows.append(['T', None, tm['rank'], tm['name'], tm['note'],
-                             tm['GP'], tm['W'], tm['D'], tm['L'], tm['GF'], ':',
-                             tm['GA'], tm['PTS'], bn, nid, lvl, cid, None, None,
-                             None, fate, f"TR_{season_id}_{tr_n:05d}", None])
+    def emit_H(label, nid, lvl):
+        out_rows.append(['H', label, None, None, None, None, None, None, None,
+                         None, None, None, None, None, nid, lvl, None, None, None,
+                         None, None, None, None])
 
-    print(f"== {kraj} ← {coll_sheet} ==")
-    print(f"  bloků kolega: {len(coll_blocks)}, namapováno: {len(coll_blocks)-len(unmatched_blocks)}")
-    if unmatched_blocks:
-        print(f"  !! NENAMAPOVANÉ bloky (chybí uzel): {unmatched_blocks}")
+    def emit_team(tm, label, nid, lvl):
+        nonlocal add_cnt, keep_cnt, tr_n
+        cid, isnew = club_for(tm['name'], tm['note'], lvl)
+        if isnew: add_cnt += 1
+        else: keep_cnt += 1
+        ex = existing_full.get(norm(tm['name']), {})
+        tm_has = any(tm[c] is not None for c in ['GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS'])
+        # MERGE: kolega bez čísel a my máme → ponech naše statistiky
+        if not tm_has and has_stats_dict(ex):
+            pos = tm['rank'] if tm['rank'] is not None else ex.get('pos')
+            GP, W, D, L = ex['GP'], ex['W'], ex['D'], ex['L']
+            GF, GA, PTS = ex['GF'], ex['GA'], ex['PTS']
+            merged.append(tm['name'])
+        else:
+            pos = tm['rank']
+            GP, W, D, L = tm['GP'], tm['W'], tm['D'], tm['L']
+            GF, GA, PTS = tm['GF'], tm['GA'], tm['PTS']
+        tr_n += 1
+        fate = tm['status'] if tm['status'] else None
+        out_rows.append(['T', None, pos, tm['name'], tm['note'], GP, W, D, L, GF,
+                         ':', GA, PTS, label, nid, lvl, cid, None, None, None,
+                         fate, f"TR_{season_id}_{tr_n:05d}", None])
+
+    # projdi kolegovy třídy v pořadí
+    for t in tridy:
+        cont_nid, cont_lvl = resolve_container(t['label'], t['level'])
+        has_direct = bool(t['_implicit']['teams'])
+        named = [g for g in t['groups'] if g['teams']]
+        if has_direct:
+            emit_H(t['label'], cont_nid, t['level'])
+            for tm in t['_implicit']['teams']:
+                emit_team(tm, t['label'], cont_nid, t['level'])
+        if named:
+            if not has_direct:
+                emit_H(t['label'], cont_nid, t['level'])   # holý kontejner
+            for g in named:
+                full = f"{t['label']} / {g['label']}"
+                gnid, glvl = resolve_group(full, cont_nid, t['level'])
+                emit_H(full, gnid, t['level'])
+                for tm in g['teams']:
+                    emit_team(tm, full, gnid, t['level'])
+
     # pojistka: naše týmy, které v kolegově podkladu nejsou → ztratily by se
     coll_names = set()
-    for full, level, teams in coll_blocks:
-        for tm in teams:
-            coll_names.add(norm(tm['name']))
+    for t in tridy:
+        for g in [t['_implicit']] + t['groups']:
+            for tm in g['teams']:
+                coll_names.add(norm(tm['name']))
     lost = [existing[k][1] for k in existing if k not in coll_names]
 
+    print(f"== {kraj} ← {coll_sheet} ==")
     print(f"  týmů celkem: {add_cnt+keep_cnt}  (zachováno {keep_cnt}, NOVÝCH {add_cnt})")
     print(f"  nové kluby: {[c[1] for c in new_clubs]}")
-    if downgrades:
-        print(f"  !! DOWNGRADE (kolega bez čísel, my máme): {downgrades}")
+    if new_sys:
+        print(f"  nové uzly: {[(s[1], s[3]) for s in new_sys]}")
+    if merged:
+        print(f"  merge (kolega bez čísel → naše čísla zachována): {merged}")
     if lost:
         print(f"  !! ZTRÁTA našich týmů (u kolegy nejsou): {lost}")
 
     if not do_write:
         print("\n(dry-run — přidej --write)")
         return
-    if unmatched_blocks:
-        print("\n!! Nepíšu — nejdřív domapovat bloky."); return
-    if downgrades:
-        print("\n!! Nepíšu — hrozí ztráta našich statistik. Vyřeš ručně."); return
     if lost:
         print("\n!! Nepíšu — naše týmy by zmizely. Vyřeš ručně."); return
 
@@ -183,6 +240,11 @@ def main():
     nws = wb.create_sheet(kraj, idx)
     for row in out_rows:
         nws.append(row)
+    # SYSTEM: nové uzly
+    for nid, name, ctype, level, parent in new_sys:
+        sys_ws.append([nid, name, ctype, level, region, parent, None, None,
+                       '2-1-0', None, 'Doplněno (kraj rebuild z kolegova podkladu).',
+                       None, None, None])
     # CLUBS
     cws = wb['CLUBS']
     for cid, name, note, level in new_clubs:
@@ -190,7 +252,8 @@ def main():
                     note, level, None, None,
                     'Doplněno z kolegova úplného podkladu (kraj rebuild).', None])
     wb.save(season_f)
-    print(f"\n✓ {season_f} přepsán list {kraj}; +{add_cnt} klubů (záloha {season_f}.bak)")
+    print(f"\n✓ {season_f} přepsán list {kraj}; +{add_cnt} klubů, +{len(new_sys)} uzlů "
+          f"(záloha {season_f}.bak)")
 
 
 if __name__ == '__main__':
