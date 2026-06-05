@@ -24,6 +24,25 @@ def norm(s):
     return s.lower()
 
 
+class XlsxSheet:
+    """Adaptér openpyxl listu na rozhraní xlrd (nrows/ncols/cell_value)."""
+    def __init__(self, ws):
+        self._rows = list(ws.iter_rows(values_only=True))
+        self.nrows = len(self._rows)
+        self.ncols = max((len(r) for r in self._rows), default=0)
+
+    def cell_value(self, r, c):
+        row = self._rows[r]
+        return row[c] if c < len(row) and row[c] is not None else ''
+
+
+def load_sheet(path, sheet):
+    if path.lower().endswith('.xlsx'):
+        wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+        return XlsxSheet(wb[sheet])
+    return xlrd.open_workbook(path).sheet_by_name(sheet)
+
+
 def blockkey(label):
     return re.sub(r'\s+', ' ', str(label)).strip().lower()
 
@@ -50,9 +69,13 @@ def main():
             blocks.append(blockkey(bn))
     # stávající kluby: norm name -> (club_id, club_name)
     existing = {}
+    existing_hasstats = {}
     for r in rows[1:]:
         if r[H['row_type']] == 'T':
-            existing[norm(r[H['club_name']])] = (r[H['club_id']], r[H['club_name']])
+            k = norm(r[H['club_name']])
+            existing[k] = (r[H['club_id']], r[H['club_name']])
+            existing_hasstats[k] = any(r[H[c]] is not None
+                                       for c in ['GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS'])
 
     # max ids v sezoně
     def maxid(prefix):
@@ -70,8 +93,7 @@ def main():
     tr_n = maxid(f'TR_{season_id}_')
 
     # parse kolega
-    rb = xlrd.open_workbook(coll_f)
-    tridy = parse_zupa(rb.sheet_by_name(coll_sheet))
+    tridy = parse_zupa(load_sheet(coll_f, coll_sheet))
     # kolega: full block label -> list teams
     coll_blocks = []   # (block_label, level, teams)
     for t in tridy:
@@ -86,6 +108,7 @@ def main():
     add_cnt = keep_cnt = 0
     out_rows = [STD_HEADER]
     unmatched_blocks = []
+    downgrades = []
 
     def club_for(name, note, level):
         nonlocal club_n
@@ -114,6 +137,10 @@ def main():
             cid, isnew = club_for(tm['name'], tm['note'], lvl)
             if isnew: add_cnt += 1
             else: keep_cnt += 1
+            tm_hasstats = any(tm[c] is not None
+                              for c in ['GP', 'W', 'D', 'L', 'GF', 'GA', 'PTS'])
+            if existing_hasstats.get(norm(tm['name'])) and not tm_hasstats:
+                downgrades.append(tm['name'])
             tr_n += 1
             fate = tm['status'] if tm['status'] else None
             out_rows.append(['T', None, tm['rank'], tm['name'], tm['note'],
@@ -125,14 +152,29 @@ def main():
     print(f"  bloků kolega: {len(coll_blocks)}, namapováno: {len(coll_blocks)-len(unmatched_blocks)}")
     if unmatched_blocks:
         print(f"  !! NENAMAPOVANÉ bloky (chybí uzel): {unmatched_blocks}")
+    # pojistka: naše týmy, které v kolegově podkladu nejsou → ztratily by se
+    coll_names = set()
+    for full, level, teams in coll_blocks:
+        for tm in teams:
+            coll_names.add(norm(tm['name']))
+    lost = [existing[k][1] for k in existing if k not in coll_names]
+
     print(f"  týmů celkem: {add_cnt+keep_cnt}  (zachováno {keep_cnt}, NOVÝCH {add_cnt})")
     print(f"  nové kluby: {[c[1] for c in new_clubs]}")
+    if downgrades:
+        print(f"  !! DOWNGRADE (kolega bez čísel, my máme): {downgrades}")
+    if lost:
+        print(f"  !! ZTRÁTA našich týmů (u kolegy nejsou): {lost}")
 
     if not do_write:
         print("\n(dry-run — přidej --write)")
         return
     if unmatched_blocks:
         print("\n!! Nepíšu — nejdřív domapovat bloky."); return
+    if downgrades:
+        print("\n!! Nepíšu — hrozí ztráta našich statistik. Vyřeš ručně."); return
+    if lost:
+        print("\n!! Nepíšu — naše týmy by zmizely. Vyřeš ručně."); return
 
     shutil.copy(season_f, season_f + '.bak')
     # přepiš list
