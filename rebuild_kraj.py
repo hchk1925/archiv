@@ -155,13 +155,19 @@ def additive_main(season_f, kraj, coll_f, coll_sheet, do_write):
     new_blocks = [bk for bk in pending if bk not in flushed]
     for bk in new_blocks:
         full, tlabel, level = binfo[bk]
+        # kontejner: nejdřív existující holý blok této třídy, pak úrovňový, pak mint
+        def cont_node():
+            if blockkey(tlabel) in block_meta:
+                return block_meta[blockkey(tlabel)][1]
+            if container_by_level.get(level):
+                return container_by_level[level]
+            nid = mint(f"{prefix} {tlabel}", 'league', level, None)
+            container_by_level[level] = nid
+            return nid
         if full == tlabel:                       # kontejnerová třída napřímo
-            nid = container_by_level.get(level) or mint(f"{prefix} {tlabel}", 'league', level, None)
-            container_by_level.setdefault(level, nid)
+            nid = cont_node()
         else:
-            cont = container_by_level.get(level) or mint(f"{prefix} {tlabel}", 'league', level, None)
-            container_by_level.setdefault(level, cont)
-            nid = mint(full, 'group', level, cont)
+            nid = mint(full, 'group', level, cont_node())
         out.append(['H', full, None, None, None, None, None, None, None, None,
                     None, None, None, None, nid, level, None, None, None, None,
                     None, None, None])

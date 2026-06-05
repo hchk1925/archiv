@@ -67,6 +67,8 @@ def num(v):
 def trida_level(c0):
     """Vrátí (level, label) pro řádek třídy, nebo None když to není třída."""
     low = c0.lower()
+    if 'oblastní soutěž' in low or low.strip() in ('oblastní soutěž', 'oblastní'):
+        return ('L20', c0)
     if not ('třída' in low or 'přebor' in low or 'mistrovství' in low):
         return None
     nodots = low.replace('.', '').replace(' ', '')
@@ -90,6 +92,8 @@ def trida_level(c0):
 def norm_trida_label(c0):
     """Sjednoť název třídy a vrať (label, extra_text)."""
     low = c0.lower()
+    if 'oblastní soutěž' in low:
+        return ('Oblastní soutěž', '')
     if 'přebor' in low:
         return ('Krajský přebor', '')
     if 'mistrovství' in low:
