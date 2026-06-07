@@ -13,20 +13,40 @@ Bere jen kraje (ne I.liga/kvalifikace o ligu). Týmy, které už v sezoně máme
 import sys, re, shutil
 import openpyxl
 
+# (klíčová slova v názvu listu) -> kandidátní kódy našich kraj-sheetů.
+# Pokrývá starou éru krajů 1949-1960 (PHAM/JHCK/...) i reformu 1960+
+# (PRAH/STRC/...). Z kandidátů se za běhu vybere ten, jehož sheet v sezoně
+# existuje, takže se mapování samo přizpůsobí éře.
 KRAJ_KW = [
-    ('PHAM', ('tyrš', 'praha')), ('JHCK', ('jihočesk',)), ('PLZN', ('plzeň',)),
-    ('KVRY', ('karlovar',)), ('USTE', ('ústeck',)), ('LIBE', ('libereck',)),
-    ('PARD', ('pardubick',)), ('HRAD', ('hradeck',)), ('JIHL', ('jihlavsk',)),
-    ('BRNO', ('brněnsk',)), ('GOTT', ('gottwaldov',)), ('OLOM', ('olomouck',)),
-    ('OSTR', ('ostravsk', 'slezsk')),
+    (('venkov',), ('PHAV', 'STRC')),
+    (('středočesk', 'středolab', 'kladn', 'kladen'), ('STRC', 'PHAV')),
+    (('tyrš', 'praha', 'pražsk'), ('PHAM', 'PRAH')),
+    (('jihočesk',), ('JHCK',)),
+    (('plzeň', 'západočesk', 'šumav'), ('PLZN', 'ZAPC')),
+    (('karlovar',), ('KVRY',)),
+    (('ústeck', 'severočesk', 'severozápadočesk'), ('USTE', 'SVRC')),
+    (('libereck',), ('LIBE',)),
+    (('pardubick', 'východočesk', 'středolab'), ('PARD', 'VYCH')),
+    (('hradeck', 'královéhradeck'), ('HRAD',)),
+    (('jihlavsk',), ('JIHL',)),
+    (('brněnsk', 'jihomorav'), ('BRNO', 'JHMR')),
+    (('gottwaldov',), ('GOTT',)),
+    (('olomouck',), ('OLOM',)),
+    (('ostravsk', 'slezsk', 'severomorav'), ('OSTR', 'SVMR')),
 ]
-def kraj_code(lst):
-    s = str(lst or '').lower()
-    for code, kws in KRAJ_KW:
-        if any(k in s for k in kws):
-            return code
-    return None
 SKIP_LIST = {'I.liga', 'kvalifikace o ligu', 'SVK'}
+
+def kraj_sheet(lst, sheetnames):
+    """Vrať (sheet_name, okr_level) pro daný list, nebo (None, None)."""
+    s = str(lst or '').lower()
+    krsheets = [sn for sn in sheetnames if sn[:2].isdigit()]
+    for kws, codes in KRAJ_KW:
+        if any(k in s for k in kws):
+            for code in codes:
+                sn = next((x for x in krsheets if x[2:] == code), None)
+                if sn:
+                    return sn, f"L{int(sn[:2]) + 10}"
+    return None, None
 
 STD_HEADER = ['row_type','block_name','pos','club_name','note','GP','W','D','L',
               'GF',':','GA','PTS','comp_path','node_id','level','club_id',
@@ -106,7 +126,7 @@ def main():
     groups = OrderedDict()
     for r in crows[1:]:
         lst = str(cc(r, 'List (oblast)') or '').strip()
-        if lst in SKIP_LIST or kraj_code(lst) is None:
+        if lst in SKIP_LIST or kraj_sheet(lst, wb.sheetnames)[0] is None:
             continue
         sou = str(cc(r, 'Soutěž') or '').strip()
         # přeskoč soutěže, které už v sezoně modelujeme (KP, kvalifikace) —
@@ -129,9 +149,7 @@ def main():
         return nid
 
     for (lst, sou, sk), rws in groups.items():
-        code_suffix = kraj_code(lst)
-        sheet = next((s for s in wb.sheetnames if s.endswith(code_suffix)
-                      and re.match(r'\d', s)), None)
+        sheet, okr = kraj_sheet(lst, wb.sheetnames)
         if not sheet:
             continue
         # jen kluby, které ještě nemáme
@@ -140,19 +158,19 @@ def main():
             continue
         reg, parent = kraj_region_parent(sheet)
         label = f"{sou} / {sk}" if sk else sou
-        node = mint(f"{lst} – {label}", 'L30', parent, reg)
+        node = mint(f"{lst} – {label}", okr, parent, reg)
         out = [['H', label, None, None, None, None, None, None, None, None, None,
-                None, None, None, node, 'L30', None, None, None, None, None, None, None]]
+                None, None, None, node, okr, None, None, None, None, None, None, None]]
         for r in todo:
             nm = str(cc(r, 'Klub')).strip()
             pori = cc(r, 'Pořadí')
             flag = cc(r, 'Příznak []') or cc(r, 'Anotace ()')
             note = flag if str(flag) in ('N', 'S', 'M') else None
             club_n += 1; cid = f"CLUB_{season_id}_{club_n:04d}"
-            new_clubs.append((cid, nm, note, sheet))
+            new_clubs.append((cid, nm, note, sheet, okr))
             tr_n += 1
             out.append(['T', None, pori, nm, note, None, None, None, None, None,
-                        ':', None, None, label, node, 'L30', cid, None, None, None,
+                        ':', None, None, label, node, okr, cid, None, None, None,
                         None, f"TR_{season_id}_{tr_n:05d}", None])
             have.add(norm(nm))
         sheet_adds.setdefault(sheet, []).extend(out)
@@ -183,9 +201,9 @@ def main():
                        None, 'Okresní soutěž – základ úplnosti z clbs (jen názvy).',
                        None, None, None])
     cws = wb['CLUBS']
-    for cid, name, note, sheet in new_clubs:
+    for cid, name, note, sheet, level in new_clubs:
         cws.append([cid, re.sub(r'\s*[\(\[](N|S|M)[\)\]]\s*$', '', name).strip(),
-                    name, sheet, note, 'L30', None, None,
+                    name, sheet, note, level, None, None,
                     'Okresní soutěž – základ úplnosti z clbs (jen názvy, bez statistik).',
                     None])
     wb.save(season_f)
