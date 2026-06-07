@@ -23,12 +23,12 @@ KRAJ_KW = [
     (('tyrš', 'praha', 'pražsk'), ('PHAM', 'PRAH')),
     (('jihočesk',), ('JHCK',)),
     (('plzeň', 'západočesk', 'šumav'), ('PLZN', 'ZAPC')),
-    (('karlovar',), ('KVRY',)),
+    (('karlovar',), ('KVRY', 'ZAPC')),
     (('ústeck', 'severočesk', 'severozápadočesk'), ('USTE', 'SVRC')),
-    (('libereck',), ('LIBE',)),
+    (('libereck',), ('LIBE', 'SVRC')),
     (('pardubick', 'východočesk', 'středolab'), ('PARD', 'VYCH')),
-    (('hradeck', 'královéhradeck'), ('HRAD',)),
-    (('vysočin',), ('VYSO', 'JIHL')),
+    (('hradeck', 'královéhradeck'), ('HRAD', 'VYCH')),
+    (('vysočin',), ('VYSO', 'JHMR', 'VYCH', 'JIHL')),
     (('jihlavsk',), ('JIHL', 'VYSO')),
     (('brněnsk', 'jihomorav'), ('BRNO', 'JHMR')),
     (('gottwaldov',), ('GOTT',)),
@@ -201,12 +201,19 @@ def main():
         sys_ws.append([nid, name, ctype, level, region, parent, None, None, None,
                        None, 'Okresní soutěž – základ úplnosti z clbs (jen názvy).',
                        None, None, None])
+    # CLUBS – pořadí sloupců se mezi érami liší (stará vs moderní hlavička),
+    # proto mapujeme podle NÁZVŮ sloupců, ne pozičně.
     cws = wb['CLUBS']
+    chdr = [str(c.value) for c in next(cws.iter_rows())]
+    ci = {name: i for i, name in enumerate(chdr)}
+    desc = 'Okresní soutěž – základ úplnosti z clbs (jen názvy, bez statistik).'
     for cid, name, note, sheet, level in new_clubs:
-        cws.append([cid, re.sub(r'\s*[\(\[](N|S|M)[\)\]]\s*$', '', name).strip(),
-                    name, sheet, note, level, None, None,
-                    'Okresní soutěž – základ úplnosti z clbs (jen názvy, bez statistik).',
-                    None])
+        clean = re.sub(r'\s*[\(\[](N|S|M)[\)\]]\s*$', '', name).strip()
+        vals = {'club_id': cid, 'raw_name': name, 'clean_name': clean,
+                'sheet': sheet, 'entry_note': note, 'level': level,
+                'district': None, 'prev_club_id': None, 'change_note': desc,
+                'city': None}
+        cws.append([vals.get(col) for col in chdr])
     wb.save(season_f)
     print(f"\n✓ {season_f}: +{total} klubů, +{len(new_sys)} uzlů (záloha {season_f}.bak)")
 
