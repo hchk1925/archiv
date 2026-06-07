@@ -13,13 +13,19 @@ Bere jen kraje (ne I.liga/kvalifikace o ligu). Týmy, které už v sezoně máme
 import sys, re, shutil
 import openpyxl
 
-KRAJ_CODE = {
-    'Praha Tyršův kraj': 'PHAM', 'Jihočeský': 'JHCK', 'Plzeňský': 'PLZN',
-    'Karlovarský': 'KVRY', 'Ústecký': 'USTE', 'Liberecký': 'LIBE',
-    'Pardubický': 'PARD', 'Královéhradecký': 'HRAD', 'Jihlavský': 'JIHL',
-    'Brněnský': 'BRNO', 'Gottwaldovský': 'GOTT', 'Olomoucký': 'OLOM',
-    'Ostravský': 'OSTR', 'Slezský': 'OSTR',
-}
+KRAJ_KW = [
+    ('PHAM', ('tyrš', 'praha')), ('JHCK', ('jihočesk',)), ('PLZN', ('plzeň',)),
+    ('KVRY', ('karlovar',)), ('USTE', ('ústeck',)), ('LIBE', ('libereck',)),
+    ('PARD', ('pardubick',)), ('HRAD', ('hradeck',)), ('JIHL', ('jihlavsk',)),
+    ('BRNO', ('brněnsk',)), ('GOTT', ('gottwaldov',)), ('OLOM', ('olomouck',)),
+    ('OSTR', ('ostravsk', 'slezsk')),
+]
+def kraj_code(lst):
+    s = str(lst or '').lower()
+    for code, kws in KRAJ_KW:
+        if any(k in s for k in kws):
+            return code
+    return None
 SKIP_LIST = {'I.liga', 'kvalifikace o ligu', 'SVK'}
 
 STD_HEADER = ['row_type','block_name','pos','club_name','note','GP','W','D','L',
@@ -100,13 +106,13 @@ def main():
     groups = OrderedDict()
     for r in crows[1:]:
         lst = str(cc(r, 'List (oblast)') or '').strip()
-        if lst in SKIP_LIST or lst not in KRAJ_CODE:
+        if lst in SKIP_LIST or kraj_code(lst) is None:
             continue
         sou = str(cc(r, 'Soutěž') or '').strip()
         # přeskoč soutěže, které už v sezoně modelujeme (KP, kvalifikace) —
         # pár nenamatchovaných jmen jsou varianty, nechceme duplicitní uzly
         sl = sou.lower()
-        if 'krajský přebor' in sl or 'kvalifik' in sl:
+        if 'krajský přebor' in sl or 'kvalifik' in sl or 'postup' in sl:
             continue
         sk = cc(r, 'Skupina/část')
         sk = str(sk).strip() if sk is not None else ''
@@ -123,7 +129,7 @@ def main():
         return nid
 
     for (lst, sou, sk), rws in groups.items():
-        code_suffix = KRAJ_CODE[lst]
+        code_suffix = kraj_code(lst)
         sheet = next((s for s in wb.sheetnames if s.endswith(code_suffix)
                       and re.match(r'\d', s)), None)
         if not sheet:
