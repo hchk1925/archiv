@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""
+clbs_completeness.py — doplní CHYBĚJÍCÍ kluby nižších (okresních) soutěží do
+per-sezónního xlsx z kolegova indexu 'clbs' (jen názvy + pořadí + příznak N/M/S,
+BEZ statistik). Záměr: základ úplnosti k pozdějšímu ručnímu doladění.
+
+Použití:
+    python3 clbs_completeness.py <sezona.xlsx> <kolega.xlsx> [--write]
+
+Bere jen kraje (ne I.liga/kvalifikace o ligu). Týmy, které už v sezoně máme
+(dle jména), nepřidává. Nové okresní soutěže zakládá jako uzly L30.
+"""
+import sys, re, shutil
+import openpyxl
+
+KRAJ_CODE = {
+    'Praha Tyršův kraj': 'PHAM', 'Jihočeský': 'JHCK', 'Plzeňský': 'PLZN',
+    'Karlovarský': 'KVRY', 'Ústecký': 'USTE', 'Liberecký': 'LIBE',
+    'Pardubický': 'PARD', 'Královéhradecký': 'HRAD', 'Jihlavský': 'JIHL',
+    'Brněnský': 'BRNO', 'Gottwaldovský': 'GOTT', 'Olomoucký': 'OLOM',
+    'Ostravský': 'OSTR', 'Slezský': 'OSTR',
+}
+SKIP_LIST = {'I.liga', 'kvalifikace o ligu', 'SVK'}
+
+STD_HEADER = ['row_type','block_name','pos','club_name','note','GP','W','D','L',
+              'GF',':','GA','PTS','comp_path','node_id','level','club_id',
+              'prev_club_id','dest_node_id','dest_type','season_fate','tr_id','district']
+
+
+def norm(s):
+    s = re.sub(r'\s+', ' ', str(s or '')).strip()
+    s = re.sub(r'\s*[\(\[](N|S|M)[\)\]]\s*$', '', s)
+    return s.lower()
+
+
+def main():
+    if len(sys.argv) < 3:
+        print(__doc__); sys.exit(1)
+    season_f, coll_f = sys.argv[1], sys.argv[2]
+    do_write = '--write' in sys.argv
+
+    cwb = openpyxl.load_workbook(coll_f, read_only=True, data_only=True)
+    if 'clbs' not in cwb.sheetnames:
+        print("!! kolega nemá list 'clbs'"); sys.exit(1)
+    crows = list(cwb['clbs'].iter_rows(values_only=True))
+    ch = {str(v): i for i, v in enumerate(crows[0])}
+    def cc(r, name):
+        return r[ch[name]] if name in ch else None
+    cwb.close()
+
+    wb = openpyxl.load_workbook(season_f)
+    season_id = re.search(r'S(\d{4}_\d{2})', season_f).group(0)
+
+    # všechny existující názvy klubů v sezoně (dedup)
+    have = set()
+    for sn in wb.sheetnames:
+        rows = list(wb[sn].iter_rows(values_only=True))
+        if not rows:
+            continue
+        h = {str(v): i for i, v in enumerate(rows[0])}
+        if 'club_name' not in h:
+            continue
+        for r in rows[1:]:
+            if r and r[h.get('row_type', 0)] == 'T' and r[h['club_name']]:
+                have.add(norm(r[h['club_name']]))
+
+    def maxid(prefix):
+        mx = 0
+        for sn in wb.sheetnames:
+            for row in wb[sn].iter_rows(values_only=True):
+                for v in row:
+                    if isinstance(v, str):
+                        for g in re.findall(prefix + r'(\d+)', v):
+                            mx = max(mx, int(g))
+        return mx
+    club_n = maxid(f'CLUB_{season_id}_'); tr_n = maxid(f'TR_{season_id}_')
+    node_n = maxid(f'NODE_{season_id}_')
+
+    sys_ws = wb['SYSTEM']
+    SH = {str(v): i for i, v in enumerate(next(sys_ws.iter_rows(values_only=True)))}
+    # region/kontejner per kraj sheet
+    def kraj_region_parent(sheet_code):
+        # najdi krajský kontejner v SYSTEM přes region z existujícího bloku listu
+        rows = list(wb[sheet_code].iter_rows(values_only=True))
+        h = {str(v): i for i, v in enumerate(rows[0])}
+        nid = None
+        for r in rows[1:]:
+            if r[h['row_type']] == 'H':
+                nid = r[h['node_id']]; break
+        reg = None; parent = None
+        for sr in sys_ws.iter_rows(values_only=True):
+            if sr[SH['node_id']] == nid:
+                reg = sr[SH['region']]
+                parent = sr[SH['parent_node_id']] or nid
+                break
+        return reg, parent
+
+    # seskup clbs řádky podle (List, Soutěž, Skupina) — jen kraje
+    from collections import OrderedDict
+    groups = OrderedDict()
+    for r in crows[1:]:
+        lst = str(cc(r, 'List (oblast)') or '').strip()
+        if lst in SKIP_LIST or lst not in KRAJ_CODE:
+            continue
+        sou = str(cc(r, 'Soutěž') or '').strip()
+        # přeskoč soutěže, které už v sezoně modelujeme (KP, kvalifikace) —
+        # pár nenamatchovaných jmen jsou varianty, nechceme duplicitní uzly
+        sl = sou.lower()
+        if 'krajský přebor' in sl or 'kvalifik' in sl:
+            continue
+        sk = cc(r, 'Skupina/část')
+        sk = str(sk).strip() if sk is not None else ''
+        groups.setdefault((lst, sou, sk), []).append(r)
+
+    new_clubs = []; new_sys = []
+    sheet_adds = {}  # sheet_code -> list of out-rows to append
+    report = []
+
+    def mint(name, level, parent, region):
+        nonlocal node_n
+        node_n += 1; nid = f"NODE_{season_id}_{node_n:04d}"
+        new_sys.append((nid, name, 'league', level, region, parent))
+        return nid
+
+    for (lst, sou, sk), rws in groups.items():
+        code_suffix = KRAJ_CODE[lst]
+        sheet = next((s for s in wb.sheetnames if s.endswith(code_suffix)
+                      and re.match(r'\d', s)), None)
+        if not sheet:
+            continue
+        # jen kluby, které ještě nemáme
+        todo = [r for r in rws if norm(cc(r, 'Klub')) not in have]
+        if not todo:
+            continue
+        reg, parent = kraj_region_parent(sheet)
+        label = f"{sou} / {sk}" if sk else sou
+        node = mint(f"{lst} – {label}", 'L30', parent, reg)
+        out = [['H', label, None, None, None, None, None, None, None, None, None,
+                None, None, None, node, 'L30', None, None, None, None, None, None, None]]
+        for r in todo:
+            nm = str(cc(r, 'Klub')).strip()
+            pori = cc(r, 'Pořadí')
+            flag = cc(r, 'Příznak []') or cc(r, 'Anotace ()')
+            note = flag if str(flag) in ('N', 'S', 'M') else None
+            club_n += 1; cid = f"CLUB_{season_id}_{club_n:04d}"
+            new_clubs.append((cid, nm, note, sheet))
+            tr_n += 1
+            out.append(['T', None, pori, nm, note, None, None, None, None, None,
+                        ':', None, None, label, node, 'L30', cid, None, None, None,
+                        None, f"TR_{season_id}_{tr_n:05d}", None])
+            have.add(norm(nm))
+        sheet_adds.setdefault(sheet, []).extend(out)
+        report.append((sheet, label, len(todo)))
+
+    # report
+    bys = {}
+    for sheet, label, n in report:
+        bys.setdefault(sheet, []).append((label, n))
+    total = sum(n for _, _, n in report)
+    print(f"== {season_id}: doplnění okresních klubů z clbs (jen názvy) ==")
+    for sheet in sorted(bys):
+        print(f"  {sheet}: +{sum(n for _,n in bys[sheet])} klubů")
+        for label, n in bys[sheet]:
+            print(f"      {label}: {n}")
+    print(f"  CELKEM +{total} klubů, +{len(new_sys)} uzlů")
+
+    if not do_write:
+        print("\n(dry-run — přidej --write)"); return
+
+    shutil.copy(season_f, season_f + '.bak')
+    for sheet, out in sheet_adds.items():
+        ws = wb[sheet]
+        for row in out:
+            ws.append(row)
+    for nid, name, ctype, level, region, parent in new_sys:
+        sys_ws.append([nid, name, ctype, level, region, parent, None, None, None,
+                       None, 'Okresní soutěž – základ úplnosti z clbs (jen názvy).',
+                       None, None, None])
+    cws = wb['CLUBS']
+    for cid, name, note, sheet in new_clubs:
+        cws.append([cid, re.sub(r'\s*[\(\[](N|S|M)[\)\]]\s*$', '', name).strip(),
+                    name, sheet, note, 'L30', None, None,
+                    'Okresní soutěž – základ úplnosti z clbs (jen názvy, bez statistik).',
+                    None])
+    wb.save(season_f)
+    print(f"\n✓ {season_f}: +{total} klubů, +{len(new_sys)} uzlů (záloha {season_f}.bak)")
+
+
+if __name__ == '__main__':
+    main()
