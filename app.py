@@ -441,7 +441,8 @@ def season(sid):
                  + '</a>')
     body = (f'<h2>Sezóna {esc(d["label"])} '
             f'<a href="/s/{sid}/edit/clubs" class=edit-link>✎ editovat</a>{audit_btn}'
-            f'<a href="/s/{sid}/audit.pdf" class=print-link>🖶 PDF</a></h2>'
+            f'<a href="/s/{sid}/full.pdf" class=print-link>🖶 PDF plný</a>'
+            f'<a href="/s/{sid}/audit.pdf" class=print-link>🖶 PDF audit</a></h2>'
             f'<div class=nav-prev-next>{prev_a}<a href="/">přehled</a>{next_a}</div>')
     # pyramida (top-level)
     body += '<h3>Pyramida soutěží</h3><table>'
@@ -963,6 +964,117 @@ def build_season_pdf(d, sid):
     return buf.getvalue()
 
 
+def audit_notes_by_node(d):
+    """node_id -> [čisté audit komentáře 'co chybí']."""
+    by = defaultdict(list)
+    for nt in d['notes']:
+        txt = nt['note_text']
+        if nt['node_id'] and (nt['source_type'] == 'TODO-auto'
+                              or str(txt).startswith('[TBD]')):
+            by[nt['node_id']].append(clean_popis(txt))
+    return by
+
+
+def build_full_pdf(d, sid):
+    """Plná sezóna: pyramida + všechny tabulky + komentáře a zaškrtávátka."""
+    import io
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.units import mm
+    from reportlab.platypus import (SimpleDocTemplate, Table, TableStyle,
+                                    Paragraph, Spacer, KeepTogether)
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    _ensure_font()
+    ss = getSampleStyleSheet()
+    H1 = ParagraphStyle('H1', parent=ss['Title'], fontName=PDF_FONT_BOLD, fontSize=16)
+    H2 = ParagraphStyle('H2', parent=ss['Heading2'], fontName=PDF_FONT_BOLD, fontSize=12,
+                        spaceBefore=10, spaceAfter=3, textColor=colors.HexColor('#1a3050'))
+    H3 = ParagraphStyle('H3', parent=ss['Heading3'], fontName=PDF_FONT_BOLD, fontSize=10,
+                        spaceBefore=6, spaceAfter=1)
+    P = ParagraphStyle('P', parent=ss['Normal'], fontName=PDF_FONT, fontSize=9, leading=11)
+    Pm = ParagraphStyle('Pm', parent=P, textColor=colors.HexColor('#666'), fontSize=8)
+    box = ParagraphStyle('box', parent=P, fontName=PDF_FONT,
+                         backColor=colors.HexColor('#fff3df'), borderPadding=3,
+                         borderColor=colors.HexColor('#d97706'), borderWidth=0.5,
+                         leftIndent=2, spaceBefore=1, spaceAfter=1)
+    anotes = audit_notes_by_node(d)
+    nodes = {n['node_id']: n for n in d['system']}
+    checks = '☐ OK  ☐ doplnit týmy  ☐ sloučit  ☐ smazat  ☐ opravit  ☐ neúplné→Todo  ____________'
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=14 * mm, rightMargin=14 * mm,
+                            topMargin=13 * mm, bottomMargin=11 * mm,
+                            title=f'Almanach {d["label"]}')
+    n_gap = sum(len(v) for v in anotes.values())
+    el = [Paragraph(f'Almanach — sezóna {esc(d["label"])}', H1),
+          Paragraph(f'Plný přehled k revizi · {len(d["system"])} soutěží · '
+                    f'{n_gap} míst s poznámkou „co chybí"', Pm), Spacer(1, 5)]
+
+    def mk_table(rows, head, widths, aligns_right_from=2):
+        data = [head]
+        data += rows
+        tb = Table(data, colWidths=widths, repeatRows=1)
+        tb.setStyle(TableStyle([
+            ('FONT', (0, 0), (-1, -1), PDF_FONT, 8),
+            ('FONT', (0, 0), (-1, 0), PDF_FONT_BOLD, 8),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#eef2f7')),
+            ('GRID', (0, 0), (-1, -1), 0.4, colors.HexColor('#cccccc')),
+            ('ALIGN', (aligns_right_from, 0), (-1, -1), 'RIGHT'),
+            ('TOPPADDING', (0, 0), (-1, -1), 1.5),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 1.5)]))
+        return tb
+
+    # pyramida
+    top = sorted([x for x in d['system'] if not x['parent_node_id']],
+                 key=lambda x: (str(x['level']), x['node_id']))
+    if top:
+        el.append(Paragraph('Pyramida soutěží', H2))
+        rows = [[esc(n['name']), esc(n['competition_type']), esc(n['level']),
+                 esc(n['feeds_into'] or '')] for n in top]
+        el.append(mk_table(rows, ['Soutěž', 'Typ', 'Úroveň', 'feeds_into'],
+                           [78 * mm, 34 * mm, 20 * mm, 50 * mm], aligns_right_from=99))
+
+    # tabulky po listech
+    for sh in sorted(d['standings'].keys()):
+        trows = [r for r in d['standings'][sh] if r['row_type'] == 'T']
+        if not trows: continue
+        el.append(Paragraph(esc(sh), H2))
+        # seskup po node_id v pořadí výskytu
+        order, groups = [], defaultdict(list)
+        for r in trows:
+            nid = r['node_id']
+            if nid not in groups: order.append(nid)
+            groups[nid].append(r)
+        for nid in order:
+            nn = nodes.get(nid)
+            nm = nn['name'] if nn else (nid or '')
+            block = [Paragraph(esc(nm), H3)]
+            for c in anotes.get(nid, []):
+                block.append(Paragraph('⚑ ' + esc(c), box))
+            rows = [[r['pos'] or '', esc(r['club_name'] or ''),
+                     r['GP'] or '', r['W'] or '', r['D'] or '', r['L'] or '',
+                     f'{r["GF"] or ""}:{r["GA"] or ""}', r['PTS'] or '',
+                     esc(r['season_fate'] or '')] for r in groups[nid]]
+            block.append(mk_table(
+                rows, ['#', 'Klub', 'GP', 'W', 'D', 'L', 'GF:GA', 'PTS', 'Fate'],
+                [7 * mm, 62 * mm, 10 * mm, 8 * mm, 8 * mm, 8 * mm, 16 * mm, 10 * mm, 22 * mm]))
+            if anotes.get(nid):
+                block.append(Paragraph(checks, P))
+            block.append(Spacer(1, 4))
+            el.append(KeepTogether(block))
+    doc.build(el)
+    return buf.getvalue()
+
+
+@app.route('/s/<sid>/full.pdf')
+def full_pdf(sid):
+    if sid not in CACHE or not CACHE[sid]: abort(404)
+    from flask import Response
+    pdf = build_full_pdf(CACHE[sid], sid)
+    return Response(pdf, mimetype='application/pdf',
+                    headers={'Content-Disposition':
+                             f'inline; filename=almanach_{sid}.pdf'})
+
+
 @app.route('/s/<sid>/audit.pdf')
 def audit_pdf(sid):
     if sid not in CACHE or not CACHE[sid]: abort(404)
@@ -996,10 +1108,11 @@ def cli_pdf(arg):
     for sid in seasons:
         d = CACHE.get(sid)
         if not d: continue
-        p = os.path.join(outdir, f'audit_S{sid}.pdf')
-        with open(p, 'wb') as f:
+        with open(os.path.join(outdir, f'almanach_S{sid}.pdf'), 'wb') as f:
+            f.write(build_full_pdf(d, sid))
+        with open(os.path.join(outdir, f'audit_S{sid}.pdf'), 'wb') as f:
             f.write(build_season_pdf(d, sid))
-    print(f"PDF: {len(seasons)} souborů → {outdir}/")
+    print(f"PDF: {len(seasons)} sezón (plný + audit) → {outdir}/")
 
 
 def cli_html(arg):
@@ -1008,10 +1121,13 @@ def cli_html(arg):
     c = app.test_client()
     seasons = _seasons_arg(arg)
     for sid in seasons:
-        html = c.get(f'/s/{sid}/audit').get_data(as_text=True)
+        full = c.get(f'/s/{sid}').get_data(as_text=True)
+        with open(os.path.join(outdir, f'sezona_S{sid}.html'), 'w') as f:
+            f.write(full)
+        au = c.get(f'/s/{sid}/audit').get_data(as_text=True)
         with open(os.path.join(outdir, f'audit_S{sid}.html'), 'w') as f:
-            f.write(html)
-    print(f"HTML: {len(seasons)} souborů → {outdir}/")
+            f.write(au)
+    print(f"HTML: {len(seasons)} sezón (plný + audit) → {outdir}/")
 
 
 def cli_xlsx(arg):
