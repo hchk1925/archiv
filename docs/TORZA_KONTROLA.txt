@@ -11,6 +11,7 @@ JAK NA TO:
 
 VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
            C) SLOUČIT s jiným uzlem  D) SMAZAT  E) OPRAVIT level/region/název
+           F) NEÚPLNÉ – data nejsou, nech co je a zapiš gap do Todo.xlsx
 ================================================================================
 
 ################################################################################
@@ -23,7 +24,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Soutěž má v tabulce jen dva celky – SK Osov a Sparta Podluhy. Na skupinu
     hranou každý s každým je to málo a působí to, jako by se nedopsal zbytek
     tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul nebo o baráž,
-    můžou být dva účastníci v pořádku a stačí to potvrdit. Úroveň je třetí
+    můžou být dva účastníci v pořádku a stačí to potvrdit. Hraje se na třetí
     úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída)
     (Středočesko).
 
@@ -32,6 +33,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -47,14 +49,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře
-    I. třída) (Středočesko).
+    Hraje se na třetí úroveň (divize / II. ČNHL / župní mistrovství, ve
+    starší éře I. třída) (Středočesko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0045]
@@ -65,13 +68,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Středočesko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Středočesko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0065]
@@ -82,13 +86,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Středočesko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Středočesko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0101]
@@ -98,7 +103,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Chotěboř. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (východní Čechy).
 
   ( ) A) OK – legitimní fáze
@@ -106,6 +111,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0124]
@@ -115,7 +121,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Žabčice. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (jihozápadní Morava).
 
   ( ) A) OK – legitimní fáze
@@ -123,6 +129,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0125]
@@ -133,7 +140,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -141,6 +148,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0126]
@@ -151,7 +159,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -159,6 +167,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0127]
@@ -169,7 +178,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -177,6 +186,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1948_49 / NODE_S1948_49_0128]
@@ -187,7 +197,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -195,6 +205,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -209,15 +220,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída)
-    (Plzeňsko).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (Plzeňsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1949_50 / NODE_S1949_50_0177]
@@ -227,15 +238,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída)
-    (Brněnsko).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (Brněnsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1949_50 / NODE_S1949_50_0233]
@@ -246,13 +257,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Plzeňsko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Plzeňsko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1949_50 / NODE_S1949_50_0234]
@@ -263,13 +275,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Ústecko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Ústecko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -285,14 +298,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství,
-    ve starší éře I. třída) (Praha).
+    opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída) (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0042]
@@ -303,14 +317,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře
-    I. třída) (Praha).
+    Hraje se na třetí úroveň (divize / II. ČNHL / župní mistrovství, ve
+    starší éře I. třída) (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0043]
@@ -321,14 +336,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře
-    I. třída) (Praha).
+    Hraje se na třetí úroveň (divize / II. ČNHL / župní mistrovství, ve
+    starší éře I. třída) (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0044]
@@ -338,14 +354,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň (divize / II.
-    ČNHL / župní mistrovství, ve starší éře I. třída) (Praha).
+    druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída) (Praha).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0192]
@@ -356,14 +373,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře
-    I. třída).
+    Hraje se na třetí úroveň (divize / II. ČNHL / župní mistrovství, ve
+    starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0193]
@@ -374,14 +392,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství,
-    ve starší éře I. třída).
+    opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0106]
@@ -391,7 +410,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Karlovy Vary. Na skupinu hranou každý s každým je to málo a působí to,
     jako by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný
     dvojzápas o titul nebo o baráž, můžou být dva účastníci v pořádku a
-    stačí to potvrdit. Úroveň je krajský přebor, ve starší éře župní II.
+    stačí to potvrdit. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -399,6 +418,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0190]
@@ -409,13 +429,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1950_51 / NODE_S1950_51_0194]
@@ -426,13 +447,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o III. třída / krajská soutěž.
+    Hraje se na III. třída / krajská soutěž.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -448,13 +470,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o druhá úroveň (1. liga/divize).
+    opravdu měla. Hraje se na druhá úroveň (1. liga/divize).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1952_53 / NODE_S1952_53_0054]
@@ -465,13 +488,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o druhá úroveň (1. liga/divize).
+    opravdu měla. Hraje se na druhá úroveň (1. liga/divize).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1952_53 / NODE_S1952_53_0058]
@@ -482,13 +506,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o druhá úroveň (1. liga/divize).
+    Hraje se na druhá úroveň (1. liga/divize).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -503,14 +528,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0127]
@@ -520,15 +546,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída)
-    (Brněnsko).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (Brněnsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0155]
@@ -539,7 +565,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -547,6 +573,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0156]
@@ -557,14 +584,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře
-    I. třída).
+    Hraje se na třetí úroveň (divize / II. ČNHL / župní mistrovství, ve
+    starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0157]
@@ -575,7 +603,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -583,6 +611,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0158]
@@ -593,7 +622,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -601,6 +630,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0160]
@@ -611,7 +641,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -619,6 +649,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1953_54 / NODE_S1953_54_0078]
@@ -628,14 +659,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (Plzeňsko).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (Plzeňsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -651,7 +683,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -659,6 +691,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1954_55 / NODE_S1954_55_0158]
@@ -669,7 +702,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -677,6 +710,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1954_55 / NODE_S1954_55_0159]
@@ -687,14 +721,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství, ve starší éře
-    I. třída).
+    Hraje se na třetí úroveň (divize / II. ČNHL / župní mistrovství, ve
+    starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1954_55 / NODE_S1954_55_0160]
@@ -705,7 +740,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
@@ -713,6 +748,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1954_55 / NODE_S1954_55_0161]
@@ -723,14 +759,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství,
-    ve starší éře I. třída).
+    opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1954_55 / NODE_S1954_55_0167]
@@ -741,14 +778,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství,
-    ve starší éře I. třída).
+    opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1954_55 / NODE_S1954_55_0180]
@@ -758,7 +796,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Polanka. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Ostravsko).
 
   ( ) A) OK – legitimní fáze
@@ -766,6 +804,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -780,14 +819,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (Brněnsko).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (Brněnsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1955_56 / NODE_S1955_56_0133]
@@ -798,7 +838,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -806,6 +846,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1955_56 / NODE_S1955_56_0134]
@@ -816,7 +857,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -824,6 +865,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1955_56 / NODE_S1955_56_0135]
@@ -834,13 +876,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1955_56 / NODE_S1955_56_0136]
@@ -851,13 +894,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1955_56 / NODE_S1955_56_0137]
@@ -868,7 +912,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -876,6 +920,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1955_56 / NODE_S1955_56_0145]
@@ -886,13 +931,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -907,14 +953,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0135]
@@ -925,7 +972,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -933,6 +980,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0136]
@@ -943,13 +991,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0137]
@@ -960,13 +1009,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0138]
@@ -977,13 +1027,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0139]
@@ -994,13 +1045,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0145]
@@ -1011,13 +1063,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1956_57 / NODE_S1956_57_0160]
@@ -1028,13 +1081,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o III. třída / krajská soutěž (Ostravsko).
+    opravdu měla. Hraje se na III. třída / krajská soutěž (Ostravsko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1050,7 +1104,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -1058,6 +1112,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1957_58 / NODE_S1957_58_0142]
@@ -1068,13 +1123,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1957_58 / NODE_S1957_58_0143]
@@ -1085,13 +1141,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1957_58 / NODE_S1957_58_0144]
@@ -1102,13 +1159,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1957_58 / NODE_S1957_58_0145]
@@ -1119,13 +1177,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1957_58 / NODE_S1957_58_0152]
@@ -1136,13 +1195,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1957_58 / NODE_S1957_58_0157]
@@ -1152,13 +1212,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Smichov SWP B. Na skupinu hranou každý s každým je to málo a působí to,
     jako by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný
     dvojzápas o titul nebo o baráž, můžou být dva účastníci v pořádku a
-    stačí to potvrdit. Úroveň je III. třída / krajská soutěž (Praha).
+    stačí to potvrdit. Hraje se na III. třída / krajská soutěž (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1174,13 +1235,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0141]
@@ -1191,13 +1253,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0142]
@@ -1208,7 +1271,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -1216,6 +1279,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0143]
@@ -1226,13 +1290,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0144]
@@ -1243,7 +1308,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -1251,6 +1316,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0151]
@@ -1261,13 +1327,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0152]
@@ -1278,13 +1345,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o III. třída / krajská soutěž (Praha).
+    opravdu měla. Hraje se na III. třída / krajská soutěž (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0153]
@@ -1295,13 +1363,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o III. třída / krajská soutěž (Praha).
+    Hraje se na III. třída / krajská soutěž (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0158]
@@ -1312,13 +1381,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o III. třída / krajská soutěž.
+    Hraje se na III. třída / krajská soutěž.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0162]
@@ -1328,13 +1398,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je III. třída / krajská soutěž (Brněnsko).
+    Hraje se na III. třída / krajská soutěž (Brněnsko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1958_59 / NODE_S1958_59_0166]
@@ -1345,13 +1416,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o III. třída / krajská soutěž (Ostravsko).
+    Hraje se na III. třída / krajská soutěž (Ostravsko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1367,13 +1439,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o III. třída / krajská soutěž (Praha).
+    opravdu měla. Hraje se na III. třída / krajská soutěž (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1959_60 / NODE_S1959_60_0167]
@@ -1384,13 +1457,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o III. třída / krajská soutěž.
+    Hraje se na III. třída / krajská soutěž.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1959_60 / NODE_S1959_60_0071]
@@ -1400,13 +1474,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je nejnižší okresní soutěž.
+    Hraje se na nejnižší okresní soutěž.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1421,14 +1496,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L35
-    (jižní Morava).
+    odveta nebo druhý zápas. Hraje se na úroveň L35 (jižní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1443,15 +1518,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída)
-    (východní Čechy).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (východní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1962_63 / NODE_S1962_63_0097]
@@ -1462,7 +1537,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní
+    ročník opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
     mistrovství, ve starší éře I. třída) (východní Čechy).
 
   ( ) A) OK – legitimní fáze
@@ -1470,6 +1545,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1484,15 +1560,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída)
-    (Středočesko).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (Středočesko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1963_64 / NODE_S1963_64_0053]
@@ -1502,14 +1578,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1963_64 / NODE_S1963_64_0075]
@@ -1519,13 +1596,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1540,14 +1619,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň (divize / II.
-    ČNHL / župní mistrovství, ve starší éře I. třída) (východní Čechy).
+    druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída) (východní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1965_66 / NODE_S1965_66_0069]
@@ -1558,14 +1638,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     listiny přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo
     omylem založil samostatný uzel pro jeden postupující celek. Než budeme
     cokoli mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž
-    ten ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
-    třída.
+    ten ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1965_66 / NODE_S1965_66_0070]
@@ -1576,14 +1657,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     původní listiny přepsal jen vítěz a zbytek pořadí se nedotáhl, případně
     někdo omylem založil samostatný uzel pro jeden postupující celek. Než
     budeme cokoli mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle
-    soutěž ten ročník opravdu měla. Jde o krajský přebor, ve starší éře
-    župní II. třída.
+    soutěž ten ročník opravdu měla. Hraje se na krajský přebor, ve starší
+    éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1965_66 / NODE_S1965_66_0099]
@@ -1594,13 +1676,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o nižší okresní soutěž (jižní Morava).
+    opravdu měla. Hraje se na nižší okresní soutěž (jižní Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1615,14 +1698,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L45
-    (východní Čechy).
+    odveta nebo druhý zápas. Hraje se na úroveň L45 (východní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1637,13 +1720,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L45.
+    odveta nebo druhý zápas. Hraje se na úroveň L45.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1659,14 +1743,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     listiny přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo
     omylem založil samostatný uzel pro jeden postupující celek. Než budeme
     cokoli mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž
-    ten ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
-    třída (východní Čechy).
+    ten ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (východní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1681,13 +1766,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L25 (celostátní).
+    druhý zápas. Hraje se na úroveň L25 (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1969_70 / NODE_S1969_70_0057]
@@ -1697,13 +1783,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (západní Čechy).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (západní
+    Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1718,15 +1806,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída) (západní
-    Čechy).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (západní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1970_71 / NODE_S1970_71_0091]
@@ -1736,15 +1824,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída) (jižní
-    Morava).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (jižní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1970_71 / NODE_S1970_71_0073]
@@ -1754,14 +1842,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1776,13 +1865,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L45 (Středočesko).
+    druhý zápas. Hraje se na úroveň L45 (Středočesko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1797,14 +1887,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je třetí úroveň
-    (divize / II. ČNHL / župní mistrovství, ve starší éře I. třída) (Praha).
+    odveta nebo druhý zápas. Hraje se na třetí úroveň (divize / II. ČNHL /
+    župní mistrovství, ve starší éře I. třída) (Praha).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1972_73 / NODE_S1972_73_0057]
@@ -1815,14 +1906,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o třetí úroveň (divize / II. ČNHL / župní mistrovství,
-    ve starší éře I. třída) (západní Čechy).
+    opravdu měla. Hraje se na třetí úroveň (divize / II. ČNHL / župní
+    mistrovství, ve starší éře I. třída) (západní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1972_73 / NODE_S1972_73_0074]
@@ -1832,13 +1924,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L35.
+    druhý zápas. Hraje se na úroveň L35.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1972_73 / NODE_S1972_73_0061]
@@ -1849,7 +1942,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída
     (západní Čechy).
 
   ( ) A) OK – legitimní fáze
@@ -1857,6 +1950,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1972_73 / NODE_S1972_73_0063]
@@ -1867,13 +1961,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (západní Čechy).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (západní
+    Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1888,13 +1984,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L45 (celostátní).
+    druhý zápas. Hraje se na úroveň L45 (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1973_74 / NODE_S1973_74_0107]
@@ -1904,14 +2001,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L55
-    (jihozápadní Morava).
+    odveta nebo druhý zápas. Hraje se na úroveň L55 (jihozápadní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1973_74 / NODE_S1973_74_0064]
@@ -1922,13 +2019,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o okresní přebor (západní Čechy).
+    Hraje se na okresní přebor (západní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1973_74 / NODE_S1973_74_0066]
@@ -1939,13 +2037,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o okresní přebor (západní Čechy).
+    Hraje se na okresní přebor (západní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -1961,13 +2060,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o III. třída / krajská soutěž (západní Čechy).
+    Hraje se na III. třída / krajská soutěž (západní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1974_75 / NODE_S1974_75_0058]
@@ -1977,13 +2077,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je III. třída / krajská soutěž (západní Čechy).
+    Hraje se na III. třída / krajská soutěž (západní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1974_75 / NODE_S1974_75_0059]
@@ -1993,14 +2094,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je III. třída /
-    krajská soutěž (západní Čechy).
+    odveta nebo druhý zápas. Hraje se na III. třída / krajská soutěž
+    (západní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1974_75 / NODE_S1974_75_0063]
@@ -2009,14 +2111,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Soutěž má v tabulce jen dva celky – Tatran Luby a Klatovy. Na skupinu
     hranou každý s každým je to málo a působí to, jako by se nedopsal zbytek
     tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul nebo o baráž,
-    můžou být dva účastníci v pořádku a stačí to potvrdit. Úroveň je okresní
-    přebor (západní Čechy).
+    můžou být dva účastníci v pořádku a stačí to potvrdit. Hraje se na
+    okresní přebor (západní Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2031,14 +2134,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída.
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1975_76 / NODE_S1975_76_0024]
@@ -2048,13 +2151,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L45 (celostátní).
+    druhý zápas. Hraje se na úroveň L45 (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2069,14 +2173,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída.
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1976_77 / NODE_S1976_77_0075]
@@ -2086,14 +2190,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L55
-    (východní Čechy).
+    odveta nebo druhý zápas. Hraje se na úroveň L55 (východní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1976_77 / NODE_S1976_77_0094]
@@ -2103,14 +2207,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je okresní přebor
-    (jihozápadní Morava).
+    druhý zápas. Hraje se na okresní přebor (jihozápadní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2125,13 +2229,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L65 (jižní Morava).
+    druhý zápas. Hraje se na úroveň L65 (jižní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2146,14 +2251,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L35
-    (Středočesko).
+    odveta nebo druhý zápas. Hraje se na úroveň L35 (Středočesko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2168,13 +2273,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2189,13 +2296,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L15 (celostátní).
+    druhý zápas. Hraje se na úroveň L15 (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2210,14 +2318,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (jižní Morava).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (jižní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1983_84 / NODE_S1983_84_0042]
@@ -2227,14 +2336,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L45
-    (jižní Čechy).
+    odveta nebo druhý zápas. Hraje se na úroveň L45 (jižní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2250,13 +2359,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o III. třída / krajská soutěž (východní Čechy).
+    ročník opravdu měla. Hraje se na III. třída / krajská soutěž (východní
+    Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2271,14 +2382,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je neurčená úroveň
-    (celostátní).
+    druhý zápas. Hraje se na neurčená úroveň (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1987_88 / NODE_S1987_88_0028]
@@ -2288,14 +2399,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je neurčená
-    úroveň (celostátní).
+    odveta nebo druhý zápas. Hraje se na neurčená úroveň (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1987_88 / NODE_S1987_88_0089]
@@ -2306,13 +2417,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o III. třída / krajská soutěž (východní Čechy).
+    ročník opravdu měla. Hraje se na III. třída / krajská soutěž (východní
+    Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1987_88 / NODE_S1987_88_0123]
@@ -2322,13 +2435,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Rýmařov. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je okresní soutěž (jihozápadní Morava).
+    potvrdit. Hraje se na okresní soutěž (jihozápadní Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2343,14 +2457,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je III. třída / krajská
-    soutěž (jižní Morava).
+    druhý zápas. Hraje se na III. třída / krajská soutěž (jižní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2365,7 +2479,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -2373,6 +2487,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2388,13 +2503,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o neurčená úroveň.
+    opravdu měla. Hraje se na neurčená úroveň.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1991_92 / NODE_S1991_92_0075]
@@ -2404,14 +2520,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída (západní Čechy).
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída
+    (západní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2427,13 +2544,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o neurčená úroveň.
+    opravdu měla. Hraje se na neurčená úroveň.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1992_93 / NODE_S1992_93_0129]
@@ -2444,13 +2562,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1992_93 / NODE_S1992_93_0092]
@@ -2460,14 +2580,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je okresní přebor
-    (východní Čechy).
+    odveta nebo druhý zápas. Hraje se na okresní přebor (východní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2483,13 +2603,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2505,13 +2627,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1994_95 / NODE_S1994_95_0092]
@@ -2522,7 +2646,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -2530,6 +2654,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1994_95 / NODE_S1994_95_0045]
@@ -2539,7 +2664,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     HC Slavoj Rekostav Č. Krumlov. Na skupinu hranou každý s každým je to
     málo a působí to, jako by se nedopsal zbytek tabulky. Pokud ovšem šlo o
     závěrečný dvojzápas o titul nebo o baráž, můžou být dva účastníci v
-    pořádku a stačí to potvrdit. Úroveň je III. třída / krajská soutěž
+    pořádku a stačí to potvrdit. Hraje se na III. třída / krajská soutěž
     (jižní Čechy).
 
   ( ) A) OK – legitimní fáze
@@ -2547,6 +2672,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1994_95 / NODE_S1994_95_0040]
@@ -2556,14 +2682,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je úroveň L55
-    (Středočesko).
+    odveta nebo druhý zápas. Hraje se na úroveň L55 (Středočesko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2578,7 +2704,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     (N2). Na skupinu hranou každý s každým je to málo a působí to, jako by
     se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Středočesko).
 
   ( ) A) OK – legitimní fáze
@@ -2586,6 +2712,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1995_96 / NODE_S1995_96_0096]
@@ -2596,13 +2723,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (východní Čechy).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (východní
+    Čechy).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2616,14 +2745,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Soutěž má v tabulce jen dva celky – Kladno 1988 a HC Dobříš. Na skupinu
     hranou každý s každým je to málo a působí to, jako by se nedopsal zbytek
     tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul nebo o baráž,
-    můžou být dva účastníci v pořádku a stačí to potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (Středočesko).
+    můžou být dva účastníci v pořádku a stačí to potvrdit. Hraje se na
+    krajský přebor, ve starší éře župní II. třída (Středočesko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2639,7 +2769,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Středočesko).
 
   ( ) A) OK – legitimní fáze
@@ -2647,6 +2777,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2661,14 +2792,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída.
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1999_00 / NODE_S1999_00_0080]
@@ -2679,7 +2810,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -2687,6 +2818,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1999_00 / NODE_S1999_00_0081]
@@ -2696,14 +2828,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S1999_00 / NODE_S1999_00_0101]
@@ -2713,7 +2846,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Sedlčany. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Středočesko).
 
   ( ) A) OK – legitimní fáze
@@ -2721,6 +2854,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2735,14 +2869,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída.
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2000_01 / NODE_S2000_01_0064]
@@ -2753,7 +2887,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -2761,6 +2895,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2000_01 / NODE_S2000_01_0065]
@@ -2770,14 +2905,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2000_01 / NODE_S2000_01_0087]
@@ -2788,13 +2924,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Praha).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2000_01 / NODE_S2000_01_0088]
@@ -2805,7 +2942,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Středočesko).
 
   ( ) A) OK – legitimní fáze
@@ -2813,6 +2950,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2827,14 +2965,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (jižní Čechy).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (jižní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2001_02 / NODE_S2001_02_0068]
@@ -2844,14 +2983,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída.
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2001_02 / NODE_S2001_02_0069]
@@ -2862,14 +3001,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     listiny přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo
     omylem založil samostatný uzel pro jeden postupující celek. Než budeme
     cokoli mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž
-    ten ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
-    třída.
+    ten ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2001_02 / NODE_S2001_02_0070]
@@ -2879,14 +3019,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2001_02 / NODE_S2001_02_0082]
@@ -2897,13 +3038,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2918,14 +3061,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (Zlínsko).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (Zlínsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2002_03 / NODE_S2002_03_0066]
@@ -2935,14 +3079,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -2957,14 +3102,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (východní Čechy).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (východní Čechy).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2004_05 / NODE_S2004_05_0076]
@@ -2974,13 +3120,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     B. Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2004_05 / NODE_S2004_05_0081]
@@ -2991,13 +3138,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (jižní Morava).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jižní
+    Morava).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3013,7 +3162,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     přepsal jen vítěz a zbytek pořadí se nedotáhl, případně někdo omylem
     založil samostatný uzel pro jeden postupující celek. Než budeme cokoli
     mazat, vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten
-    ročník opravdu měla. Jde o krajský přebor, ve starší éře župní II.
+    ročník opravdu měla. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -3021,6 +3170,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2005_06 / NODE_S2005_06_0076]
@@ -3030,14 +3180,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je III. třída /
-    krajská soutěž.
+    odveta nebo druhý zápas. Hraje se na III. třída / krajská soutěž.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3052,13 +3202,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3072,14 +3223,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Soutěž má v tabulce jen dva celky – HC Jičín a HC Varnsdorf. Na skupinu
     hranou každý s každým je to málo a působí to, jako by se nedopsal zbytek
     tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul nebo o baráž,
-    můžou být dva účastníci v pořádku a stačí to potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    můžou být dva účastníci v pořádku a stačí to potvrdit. Hraje se na
+    krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3094,14 +3246,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je neurčená úroveň
-    (celostátní).
+    druhý zápas. Hraje se na neurčená úroveň (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2010_11 / NODE_S2010_11_0084]
@@ -3112,13 +3264,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída.
+    Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3133,14 +3286,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je neurčená úroveň
-    (celostátní).
+    druhý zápas. Hraje se na neurčená úroveň (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2011_12 / NODE_S2011_12_0082]
@@ -3150,14 +3303,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (jižní Morava).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (jižní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2011_12 / NODE_S2011_12_0085]
@@ -3167,14 +3321,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (jihozápadní Morava).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (jihozápadní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2011_12 / NODE_S2011_12_0086]
@@ -3184,7 +3339,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Česká Lípa. Na skupinu hranou každý s každým je to málo a působí to,
     jako by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný
     dvojzápas o titul nebo o baráž, můžou být dva účastníci v pořádku a
-    stačí to potvrdit. Úroveň je krajský přebor, ve starší éře župní II.
+    stačí to potvrdit. Hraje se na krajský přebor, ve starší éře župní II.
     třída.
 
   ( ) A) OK – legitimní fáze
@@ -3192,6 +3347,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3206,14 +3362,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je neurčená
-    úroveň (celostátní).
+    odveta nebo druhý zápas. Hraje se na neurčená úroveň (celostátní).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2012_13 / NODE_S2012_13_0069]
@@ -3223,14 +3379,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (Plzeňsko).
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída (Plzeňsko).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2012_13 / NODE_S2012_13_0073]
@@ -3240,14 +3397,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     účastník nemusí být nic divného – krátký závěr soutěže (rozhodující
     zápas o titul či postup) takhle klidně vypadá. Spíš než o chybu jde
     nejspíš o regulérní stav; stačí v podkladech ověřit, že tu nechybí
-    odveta nebo druhý zápas, a pak to jen potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída.
+    odveta nebo druhý zápas. Hraje se na krajský přebor, ve starší éře župní
+    II. třída.
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2012_13 / NODE_S2012_13_0100]
@@ -3257,14 +3415,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     nemusí být nic divného – krátký závěr soutěže (rozhodující zápas o titul
     či postup) takhle klidně vypadá. Spíš než o chybu jde nejspíš o
     regulérní stav; stačí v podkladech ověřit, že tu nechybí odveta nebo
-    druhý zápas, a pak to jen potvrdit. Úroveň je krajský přebor, ve starší
-    éře župní II. třída (jihozápadní Morava).
+    druhý zápas. Hraje se na krajský přebor, ve starší éře župní II. třída
+    (jihozápadní Morava).
 
   (x) A) OK – legitimní fáze
   ( ) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2012_13 / NODE_S2012_13_0101]
@@ -3274,13 +3433,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Tygři. Na skupinu hranou každý s každým je to málo a působí to, jako by
     se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída.
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2012_13 / NODE_S2012_13_0103]
@@ -3291,13 +3451,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída.
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída.
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3312,13 +3473,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Praha (PRA). Na skupinu hranou každý s každým je to málo a působí to,
     jako by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný
     dvojzápas o titul nebo o baráž, můžou být dva účastníci v pořádku a
-    stačí to potvrdit. Úroveň je úroveň L35 (celostátní).
+    stačí to potvrdit. Hraje se na úroveň L35 (celostátní).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2013_14 / NODE_S2013_14_0249]
@@ -3328,7 +3490,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Louny. Na skupinu hranou každý s každým je to málo a působí to, jako by
     se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Praha).
 
   ( ) A) OK – legitimní fáze
@@ -3336,6 +3498,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2013_14 / NODE_S2013_14_0250]
@@ -3346,13 +3509,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Karlovarsko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Karlovarsko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3367,7 +3531,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Labem. Na skupinu hranou každý s každým je to málo a působí to, jako by
     se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Praha).
 
   ( ) A) OK – legitimní fáze
@@ -3375,6 +3539,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2014_15 / NODE_S2014_15_0226]
@@ -3385,13 +3550,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Karlovarsko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Karlovarsko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3407,13 +3573,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Praha).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2015_16 / NODE_S2015_16_0223]
@@ -3424,13 +3591,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Liberecko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Liberecko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2015_16 / NODE_S2015_16_0224]
@@ -3440,7 +3608,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída
+    Hraje se na krajský přebor, ve starší éře župní II. třída
     (Královéhradecko).
 
   ( ) A) OK – legitimní fáze
@@ -3448,6 +3616,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3462,13 +3631,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (Praha).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Praha).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2016_17 / NODE_S2016_17_0229]
@@ -3478,7 +3648,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída
+    Hraje se na krajský přebor, ve starší éře župní II. třída
     (Královéhradecko).
 
   ( ) A) OK – legitimní fáze
@@ -3486,6 +3656,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3500,7 +3671,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída
+    Hraje se na krajský přebor, ve starší éře župní II. třída
     (Královéhradecko).
 
   ( ) A) OK – legitimní fáze
@@ -3508,6 +3679,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2017_18 / NODE_S2017_18_0231]
@@ -3517,13 +3689,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (Vysočina).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Vysočina).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3539,13 +3712,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Středočesko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Středočesko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2018_19 / NODE_S2018_19_0256]
@@ -3556,13 +3730,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     zbytek pořadí se nedotáhl, případně někdo omylem založil samostatný uzel
     pro jeden postupující celek. Než budeme cokoli mazat, vyplatí se v
     podkladech ověřit, kolik mužstev tahle soutěž ten ročník opravdu měla.
-    Jde o krajský přebor, ve starší éře župní II. třída (Liberecko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Liberecko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2018_19 / NODE_S2018_19_0257]
@@ -3572,13 +3747,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (Pardubicko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Pardubicko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2018_19 / NODE_S2018_19_0258]
@@ -3588,13 +3764,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (Vysočina).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Vysočina).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3610,7 +3787,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Praha).
 
   ( ) A) OK – legitimní fáze
@@ -3618,6 +3795,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2019_20 / NODE_S2019_20_0228]
@@ -3627,7 +3805,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Varnsdorf. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Liberecko).
 
   ( ) A) OK – legitimní fáze
@@ -3635,6 +3813,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2019_20 / NODE_S2019_20_0229]
@@ -3644,13 +3823,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (Pardubicko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Pardubicko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 
@@ -3666,7 +3846,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Praha).
 
   ( ) A) OK – legitimní fáze
@@ -3674,6 +3854,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0090]
@@ -3683,7 +3864,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Praha. Na skupinu hranou každý s každým je to málo a působí to, jako by
     se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Středočesko).
 
   ( ) A) OK – legitimní fáze
@@ -3691,6 +3872,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0091]
@@ -3701,7 +3883,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     vítěz a zbytek pořadí se nedotáhl, případně někdo omylem založil
     samostatný uzel pro jeden postupující celek. Než budeme cokoli mazat,
     vyplatí se v podkladech ověřit, kolik mužstev tahle soutěž ten ročník
-    opravdu měla. Jde o krajský přebor, ve starší éře župní II. třída
+    opravdu měla. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Plzeňsko).
 
   ( ) A) OK – legitimní fáze
@@ -3709,6 +3891,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0092]
@@ -3718,7 +3901,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Varnsdorf. Na skupinu hranou každý s každým je to málo a působí to, jako
     by se nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o
     titul nebo o baráž, můžou být dva účastníci v pořádku a stačí to
-    potvrdit. Úroveň je krajský přebor, ve starší éře župní II. třída
+    potvrdit. Hraje se na krajský přebor, ve starší éře župní II. třída
     (Liberecko).
 
   ( ) A) OK – legitimní fáze
@@ -3726,6 +3909,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0093]
@@ -3735,13 +3919,14 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (Pardubicko).
+    Hraje se na krajský přebor, ve starší éře župní II. třída (Pardubicko).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0094]
@@ -3750,14 +3935,15 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Soutěž má v tabulce jen dva celky – HC Skuteč a HC Zastávka. Na skupinu
     hranou každý s každým je to málo a působí to, jako by se nedopsal zbytek
     tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul nebo o baráž,
-    můžou být dva účastníci v pořádku a stačí to potvrdit. Úroveň je krajský
-    přebor, ve starší éře župní II. třída (Vysočina).
+    můžou být dva účastníci v pořádku a stačí to potvrdit. Hraje se na
+    krajský přebor, ve starší éře župní II. třída (Vysočina).
 
   ( ) A) OK – legitimní fáze
   (x) B) TORZO – doplnit týmy
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0095]
@@ -3767,7 +3953,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Spartak Velká Bíteš. Na skupinu hranou každý s každým je to málo a
     působí to, jako by se nedopsal zbytek tabulky. Pokud ovšem šlo o
     závěrečný dvojzápas o titul nebo o baráž, můžou být dva účastníci v
-    pořádku a stačí to potvrdit. Úroveň je krajský přebor, ve starší éře
+    pořádku a stačí to potvrdit. Hraje se na krajský přebor, ve starší éře
     župní II. třída (jižní Morava).
 
   ( ) A) OK – legitimní fáze
@@ -3775,6 +3961,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
 [S2020_21 / NODE_S2020_21_0096]
@@ -3784,7 +3971,7 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
     Na skupinu hranou každý s každým je to málo a působí to, jako by se
     nedopsal zbytek tabulky. Pokud ovšem šlo o závěrečný dvojzápas o titul
     nebo o baráž, můžou být dva účastníci v pořádku a stačí to potvrdit.
-    Úroveň je krajský přebor, ve starší éře župní II. třída (jihozápadní
+    Hraje se na krajský přebor, ve starší éře župní II. třída (jihozápadní
     Morava).
 
   ( ) A) OK – legitimní fáze
@@ -3792,5 +3979,6 @@ VARIANTY:  A) OK (legitimní fáze)   B) TORZO (doplnit týmy)
   ( ) C) SLOUČIT s: __________________________
   ( ) D) SMAZAT
   ( ) E) OPRAVIT: __________________________
+  ( ) F) NEÚPLNÉ – nech co je + Todo.xlsx
   VOLNÉ: ______________________________________________
 --------------------------------------------------------------------------------
