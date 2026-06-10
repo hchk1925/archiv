@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-app.py — Almanach: Viewer + Editor v jedné aplikaci.
+app.py — Almanach: vše v jednom (korektor · viewer · builder · printer).
 
-Čte přímo z data/S*_FINAL.xlsx (XLSX je jediný zdroj pravdy).
-Žádná SQLite, žádná instalace — `python3 app.py` a otevři localhost:5000.
+Čte/zapisuje přímo do data/S*_FINAL.xlsx (XLSX je jediný zdroj pravdy).
 
-Funkce:
-  Viewer:
-    /                          — seznam sezón + stats
-    /s/<sid>                   — sezóna: pyramida + všechny tabulky
-    /club/<chain_id>           — běh klubu napříč sezónami
-    /comp/<comp_chain_id>      — běh soutěže napříč sezónami
-    /search?q=...              — fulltext klubů
-  Editor:
-    /s/<sid>/edit/clubs        — formulář na CLUBS
-    /s/<sid>/edit/standings    — formulář na T-řádky standings
+  python app.py            web: viewer + korektor + audit (localhost:5000)
+  python app.py build      xlsx → almanach.sqlite + CSV
+  python app.py pdf  all   audit worklist → docs/audit_pdf/   (Garamond)
+  python app.py html all   audit worklist → docs/audit_html/
+  python app.py xlsx all   audit worklist → docs/Audit_export.xlsx
+
+Web:
+  Viewer:   /  ·  /s/<sid>  ·  /club/<chain>  ·  /comp/<chain>  ·  /search
+  Korektor: /s/<sid>/edit/clubs  ·  /s/<sid>/edit/standings
+  Audit:    /audit  ·  /s/<sid>/audit  (komentář „co chybí" + řešení → xlsx)
+            /s/<sid>/audit.pdf  (tisk pro ruční zpracování)
 
 Po uložení se z xlsx přečte ta sezóna znovu a chainy se přepočtou.
 """
@@ -76,7 +76,7 @@ def load_season(sid):
         return None
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
     out = {'clubs': [], 'system': [], 'standings': defaultdict(list),
-           'notes': [], 'meta': {}, 'label': sid.replace('_', '/')}
+           'notes': [], 'todo': [], 'meta': {}, 'label': sid.replace('_', '/')}
     # META
     if 'META' in wb.sheetnames:
         for r in wb['META'].iter_rows(values_only=True):
@@ -129,6 +129,23 @@ def load_season(sid):
                     'sheet': cell(r, NH, 'sheet') or '',
                     'note_text': cell(r, NH, 'note_text') or '',
                     'source_type': cell(r, NH, 'source_type') or '',
+                })
+    # TODO (audit worklist)
+    if 'TODO' in wb.sheetnames:
+        rt = list(wb['TODO'].iter_rows(values_only=True))
+        if rt:
+            TH = hidx(rt[0])
+            for r in rt[1:]:
+                if not r or all(x is None for x in r): continue
+                popis = cell(r, TH, 'popis')
+                if popis is None: continue
+                out['todo'].append({
+                    'num': cell(r, TH, '#'),
+                    'typ': cell(r, TH, 'typ') or '',
+                    'reference': cell(r, TH, 'reference') or '',
+                    'popis': popis or '',
+                    'done': cell(r, TH, 'vyřešeno? (ANO/ne)') or '',
+                    'poznamka': cell(r, TH, 'poznámka kolegy') or '',
                 })
     # standings (T) + registrations (R) per data sheet
     for sh in wb.sheetnames:
@@ -319,6 +336,24 @@ input[type=number]{width:60px;padding:3px 5px;border:1px solid #ccc;border-radiu
 .edit-link{float:right;font-size:12px;background:#1a3050;color:#fff;padding:3px 10px;border-radius:3px}
 .edit-link:hover{background:#2d4868;color:#fff;text-decoration:none}
 footer{padding:18px;color:#888;text-align:center;font-size:11px}
+.note-callout{background:#fff7e0;border-left:4px solid #f0a500;padding:6px 10px;margin:0 0 8px;font-size:12.5px;border-radius:0 4px 4px 0}
+.note-callout.torzo{background:#ffe9d6;border-left-color:#d97706}
+.note-callout .tag{display:inline-block;font-weight:700;color:#b45309;margin-right:6px;text-transform:uppercase;font-size:11px;letter-spacing:.04em}
+.audit-link{background:#d97706;color:#fff;padding:3px 10px;border-radius:3px;font-size:12px;margin-left:6px}
+.audit-link:hover{background:#b45309;color:#fff;text-decoration:none}
+.audit-item{background:#fff;border:1px solid #e2d2bd;border-left:4px solid #d97706;border-radius:4px;padding:10px 12px;margin:8px 0}
+.audit-item.done{border-left-color:#3a9d4f;opacity:.72}
+.audit-item h4{margin:0 0 3px;font-size:13.5px;color:#234}
+.audit-item .ref{color:#666;font-size:12px}
+.audit-item form{display:flex;gap:8px;align-items:flex-end;margin-top:7px;flex-wrap:wrap}
+.audit-item .fcol{display:flex;flex-direction:column;gap:2px}
+.audit-item label{font-size:11px;color:#777}
+.audit-item select{width:150px}.audit-item textarea{min-width:280px;min-height:30px}
+.audit-item button{padding:6px 14px;background:#d97706;color:#fff;border:0;border-radius:4px;cursor:pointer;font-weight:600}
+.audit-item button:hover{background:#b45309}
+.badge-open{background:#d97706;color:#fff;border-radius:10px;padding:1px 8px;font-size:11px}
+.print-link{background:#444;color:#fff;padding:3px 10px;border-radius:3px;font-size:12px;margin-left:6px}
+.print-link:hover{background:#222;color:#fff;text-decoration:none}
 </style></head><body>
 <header>
 <a href="/" class=brand>🏒 Almanach</a>
@@ -392,8 +427,21 @@ def season(sid):
               if i > 0 else '<span></span>')
     next_a = (f'<a href="/s/{SEASON_ORDER[i+1]}">{SEASON_ORDER[i+1].replace("_","/")} →</a>'
               if i + 1 < len(SEASON_ORDER) else '<span></span>')
+    # audit poznámky podle node_id (co chybí)
+    audit_by_node = defaultdict(list)
+    for nt in d['notes']:
+        txt = nt['note_text']
+        if nt['node_id'] and (nt['source_type'] == 'TODO-auto'
+                              or str(txt).startswith('[TBD]')):
+            audit_by_node[nt['node_id']].append(txt)
+    n_open = sum(1 for t in d['todo']
+                 if str(t['done']).strip().upper() != 'ANO')
+    audit_btn = (f'<a href="/s/{sid}/audit" class=audit-link>⚑ audit'
+                 + (f' <span class=badge-open>{n_open}</span>' if n_open else '')
+                 + '</a>')
     body = (f'<h2>Sezóna {esc(d["label"])} '
-            f'<a href="/s/{sid}/edit/clubs" class=edit-link>✎ editovat</a></h2>'
+            f'<a href="/s/{sid}/edit/clubs" class=edit-link>✎ editovat</a>{audit_btn}'
+            f'<a href="/s/{sid}/audit.pdf" class=print-link>🖶 PDF</a></h2>'
             f'<div class=nav-prev-next>{prev_a}<a href="/">přehled</a>{next_a}</div>')
     # pyramida (top-level)
     body += '<h3>Pyramida soutěží</h3><table>'
@@ -421,8 +469,16 @@ def season(sid):
                 nm = nn['name'] if nn else cur_node
                 ccid = NODE_CHAIN.get((sid, cur_node))
                 title = (f'<a href="/comp/{ccid}">{esc(nm)}</a>' if ccid else esc(nm))
-                body += (f'<b>{title}</b>'
-                         '<table><tr><th>#</th><th>Klub</th>'
+                body += f'<b>{title}</b>'
+                for txt in audit_by_node.get(cur_node, []):
+                    t = str(txt).replace('[TBD] ', '').replace('  [torzo-audit]', '')
+                    is_torzo = 'torzo' in t[:12].lower()
+                    tag, rest = (t.split(':', 1) + [''])[:2] if ':' in t else ('chybí', t)
+                    cls = ' torzo' if is_torzo else ''
+                    body += (f'<div class="note-callout{cls}">'
+                             f'<span class=tag>{esc(tag.strip())}</span>'
+                             f'{esc(rest.strip() or t)}</div>')
+                body += ('<table><tr><th>#</th><th>Klub</th>'
                          '<th>GP</th><th>W</th><th>D</th><th>L</th>'
                          '<th>GF:GA</th><th>PTS</th><th>Fate</th></tr>')
             ch = CLUB_CHAIN.get((sid, r['club_id']))
@@ -637,7 +693,385 @@ def edit_standings(sid):
     return render(f'{sid} Standings edit', body, sid, flash)
 
 
-if __name__ == '__main__':
-    load_all()
-    print(f"\n  → otevři: http://localhost:5000\n")
+# ─────────── Audit ───────────
+VARIANTY = ['', 'OK – legitimní fáze', 'doplnit týmy', 'sloučit', 'smazat',
+            'opravit (level/region/název)', 'neúplné – nech co je']
+TODO_HDR = ['#', 'typ', 'reference', 'popis', 'vyřešeno? (ANO/ne)',
+            'poznámka kolegy']
+
+
+def node_rows(d):
+    """node_id -> [T-řádky] napříč listy."""
+    by = defaultdict(list)
+    for sh, rows in d['standings'].items():
+        for r in rows:
+            if r['row_type'] == 'T' and r['node_id']:
+                by[r['node_id']].append(r)
+    return by
+
+
+def clean_popis(txt):
+    return (str(txt).replace('[TBD] ', '')
+            .replace('  [torzo-audit]', '').replace('[torzo-audit]', '').strip())
+
+
+@app.route('/s/<sid>/audit')
+def audit(sid):
+    if sid not in CACHE or not CACHE[sid]: abort(404)
+    d = CACHE[sid]
+    i = SEASON_ORDER.index(sid)
+    prev_a = (f'<a href="/s/{SEASON_ORDER[i-1]}/audit">← {SEASON_ORDER[i-1].replace("_","/")}</a>'
+              if i > 0 else '<span></span>')
+    next_a = (f'<a href="/s/{SEASON_ORDER[i+1]}/audit">{SEASON_ORDER[i+1].replace("_","/")} →</a>'
+              if i + 1 < len(SEASON_ORDER) else '<span></span>')
+    nrows = node_rows(d)
+    items = d['todo']
+    op = [t for t in items if str(t['done']).strip().upper() != 'ANO']
+    dn = [t for t in items if str(t['done']).strip().upper() == 'ANO']
+    flash = ('Uloženo.' if request.args.get('saved') else None)
+    body = (f'<h2>Audit · {esc(d["label"])} '
+            f'<a href="/s/{sid}" class=edit-link>← pohled</a>'
+            f'<a href="/s/{sid}/audit.pdf" class=print-link>🖶 PDF</a></h2>'
+            f'<div class=nav-prev-next>{prev_a}<a href="/audit">přehled auditů</a>{next_a}</div>'
+            f'<p class=muted>{len(op)} otevřených · {len(dn)} vyřešených</p>')
+
+    def render_item(t, done=False):
+        num = t['num']
+        ref = esc(t['reference'])
+        popis = esc(clean_popis(t['popis']))
+        typ = esc(t['typ'])
+        # mini-tabulka pro torzo (kontext)
+        mini = ''
+        nid = None
+        m = re.search(r'NODE_S\d{4}_\d{2}_\d+', str(t['reference']))
+        if m: nid = m.group(0)
+        if nid and nrows.get(nid):
+            mini = '<table style="margin:5px 0;max-width:520px"><tr><th>#</th><th>Klub</th><th>GP</th><th>W</th><th>D</th><th>L</th><th>GF:GA</th><th>PTS</th></tr>'
+            for r in nrows[nid]:
+                mini += (f'<tr><td>{r["pos"] or ""}</td><td>{esc(r["club_name"])}</td>'
+                         f'<td class=num>{r["GP"] or ""}</td><td class=num>{r["W"] or ""}</td>'
+                         f'<td class=num>{r["D"] or ""}</td><td class=num>{r["L"] or ""}</td>'
+                         f'<td class=num>{(r["GF"] or "")}:{(r["GA"] or "")}</td>'
+                         f'<td class=num>{r["PTS"] or ""}</td></tr>')
+            mini += '</table>'
+        sel_done = str(t['done']).strip()
+        opts_stav = [('ne', 'Otevřeno'), ('ANO', 'Vyřešeno'),
+                     ('nedořešitelné', 'Nedořešitelné')]
+        stav_html = ''.join(
+            f'<option value="{v}"{" selected" if sel_done==v or (not sel_done and v=="ne") else ""}>{lbl}</option>'
+            for v, lbl in opts_stav)
+        var_html = ''.join(f'<option{" selected" if o and o in (t["poznamka"] or "") else ""}>{esc(o)}</option>'
+                           for o in VARIANTY)
+        pozn_clean = re.sub(r'^\[[^\]]*\]\s*', '', t['poznamka'] or '')
+        return (f'<div class="audit-item{" done" if done else ""}">'
+                f'<h4><span class=pill>{typ}</span> #{num} &nbsp; {popis}</h4>'
+                f'<div class=ref>{ref}</div>{mini}'
+                f'<form method=POST action="/s/{sid}/audit/save">'
+                f'<input type=hidden name=num value="{num}">'
+                f'<div class=fcol><label>stav</label><select name=done>{stav_html}</select></div>'
+                f'<div class=fcol><label>řešení (typ)</label><select name=varianta>{var_html}</select></div>'
+                f'<div class=fcol style="flex:1"><label>poznámka kolegy</label>'
+                f'<textarea name=poznamka>{esc(pozn_clean)}</textarea></div>'
+                f'<button>Uložit do xlsx</button></form></div>')
+
+    if op:
+        body += '<h3>Otevřené položky</h3>'
+        for t in op: body += render_item(t)
+    if dn:
+        body += '<h3 style="margin-top:18px">Vyřešené</h3>'
+        for t in dn: body += render_item(t, done=True)
+    if not items:
+        body += '<p class=muted>Žádné položky v TODO listu této sezóny.</p>'
+    return render(f'Audit {sid}', body, sid, flash)
+
+
+@app.route('/s/<sid>/audit/save', methods=['POST'])
+def audit_save(sid):
+    if sid not in CACHE: abort(404)
+    num = str(request.form.get('num', ''))
+    done = request.form.get('done', 'ne')
+    varianta = request.form.get('varianta', '').strip()
+    poznamka = request.form.get('poznamka', '').strip()
+    combined = (f'[{varianta}] ' if varianta else '') + poznamka
+    path = os.path.join(DATA, f'S{sid}_FINAL.xlsx')
+    wb = openpyxl.load_workbook(path)
+    ws = wb['TODO']
+    H = {c.value: j for j, c in enumerate(ws[1], 1) if c.value}
+    cnum = H.get('#'); cdone = H.get('vyřešeno? (ANO/ne)')
+    cpoz = H.get('poznámka kolegy')
+    for row in ws.iter_rows(min_row=2):
+        if cnum and str(row[cnum - 1].value) == num:
+            if cdone: row[cdone - 1].value = done
+            if cpoz: row[cpoz - 1].value = combined or None
+            break
+    wb.save(path); wb.close()
+    reload_season(sid)
+    return redirect(url_for('audit', sid=sid, saved=1))
+
+
+@app.route('/audit')
+def audit_overview():
+    body = '<h2>Přehled auditů</h2><table><tr><th>Sezóna</th><th>Otevřené</th><th>Vyřešené</th><th></th></tr>'
+    tot_o = tot_d = 0
+    for sid in SEASON_ORDER:
+        d = CACHE.get(sid)
+        if not d: continue
+        op = sum(1 for t in d['todo'] if str(t['done']).strip().upper() != 'ANO')
+        dn = sum(1 for t in d['todo'] if str(t['done']).strip().upper() == 'ANO')
+        tot_o += op; tot_d += dn
+        if not (op or dn): continue
+        bo = f'<span class=badge-open>{op}</span>' if op else '0'
+        body += (f'<tr><td><a href="/s/{sid}/audit">{esc(d["label"])}</a></td>'
+                 f'<td class=num>{bo}</td><td class=num>{dn}</td>'
+                 f'<td><a href="/s/{sid}/audit.pdf">PDF</a></td></tr>')
+    body += '</table>'
+    body = (f'<div class=stat-row><div class=stat><b>{tot_o}</b><span>otevřených</span></div>'
+            f'<div class=stat><b>{tot_d}</b><span>vyřešených</span></div></div>') + body
+    return render('Přehled auditů', body)
+
+
+# ─────────── PDF export ───────────
+# Preferuj Garamond (uživatel je zvyklý); fallback na serif.
+PDF_FONT = None          # název regular fontu po registraci
+PDF_FONT_BOLD = None     # název bold fontu
+FONT_DIRS = [
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fonts'),
+    os.path.expanduser('~/.fonts'), os.path.expanduser('~/.local/share/fonts'),
+    os.path.expanduser('~/Library/Fonts'), '/Library/Fonts',
+    '/usr/share/fonts', '/usr/local/share/fonts', 'C:\\Windows\\Fonts']
+
+
+def _scan_fonts(needles, exclude=()):
+    """Najdi .ttf, jehož jméno obsahuje všechny 'needles' a žádný 'exclude'."""
+    for d in FONT_DIRS:
+        if not d or not os.path.isdir(d): continue
+        for root, _, files in os.walk(d):
+            for f in files:
+                low = f.lower()
+                if not low.endswith('.ttf'): continue
+                if all(n in low for n in needles) and not any(x in low for x in exclude):
+                    return os.path.join(root, f)
+    return None
+
+
+def _fc_match(query):
+    import subprocess
+    try:
+        out = subprocess.run(['fc-match', '-f', '%{file}', query],
+                             capture_output=True, text=True, timeout=5)
+        p = out.stdout.strip()
+        return p if p.lower().endswith('.ttf') and 'garamond' in p.lower() else None
+    except Exception:
+        return None
+
+
+def _resolve_fonts():
+    """(regular_path, bold_path, label). Garamond > serif fallback."""
+    env = os.environ.get('AUDIT_PDF_FONT')
+    if env and os.path.exists(env):
+        return env, os.environ.get('AUDIT_PDF_FONT_BOLD', env), 'Garamond (env)'
+    reg = (_scan_fonts(['garamond'], exclude=['bold', 'italic', 'oblique'])
+           or _fc_match('Garamond'))
+    if reg:
+        bold = (_scan_fonts(['garamond', 'bold'], exclude=['italic'])
+                or _fc_match('Garamond:bold') or reg)
+        return reg, bold, 'Garamond'
+    # fallback: serif
+    for base, rname, bname in [
+        ('/usr/share/fonts/truetype/liberation', 'LiberationSerif-Regular.ttf',
+         'LiberationSerif-Bold.ttf'),
+        ('/usr/share/fonts/truetype/dejavu', 'DejaVuSerif.ttf',
+         'DejaVuSerif-Bold.ttf')]:
+        r = os.path.join(base, rname)
+        if os.path.exists(r):
+            b = os.path.join(base, bname)
+            return r, (b if os.path.exists(b) else r), 'serif (fallback)'
+    return None, None, 'none'
+
+
+def _ensure_font():
+    global PDF_FONT, PDF_FONT_BOLD
+    if PDF_FONT: return PDF_FONT
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+    reg, bold, label = _resolve_fonts()
+    if not reg:
+        raise RuntimeError('Nenalezen žádný TTF font pro PDF.')
+    pdfmetrics.registerFont(TTFont('AuditSerif', reg))
+    pdfmetrics.registerFont(TTFont('AuditSerif-Bold', bold))
+    PDF_FONT, PDF_FONT_BOLD = 'AuditSerif', 'AuditSerif-Bold'
+    print(f"  PDF font: {label}  ({os.path.basename(reg)})")
+    return PDF_FONT
+
+
+def build_season_pdf(d, sid):
+    """Tiskový audit-worklist sezóny → bytes (jen otevřené položky)."""
+    import io
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.units import mm
+    from reportlab.platypus import (SimpleDocTemplate, Table, TableStyle,
+                                    Paragraph, Spacer)
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    _ensure_font()
+    ss = getSampleStyleSheet()
+    H1 = ParagraphStyle('H1', parent=ss['Title'], fontName=PDF_FONT_BOLD, fontSize=16)
+    H2 = ParagraphStyle('H2', parent=ss['Heading3'], fontName=PDF_FONT_BOLD, fontSize=11,
+                        spaceBefore=8, spaceAfter=2)
+    P = ParagraphStyle('P', parent=ss['Normal'], fontName=PDF_FONT, fontSize=9.5, leading=12)
+    Pm = ParagraphStyle('Pm', parent=P, textColor=colors.HexColor('#666'), fontSize=8.5)
+    box = ParagraphStyle('box', parent=P, fontName=PDF_FONT,
+                         backColor=colors.HexColor('#fff3df'), borderPadding=4,
+                         leftIndent=2, spaceBefore=2, spaceAfter=2)
+    nrows = node_rows(d)
+    op = [t for t in d['todo'] if str(t['done']).strip().upper() != 'ANO']
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=15 * mm, rightMargin=15 * mm,
+                            topMargin=14 * mm, bottomMargin=12 * mm,
+                            title=f'Audit {d["label"]}')
+    el = [Paragraph(f'Audit — sezóna {esc(d["label"])}', H1),
+          Paragraph(f'{len(op)} otevřených položek · k ručnímu zpracování', Pm),
+          Spacer(1, 6)]
+    checks = '☐ OK   ☐ doplnit týmy   ☐ sloučit   ☐ smazat   ☐ opravit   ☐ neúplné→Todo'
+    for t in op:
+        el.append(Paragraph(f'<b>#{t["num"]} · {esc(t["typ"])}</b> — {esc(t["reference"])}', H2))
+        el.append(Paragraph(esc(clean_popis(t['popis'])), box))
+        nid = None
+        m = re.search(r'NODE_S\d{4}_\d{2}_\d+', str(t['reference']))
+        if m: nid = m.group(0)
+        if nid and nrows.get(nid):
+            data = [['#', 'Klub', 'GP', 'W', 'D', 'L', 'GF:GA', 'PTS']]
+            for r in nrows[nid]:
+                data.append([r['pos'] or '', r['club_name'] or '',
+                             r['GP'] or '', r['W'] or '', r['D'] or '', r['L'] or '',
+                             f'{r["GF"] or ""}:{r["GA"] or ""}', r['PTS'] or ''])
+            tb = Table(data, colWidths=[8 * mm, 70 * mm, 11 * mm, 9 * mm, 9 * mm,
+                                        9 * mm, 18 * mm, 11 * mm])
+            tb.setStyle(TableStyle([
+                ('FONT', (0, 0), (-1, -1), PDF_FONT, 8),
+                ('FONT', (0, 0), (-1, 0), PDF_FONT_BOLD, 8),
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#eef2f7')),
+                ('GRID', (0, 0), (-1, -1), 0.4, colors.HexColor('#cccccc')),
+                ('ALIGN', (2, 0), (-1, -1), 'RIGHT')]))
+            el.append(tb)
+        el.append(Paragraph(checks, P))
+        el.append(Paragraph('poznámka: ' + '.' * 78, Pm))
+        el.append(Spacer(1, 6))
+    if not op:
+        el.append(Paragraph('Žádné otevřené položky — sezóna OK.', P))
+    doc.build(el)
+    return buf.getvalue()
+
+
+@app.route('/s/<sid>/audit.pdf')
+def audit_pdf(sid):
+    if sid not in CACHE or not CACHE[sid]: abort(404)
+    from flask import Response
+    pdf = build_season_pdf(CACHE[sid], sid)
+    return Response(pdf, mimetype='application/pdf',
+                    headers={'Content-Disposition':
+                             f'inline; filename=audit_{sid}.pdf'})
+
+
+# ─────────── All-in-one CLI (serve / build / print) ───────────
+def cli_build():
+    """Konsolidace xlsx → almanach.sqlite + CSV (volá build_db.py)."""
+    import subprocess
+    print("Builder: data/S*_FINAL.xlsx → almanach.sqlite …")
+    r = subprocess.run([sys.executable, 'build_db.py'])
+    sys.exit(r.returncode)
+
+
+def _seasons_arg(arg):
+    if not arg or arg == 'all':
+        return list(SEASON_ORDER)
+    arg = arg.replace('/', '_').lstrip('S')
+    return [arg] if arg in SEASON_ORDER else []
+
+
+def cli_pdf(arg):
+    outdir = 'docs/audit_pdf'
+    os.makedirs(outdir, exist_ok=True)
+    seasons = _seasons_arg(arg)
+    for sid in seasons:
+        d = CACHE.get(sid)
+        if not d: continue
+        p = os.path.join(outdir, f'audit_S{sid}.pdf')
+        with open(p, 'wb') as f:
+            f.write(build_season_pdf(d, sid))
+    print(f"PDF: {len(seasons)} souborů → {outdir}/")
+
+
+def cli_html(arg):
+    outdir = 'docs/audit_html'
+    os.makedirs(outdir, exist_ok=True)
+    c = app.test_client()
+    seasons = _seasons_arg(arg)
+    for sid in seasons:
+        html = c.get(f'/s/{sid}/audit').get_data(as_text=True)
+        with open(os.path.join(outdir, f'audit_S{sid}.html'), 'w') as f:
+            f.write(html)
+    print(f"HTML: {len(seasons)} souborů → {outdir}/")
+
+
+def cli_xlsx(arg):
+    """Audit worklist → docs/Audit_export.xlsx (listy per sezóna)."""
+    import openpyxl as ox
+    from openpyxl.styles import Font, PatternFill, Alignment
+    wb = ox.Workbook(); wb.remove(wb.active)
+    hf = Font(bold=True, color='FFFFFF'); fl = PatternFill('solid', fgColor='305496')
+    seasons = _seasons_arg(arg)
+    for sid in seasons:
+        d = CACHE.get(sid)
+        if not d or not d['todo']: continue
+        ws = wb.create_sheet(sid.replace('_', '-')[:31])
+        ws.append(['#', 'typ', 'reference', 'co chybí / popis', 'stav', 'poznámka'])
+        for c0 in ws[1]: c0.font = hf; c0.fill = fl
+        for t in d['todo']:
+            ws.append([t['num'], t['typ'], t['reference'],
+                       clean_popis(t['popis']), t['done'] or 'ne', t['poznamka']])
+        for col, w in zip('ABCDEF', [5, 14, 40, 55, 10, 30]):
+            ws.column_dimensions[col].width = w
+        for r in ws.iter_rows(min_row=2):
+            for c0 in r: c0.alignment = Alignment(wrap_text=True, vertical='top')
+        ws.freeze_panes = 'A2'
+    out = 'docs/Audit_export.xlsx'
+    wb.save(out)
+    print(f"XLSX: {len(wb.sheetnames)} listů → {out}")
+
+
+def cli_serve():
+    print(f"\n  → otevři: http://localhost:5000   "
+          f"(viewer · korektor · audit · PDF)\n")
     app.run(host='127.0.0.1', port=5000, debug=False)
+
+
+HELP = """Almanach — vše v jednom (korektor · viewer · builder · printer)
+
+  python app.py [serve]        spustí web (viewer + korektor + audit)   [výchozí]
+  python app.py build          xlsx → almanach.sqlite + CSV
+  python app.py pdf  [sid|all] audit worklist → docs/audit_pdf/*.pdf  (Garamond)
+  python app.py html [sid|all] audit worklist → docs/audit_html/*.html
+  python app.py xlsx [sid|all] audit worklist → docs/Audit_export.xlsx
+
+  sid např. 1948_49.  PDF font: Garamond (env AUDIT_PDF_FONT, fonts/, fc-match),
+  jinak serif fallback."""
+
+if __name__ == '__main__':
+    cmd = sys.argv[1] if len(sys.argv) > 1 else 'serve'
+    if cmd in ('-h', '--help', 'help'):
+        print(HELP); sys.exit(0)
+    if cmd == 'build':
+        cli_build()
+    load_all()
+    arg = sys.argv[2] if len(sys.argv) > 2 else 'all'
+    if cmd == 'serve':
+        cli_serve()
+    elif cmd == 'pdf':
+        cli_pdf(arg)
+    elif cmd == 'html':
+        cli_html(arg)
+    elif cmd == 'xlsx':
+        cli_xlsx(arg)
+    else:
+        print(f"Neznámý příkaz '{cmd}'.\n"); print(HELP); sys.exit(1)

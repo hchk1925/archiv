@@ -12,5 +12,9 @@ print/
 hokej_almanach_xlsx.zip
 # ad-hoc ukázky
 S*_ukazka.html
+# generované audit exporty (znovu vytvoř: python3 app.py pdf|html|xlsx all)
+docs/audit_pdf/
+docs/audit_html/
+docs/Audit_export.xlsx
 # generovaný health report (regeneruje build hook)
 HEALTH.md
