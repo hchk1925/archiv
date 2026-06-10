@@ -3,3 +3,4 @@ flask
 pandas
 pdfminer.six
 cffi
+reportlab
