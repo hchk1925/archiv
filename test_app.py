@@ -71,6 +71,11 @@ def main():
                          and 'SMOKE-TEST' in str(row[H['poznámka kolegy']]))
                 break
         check(found, 'write-back zapsal stav ANO + poznámku do TODO listu xlsx')
+        # po vyřešení musí callout na sezónním pohledu zezelenat
+        app.reload_season(sid)
+        sp2 = c.get(f'/s/{sid}').get_data(as_text=True)
+        check('note-callout done' in sp2,
+              'vyřešený uzel → zelený „✓ vyřešeno" callout (ne oranžový)')
     finally:
         open(path, 'wb').write(backup)
         app.reload_season(sid)

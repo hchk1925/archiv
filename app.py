@@ -338,6 +338,8 @@ input[type=number]{width:60px;padding:3px 5px;border:1px solid #ccc;border-radiu
 footer{padding:18px;color:#888;text-align:center;font-size:11px}
 .note-callout{background:#fff7e0;border-left:4px solid #f0a500;padding:6px 10px;margin:0 0 8px;font-size:12.5px;border-radius:0 4px 4px 0}
 .note-callout.torzo{background:#ffe9d6;border-left-color:#d97706}
+.note-callout.done{background:#e4f5e7;border-left-color:#3a9d4f}
+.note-callout.done .tag{color:#1b7a32}
 .note-callout .tag{display:inline-block;font-weight:700;color:#b45309;margin-right:6px;text-transform:uppercase;font-size:11px;letter-spacing:.04em}
 .audit-link{background:#d97706;color:#fff;padding:3px 10px;border-radius:3px;font-size:12px;margin-left:6px}
 .audit-link:hover{background:#b45309;color:#fff;text-decoration:none}
@@ -434,6 +436,13 @@ def season(sid):
         if nt['node_id'] and (nt['source_type'] == 'TODO-auto'
                               or str(txt).startswith('[TBD]')):
             audit_by_node[nt['node_id']].append(txt)
+    # uzly už vyřešené v auditu (TODO vyřešeno=ANO) → callout zezelená
+    resolved_nodes = set()
+    for t in d['todo']:
+        if str(t['done']).strip().upper() == 'ANO':
+            m = re.search(r'NODE_S\d{4}_\d{2}_\d+', str(t['reference']))
+            if m:
+                resolved_nodes.add(m.group(0))
     n_open = sum(1 for t in d['todo']
                  if str(t['done']).strip().upper() != 'ANO')
     audit_btn = (f'<a href="/s/{sid}/audit" class=audit-link>⚑ audit'
@@ -471,11 +480,15 @@ def season(sid):
                 ccid = NODE_CHAIN.get((sid, cur_node))
                 title = (f'<a href="/comp/{ccid}">{esc(nm)}</a>' if ccid else esc(nm))
                 body += f'<b>{title}</b>'
+                done = cur_node in resolved_nodes
                 for txt in audit_by_node.get(cur_node, []):
                     t = str(txt).replace('[TBD] ', '').replace('  [torzo-audit]', '')
                     is_torzo = 'torzo' in t[:12].lower()
                     tag, rest = (t.split(':', 1) + [''])[:2] if ':' in t else ('chybí', t)
-                    cls = ' torzo' if is_torzo else ''
+                    if done:
+                        cls = ' done'; tag = '✓ vyřešeno'
+                    else:
+                        cls = ' torzo' if is_torzo else ''
                     body += (f'<div class="note-callout{cls}">'
                              f'<span class=tag>{esc(tag.strip())}</span>'
                              f'{esc(rest.strip() or t)}</div>')
@@ -997,7 +1010,15 @@ def build_full_pdf(d, sid):
                          backColor=colors.HexColor('#fff3df'), borderPadding=3,
                          borderColor=colors.HexColor('#d97706'), borderWidth=0.5,
                          leftIndent=2, spaceBefore=1, spaceAfter=1)
+    donebox = ParagraphStyle('donebox', parent=box,
+                             backColor=colors.HexColor('#e4f5e7'),
+                             borderColor=colors.HexColor('#3a9d4f'))
     anotes = audit_notes_by_node(d)
+    resolved = set()
+    for t in d['todo']:
+        if str(t['done']).strip().upper() == 'ANO':
+            m = re.search(r'NODE_S\d{4}_\d{2}_\d+', str(t['reference']))
+            if m: resolved.add(m.group(0))
     nodes = {n['node_id']: n for n in d['system']}
     checks = '☐ OK  ☐ doplnit týmy  ☐ sloučit  ☐ smazat  ☐ opravit  ☐ neúplné→Todo  ____________'
     buf = io.BytesIO()
@@ -1047,9 +1068,13 @@ def build_full_pdf(d, sid):
         for nid in order:
             nn = nodes.get(nid)
             nm = nn['name'] if nn else (nid or '')
+            is_done = nid in resolved
             block = [Paragraph(esc(nm), H3)]
             for c in anotes.get(nid, []):
-                block.append(Paragraph('⚑ ' + esc(c), box))
+                if is_done:
+                    block.append(Paragraph('✓ vyřešeno — ' + esc(c), donebox))
+                else:
+                    block.append(Paragraph('⚑ ' + esc(c), box))
             rows = [[r['pos'] or '', esc(r['club_name'] or ''),
                      r['GP'] or '', r['W'] or '', r['D'] or '', r['L'] or '',
                      f'{r["GF"] or ""}:{r["GA"] or ""}', r['PTS'] or '',
@@ -1057,7 +1082,7 @@ def build_full_pdf(d, sid):
             block.append(mk_table(
                 rows, ['#', 'Klub', 'GP', 'W', 'D', 'L', 'GF:GA', 'PTS', 'Fate'],
                 [7 * mm, 62 * mm, 10 * mm, 8 * mm, 8 * mm, 8 * mm, 16 * mm, 10 * mm, 22 * mm]))
-            if anotes.get(nid):
+            if anotes.get(nid) and not is_done:
                 block.append(Paragraph(checks, P))
             block.append(Spacer(1, 4))
             el.append(KeepTogether(block))
