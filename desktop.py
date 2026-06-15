@@ -80,6 +80,7 @@ class AlmanachDesktop(tk.Tk):
         if self.seasons:
             self.season_var.set(self.seasons[0])
             self.load_sid(self.seasons[0])
+        self.after(80, lambda: self.pan.sashpos(0, 470))
 
     # -- stavba UI --
     def _build_ui(self):
@@ -98,22 +99,25 @@ class AlmanachDesktop(tk.Tk):
         ttk.Button(top, text='PDF plný', command=lambda: self.export('full')).pack(side='right', padx=2)
         ttk.Button(top, text='PDF audit', command=lambda: self.export('audit')).pack(side='right', padx=2)
 
-        pan = ttk.Panedwindow(self, orient='horizontal')
-        pan.pack(fill='both', expand=True, padx=8, pady=4)
+        self.pan = ttk.Panedwindow(self, orient='horizontal')
+        self.pan.pack(fill='both', expand=True, padx=8, pady=4)
 
-        left = ttk.Frame(pan)
-        pan.add(left, weight=1)
+        left = ttk.Frame(self.pan)
+        self.pan.add(left, weight=1)
         self.tree = ttk.Treeview(left, show='tree')
-        self.tree.pack(side='left', fill='both', expand=True)
+        self.tree.column('#0', width=440, minwidth=240, stretch=True)
+        xsb = ttk.Scrollbar(left, orient='horizontal', command=self.tree.xview)
+        xsb.pack(side='bottom', fill='x')
         sb = ttk.Scrollbar(left, command=self.tree.yview)
         sb.pack(side='right', fill='y')
-        self.tree.config(yscrollcommand=sb.set)
+        self.tree.pack(side='left', fill='both', expand=True)
+        self.tree.config(yscrollcommand=sb.set, xscrollcommand=xsb.set)
         self.tree.bind('<<TreeviewSelect>>', self.on_select)
         self.tree.tag_configure('gap', foreground='#b45309')
         self.tree.tag_configure('done', foreground='#1b7a32')
 
-        right = ttk.Frame(pan)
-        pan.add(right, weight=2)
+        right = ttk.Frame(self.pan)
+        self.pan.add(right, weight=2)
         self.title_lbl = ttk.Label(right, text='', font=('TkDefaultFont', 13, 'bold'),
                                    wraplength=640, justify='left')
         self.title_lbl.pack(anchor='w', pady=(0, 2))
@@ -172,30 +176,40 @@ class AlmanachDesktop(tk.Tk):
         self._clear_detail()
 
     def populate_tree(self):
+        # Strom = org-chart hierarchie (parent_node_id) s plnými názvy.
+        # Žádné kódy listů — jen čitelné názvy soutěží.
         self.tree.delete(*self.tree.get_children())
         self.item_map = {}
         d = self.d
         resolved = resolved_set(d)
-        nr = core.node_rows(d)
-        for sh in sorted(d['standings'].keys()):
-            trows = [r for r in d['standings'][sh] if r['row_type'] == 'T']
-            if not trows:
-                continue
-            shid = self.tree.insert('', 'end', text=sh, open=False)
-            seen = set()
-            for r in trows:
-                nid = r['node_id']
-                if nid in seen:
-                    continue
-                seen.add(nid)
-                nm = self.nodes.get(nid, {}).get('name') or nid or '?'
-                gap = nid in self.anote
-                done = nid in resolved
-                mark = '✓ ' if done else ('⚑ ' if gap else '   ')
-                tag = 'done' if done else ('gap' if gap else '')
-                iid = self.tree.insert(shid, 'end', text=f'{mark}{nm}',
-                                       tags=(tag,) if tag else ())
-                self.item_map[iid] = ('node', nid)
+        ids = {n['node_id'] for n in d['system']}
+        children = {}
+        roots = []
+        for n in d['system']:
+            p = n['parent_node_id']
+            if p and p in ids:
+                children.setdefault(p, []).append(n)
+            else:
+                roots.append(n)   # bez rodiče (nebo rodič mimo sezónu) = vršek
+
+        def keyf(n):
+            return (core.lvl(n['level']) or 9999, str(n['name']))
+
+        def insert(parent_iid, n):
+            nid = n['node_id']
+            gap = nid in self.anote
+            done = nid in resolved
+            mark = '✓ ' if done else ('⚑ ' if gap else '')
+            tag = 'done' if done else ('gap' if gap else '')
+            iid = self.tree.insert(parent_iid, 'end',
+                                   text=f'{mark}{n["name"] or nid}',
+                                   tags=(tag,) if tag else (), open=False)
+            self.item_map[iid] = ('node', nid)
+            for c in sorted(children.get(nid, []), key=keyf):
+                insert(iid, c)
+
+        for n in sorted(roots, key=keyf):
+            insert('', n)
         others = [t for t in d['todo'] if not node_of(t)]
         if others:
             oid = self.tree.insert('', 'end', text='▣ Ostatní položky (TODO)', open=False)
