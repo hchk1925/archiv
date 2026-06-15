@@ -16,10 +16,18 @@ Windows:      dvojklik na run_desktop.bat
 macOS/Linux:  ./run_desktop.sh
 ```
 (Při prvním běhu se doinstalují knihovny.) Otevře se okno:
-- vlevo **strom soutěží** (torzo = ⚑, vyřešené = ✓),
+- vlevo **strom soutěží** = hierarchie (org chart) s **plnými, čitelnými názvy** (žádné kódy),
+  torzo = ⚑, vyřešené = ✓,
 - vpravo **tabulka týmů** a žlutý **komentář „co chybí"**,
 - dole **Řešení** (stav + typ + poznámka) → **Uložit do xlsx** zapíše rovnou do sešitu,
-- nahoře **PDF plný / PDF audit** pro tisk.
+- nahoře **Org chart ✎** (patra dle úrovní; přetažením soutěže změníš úroveň/nadřazenost
+  a uložíš do xlsx) a **PDF plný / PDF audit** pro tisk.
+
+### Plné názvy soutěží (blbuvzdorné)
+Názvy v datech jsou už rozbalené z kódů na čitelné (`30_Jihlavský L30` → `Jihlavský,
+3. úroveň (krajský přebor)`). Skript `expand_names.py` to umí spustit znovu:
+`python expand_names.py --preview` (jen ukázka do `docs/NAZVY_PREVIEW.csv`) /
+`--apply` (zápis do xlsx). Slovník úrovní lze upravit nahoře ve skriptu.
 
 Ručně: `pip install flask openpyxl reportlab` a `python desktop.py`.
 
@@ -65,6 +73,7 @@ Očekávaný výstup: `VŠE OK`.
 - `desktop.py` — desktopová appka (Tkinter) — **doporučená**
 - `app.py` — webová verze (Flask) + CLI printer/builder
 - `data/S*_FINAL.xlsx` — 74 sezón (zdroj pravdy, sem se zapisuje)
+- `expand_names.py` — rozbalení kódů názvů na plné názvy (re-runnable)
 - `build_db.py` — konsolidace sešitů → `almanach.sqlite` + CSV
 - `apply_torzo_gaps.py` — (re-runnable) zápis torz do TODO/NOTES listů
 - `test_app.py`, `test_desktop.py` — smoke testy

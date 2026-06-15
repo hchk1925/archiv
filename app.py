@@ -826,6 +826,33 @@ def save_todo_resolution(sid, num, done='ne', varianta='', poznamka=''):
     return combined
 
 
+def save_system_layout(sid, changes):
+    """Zapiš změny org-chartu (nadřazenost + úroveň) do SYSTEM listu.
+    changes: {node_id: {'parent_node_id': hodnota|None, 'level': hodnota}}.
+    Vrací počet změněných uzlů. Nezávislé na Flasku (sdílí desktop)."""
+    if not changes:
+        return 0
+    path = os.path.join(DATA, f'S{sid}_FINAL.xlsx')
+    wb = openpyxl.load_workbook(path)
+    ws = wb['SYSTEM']
+    H = {c.value: j for j, c in enumerate(ws[1], 1) if c.value}
+    cid = H.get('node_id'); cpar = H.get('parent_node_id'); clev = H.get('level')
+    n = 0
+    for row in ws.iter_rows(min_row=2):
+        if not cid:
+            break
+        nid = row[cid - 1].value
+        if nid in changes:
+            ch = changes[nid]
+            if 'parent_node_id' in ch and cpar:
+                row[cpar - 1].value = ch['parent_node_id'] or None
+            if 'level' in ch and clev:
+                row[clev - 1].value = ch['level'] or None
+            n += 1
+    wb.save(path); wb.close()
+    return n
+
+
 @app.route('/s/<sid>/audit/save', methods=['POST'])
 def audit_save(sid):
     if sid not in CACHE: abort(404)

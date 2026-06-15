@@ -8,10 +8,12 @@ Sdílí backend s webovou verzí (app.py): načítání sezón, audit, PDF.
 Spuštění:  python desktop.py
 Potřebuje: tkinter (součást Pythonu na Windows/macOS) + openpyxl (+ reportlab pro PDF).
 """
+import collections
 import os
 import re
 import sys
 import tkinter as tk
+from math import ceil
 from tkinter import ttk, messagebox, filedialog
 
 import app as core  # sdílený backend (Flask se neespouští, jen importuje)
@@ -98,6 +100,7 @@ class AlmanachDesktop(tk.Tk):
         self.count_lbl.pack(side='left', padx=12)
         ttk.Button(top, text='PDF plný', command=lambda: self.export('full')).pack(side='right', padx=2)
         ttk.Button(top, text='PDF audit', command=lambda: self.export('audit')).pack(side='right', padx=2)
+        ttk.Button(top, text='Org chart ✎', command=self.open_orgchart).pack(side='right', padx=10)
 
         self.pan = ttk.Panedwindow(self, orient='horizontal')
         self.pan.pack(fill='both', expand=True, padx=8, pady=4)
@@ -357,6 +360,259 @@ class AlmanachDesktop(tk.Tk):
             f.write(data)
         self.status.config(text=f'PDF uloženo: {path}')
         open_file(path)
+
+    def open_orgchart(self):
+        if self.d:
+            OrgChart(self, self.sid, self.d, on_saved=self.reload_current)
+
+    def reload_current(self):
+        if self.sid:
+            self.load_sid(self.sid)
+            self.status.config(text=f'Org chart uložen do data/S{self.sid}_FINAL.xlsx.')
+
+
+LANE_LABEL = {
+    'L10': 'Nejvyšší soutěž', 'L15': 'Kvalifikace',
+    'L20': '2. úroveň (oblastní)', 'L30': '3. úroveň (krajský přebor)',
+    'L40': '4. úroveň', 'L50': '5. úroveň',
+}
+
+
+def lane_label(lev):
+    if lev in LANE_LABEL:
+        return LANE_LABEL[lev]
+    n = core.lvl(lev)
+    return f'{n // 10}. úroveň' if n else '(bez úrovně)'
+
+
+class OrgChart(tk.Toplevel):
+    """Org chart sezóny: patra dle úrovní, přetahováním se mění úroveň (svisle)
+    a nadřazenost (puštění na jinou soutěž). Uloží se do SYSTEM listu xlsx."""
+    BOXW, BOXH, GAPX, GAPY, HEADER, COLS = 184, 40, 14, 10, 22, 8
+
+    def __init__(self, master, sid, d, on_saved=None):
+        super().__init__(master)
+        self.title(f'Org chart — {d["label"]}')
+        self.geometry('1240x760')
+        self.sid = sid
+        self.on_saved = on_saved
+        self.nodes = {n['node_id']: dict(n) for n in d['system']}
+        self.model = {nid: {'parent': (n['parent_node_id']
+                                       if n['parent_node_id'] in self.nodes else None),
+                            'level': n['level']}
+                      for nid, n in self.nodes.items()}
+        self.orig = {nid: dict(v) for nid, v in self.model.items()}
+        self.item_node = {}     # canvas item id -> nid
+        self.box = {}           # nid -> (x, y)
+        self.bands = []         # [(level, y0, y1)]
+        self.drag = None
+        self._build()
+        self.relayout()
+
+    # -- UI --
+    def _build(self):
+        bar = ttk.Frame(self)
+        bar.pack(fill='x')
+        ttk.Label(bar, foreground='#555',
+                  text='Táhni soutěž:  svisle = změna úrovně (patro)  ·  '
+                       'puštění na jinou soutěž = nadřazenost.').pack(side='left', padx=6, pady=4)
+        self.save_btn = ttk.Button(bar, text='Uložit do xlsx', command=self.save)
+        self.save_btn.pack(side='right', padx=4)
+        ttk.Button(bar, text='Vrátit změny', command=self.reset).pack(side='right')
+        self.info = ttk.Label(bar, text='')
+        self.info.pack(side='right', padx=10)
+        wrap = ttk.Frame(self)
+        wrap.pack(fill='both', expand=True)
+        self.cv = tk.Canvas(wrap, background='#fbfbfd', highlightthickness=0)
+        ysb = ttk.Scrollbar(wrap, orient='vertical', command=self.cv.yview)
+        xsb = ttk.Scrollbar(self, orient='horizontal', command=self.cv.xview)
+        self.cv.configure(yscrollcommand=ysb.set, xscrollcommand=xsb.set)
+        xsb.pack(side='bottom', fill='x')
+        ysb.pack(side='right', fill='y')
+        self.cv.pack(side='left', fill='both', expand=True)
+        self.cv.tag_bind('box', '<ButtonPress-1>', self._press)
+        self.cv.tag_bind('box', '<B1-Motion>', self._motion)
+        self.cv.tag_bind('box', '<ButtonRelease-1>', self._release)
+
+    # -- model helpers --
+    def _children(self):
+        kids = collections.defaultdict(list)
+        for nid, v in self.model.items():
+            if v['parent']:
+                kids[v['parent']].append(nid)
+        return kids
+
+    def _root_of(self, nid):
+        seen = set()
+        while True:
+            p = self.model[nid]['parent']
+            if not p or p not in self.model or p in seen:
+                return nid
+            seen.add(nid)
+            nid = p
+
+    def _descendants(self, nid):
+        kids = self._children()
+        out, stack = set(), [nid]
+        while stack:
+            for c in kids[stack.pop()]:
+                if c not in out:
+                    out.add(c)
+                    stack.append(c)
+        return out
+
+    def _levels(self):
+        return sorted({v['level'] for v in self.model.values()},
+                      key=lambda l: (core.lvl(l) or 9999))
+
+    # -- kreslení --
+    def relayout(self):
+        self.cv.delete('all')
+        self.item_node = {}
+        self.box = {}
+        self.bands = []
+        per = collections.defaultdict(list)
+        for nid, v in self.model.items():
+            per[v['level']].append(nid)
+        rootname = lambda n: str(self.nodes[self._root_of(n)]['name'])
+        y = 10
+        x0 = 12
+        for lev in self._levels():
+            ids = sorted(per[lev], key=lambda n: (rootname(n), str(self.nodes[n]['name'])))
+            rows = max(1, ceil(len(ids) / self.COLS))
+            self.cv.create_rectangle(2, y, 2, y, outline='')  # placeholder
+            self.cv.create_text(x0, y + 2, anchor='nw', text=f'{lane_label(lev)}  ({len(ids)})',
+                                font=('TkDefaultFont', 9, 'bold'), fill='#1a3050')
+            top = y + self.HEADER
+            for i, nid in enumerate(ids):
+                col, row = i % self.COLS, i // self.COLS
+                bx = x0 + col * (self.BOXW + self.GAPX)
+                by = top + row * (self.BOXH + self.GAPY)
+                self._draw_box(nid, bx, by)
+            band_h = self.HEADER + rows * (self.BOXH + self.GAPY) + 14
+            self.cv.create_line(0, y + band_h - 7, 4000, y + band_h - 7,
+                                fill='#e0e3e8')
+            self.bands.append((lev, y, y + band_h))
+            y += band_h
+        self._draw_links()
+        self.cv.configure(scrollregion=(0, 0,
+                          x0 + self.COLS * (self.BOXW + self.GAPX) + 40, y + 20))
+        self._refresh_info()
+
+    def _draw_box(self, nid, x, y):
+        changed = self.model[nid] != self.orig.get(nid)
+        fill = '#fde8c8' if changed else '#ffffff'
+        rect = self.cv.create_rectangle(x, y, x + self.BOXW, y + self.BOXH,
+                                        fill=fill, outline='#9aa7b8', width=1.2,
+                                        tags=('box', f'g_{nid}'))
+        nm = str(self.nodes[nid]['name'])
+        if len(nm) > 46:
+            nm = nm[:44] + '…'
+        txt = self.cv.create_text(x + 7, y + self.BOXH / 2, anchor='w', text=nm,
+                                  width=self.BOXW - 14, font=('TkDefaultFont', 8),
+                                  tags=('box', f'g_{nid}'))
+        self.item_node[rect] = nid
+        self.item_node[txt] = nid
+        self.box[nid] = (x, y)
+
+    def _draw_links(self):
+        for nid, v in self.model.items():
+            p = v['parent']
+            if p and p in self.box and nid in self.box:
+                px, py = self.box[p]
+                cx, cy = self.box[nid]
+                self.cv.create_line(px + self.BOXW / 2, py + self.BOXH,
+                                    cx + self.BOXW / 2, cy,
+                                    fill='#b9c2cf', width=1, tags='link')
+        self.cv.tag_lower('link')
+
+    # -- drag --
+    def _press(self, e):
+        cur = self.cv.find_withtag('current')
+        if not cur:
+            return
+        nid = self.item_node.get(cur[0])
+        if nid is None:
+            return
+        self.drag = {'nid': nid, 'x': self.cv.canvasx(e.x), 'y': self.cv.canvasy(e.y)}
+        self.cv.tag_raise(f'g_{nid}')
+
+    def _motion(self, e):
+        if not self.drag:
+            return
+        cx, cy = self.cv.canvasx(e.x), self.cv.canvasy(e.y)
+        self.cv.move(f'g_{self.drag["nid"]}', cx - self.drag['x'], cy - self.drag['y'])
+        self.drag['x'], self.drag['y'] = cx, cy
+        self._highlight(cx, cy)
+
+    def _highlight(self, cx, cy):
+        self.cv.delete('hl')
+        tgt = self._target_at(cx, cy, self.drag['nid'])
+        if tgt and tgt in self.box:
+            x, y = self.box[tgt]
+            self.cv.create_rectangle(x - 2, y - 2, x + self.BOXW + 2, y + self.BOXH + 2,
+                                     outline='#1b7a32', width=2, tags='hl')
+
+    def _band_at(self, cy):
+        for lev, y0, y1 in self.bands:
+            if y0 <= cy < y1:
+                return lev
+        return self.bands[-1][0] if self.bands and cy >= self.bands[-1][2] else (
+               self.bands[0][0] if self.bands else None)
+
+    def _target_at(self, cx, cy, nid):
+        skip = self._descendants(nid) | {nid}
+        for item in reversed(self.cv.find_overlapping(cx - 1, cy - 1, cx + 1, cy + 1)):
+            t = self.item_node.get(item)
+            if t and t not in skip:
+                return t
+        return None
+
+    def _release(self, e):
+        if not self.drag:
+            return
+        nid = self.drag['nid']
+        cx, cy = self.cv.canvasx(e.x), self.cv.canvasy(e.y)
+        self.cv.delete('hl')
+        new_parent = self._target_at(cx, cy, nid)
+        new_level = (self.model[new_parent]['level'] if new_parent
+                     else self._band_at(cy)) or self.model[nid]['level']
+        self.drag = None
+        self.apply_change(nid, new_parent, new_level)
+
+    def apply_change(self, nid, new_parent, new_level):
+        """Změní nadřazenost/úroveň uzlu (testovatelné bez myši)."""
+        if new_parent in (self._descendants(nid) | {nid}):
+            new_parent = self.model[nid]['parent']     # zákaz cyklu
+        self.model[nid]['parent'] = new_parent
+        self.model[nid]['level'] = new_level
+        self.relayout()
+
+    # -- akce --
+    def _changes(self):
+        return {nid: v for nid, v in self.model.items() if v != self.orig.get(nid)}
+
+    def _refresh_info(self):
+        n = len(self._changes())
+        self.info.config(text=(f'{n} změn k uložení' if n else 'beze změn'))
+
+    def reset(self):
+        self.model = {nid: dict(v) for nid, v in self.orig.items()}
+        self.relayout()
+
+    def save(self):
+        ch = self._changes()
+        if not ch:
+            messagebox.showinfo('Org chart', 'Žádné změny k uložení.')
+            return
+        payload = {nid: {'parent_node_id': v['parent'], 'level': v['level']}
+                   for nid, v in ch.items()}
+        n = core.save_system_layout(self.sid, payload)
+        self.orig = {nid: dict(v) for nid, v in self.model.items()}
+        self.relayout()
+        messagebox.showinfo('Org chart', f'Uloženo {n} změn do xlsx.')
+        if self.on_saved:
+            self.on_saved()
 
 
 def main():
