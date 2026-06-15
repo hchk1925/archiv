@@ -1,32 +1,33 @@
 # Almanach — nástroj (korektor · viewer · builder · printer)
 
-Vše v jednom souboru **`app.py`**. Zdroj pravdy jsou sešity v **`data/S*_FINAL.xlsx`**.
+Zdroj pravdy jsou sešity v **`data/S*_FINAL.xlsx`**. Dvě podoby téhož:
+- **`desktop.py`** — desktopová appka (okno, bez prohlížeče) — **doporučená**
+- **`app.py`** — webová verze (běží v prohlížeči) — bonus
+
+Obě sdílí stejný backend a zapisují do stejných Excelů.
 
 ## 1. Co potřebuješ
-- Python 3.9+ (testováno na 3.11)
-- balíčky: `flask`, `openpyxl`, `reportlab` (pro PDF)
+- Python 3.9+ (na Windows/macOS má `tkinter` v sobě)
+- balíčky: `flask`, `openpyxl`, `reportlab`
 
-## 2. Instalace
-```bash
-# (volitelně) virtuální prostředí
-python -m venv .venv
-# Windows:  .venv\Scripts\activate
-# macOS/Linux:  source .venv/bin/activate
-
-pip install flask openpyxl reportlab
+## 2. Spuštění — DESKTOP (doporučeno)
 ```
-
-## 3. Spuštění aplikace
-```bash
-python app.py
+Windows:      dvojklik na run_desktop.bat
+macOS/Linux:  ./run_desktop.sh
 ```
-Otevři v prohlížeči: **http://localhost:5000**
+(Při prvním běhu se doinstalují knihovny.) Otevře se okno:
+- vlevo **strom soutěží** (torzo = ⚑, vyřešené = ✓),
+- vpravo **tabulka týmů** a žlutý **komentář „co chybí"**,
+- dole **Řešení** (stav + typ + poznámka) → **Uložit do xlsx** zapíše rovnou do sešitu,
+- nahoře **PDF plný / PDF audit** pro tisk.
 
-- Seznam sezón → klikni na sezónu → **pyramida + všechny tabulky**.
-- Pod tabulkami se žlutě/oranžově ukazují **komentáře „co chybí"**.
-- Tlačítko **⚑ audit** → vyřeš položku (stav + řešení + poznámka) → **Uložit do xlsx**
-  (zapíše se rovnou do příslušného sešitu — žádný mezikrok).
-- **PDF plný** / **PDF audit** = tisk pro ruční práci (čekárna, gauč).
+Ručně: `pip install flask openpyxl reportlab` a `python desktop.py`.
+
+## 3. Spuštění — WEB (bonus)
+```
+python app.py        →  http://localhost:5000
+```
+Stejné funkce v prohlížeči (sezóna → tabulky + komentáře → ⚑ audit → uložit).
 
 ## 4. Tisk / export z příkazové řádky
 ```bash
@@ -61,9 +62,12 @@ python test_app.py        # projede routy, PDF, zápis do xlsx (a vrátí ho zp�
 Očekávaný výstup: `VŠE OK`.
 
 ## Soubory v balíku
-- `app.py` — celý nástroj (web + CLI)
+- `desktop.py` — desktopová appka (Tkinter) — **doporučená**
+- `app.py` — webová verze (Flask) + CLI printer/builder
 - `data/S*_FINAL.xlsx` — 74 sezón (zdroj pravdy, sem se zapisuje)
 - `build_db.py` — konsolidace sešitů → `almanach.sqlite` + CSV
 - `apply_torzo_gaps.py` — (re-runnable) zápis torz do TODO/NOTES listů
-- `test_app.py` — smoke testy
-- `requirements.txt`, `fonts/`, `run.sh`, `run.bat`
+- `test_app.py`, `test_desktop.py` — smoke testy
+- `requirements.txt`, `fonts/`
+- `run_desktop.bat` / `run_desktop.sh` — spuštění desktopu
+- `run.bat` / `run.sh` — spuštění webu

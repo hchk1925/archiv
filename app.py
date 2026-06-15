@@ -180,6 +180,13 @@ def load_season(sid):
     return out
 
 
+def list_season_ids():
+    """Seřazený seznam sezón ('1947_48', …) ze složky data/ (bez načítání)."""
+    files = sorted(glob.glob(os.path.join(DATA, 'S*_FINAL.xlsx')))
+    return [re.search(r'S(\d{4}_\d{2})', os.path.basename(p)).group(1)
+            for p in files]
+
+
 def load_all():
     global SEASON_ORDER
     files = sorted(glob.glob(os.path.join(DATA, 'S*_FINAL.xlsx')))
@@ -799,14 +806,11 @@ def audit(sid):
     return render(f'Audit {sid}', body, sid, flash)
 
 
-@app.route('/s/<sid>/audit/save', methods=['POST'])
-def audit_save(sid):
-    if sid not in CACHE: abort(404)
-    num = str(request.form.get('num', ''))
-    done = request.form.get('done', 'ne')
-    varianta = request.form.get('varianta', '').strip()
-    poznamka = request.form.get('poznamka', '').strip()
-    combined = (f'[{varianta}] ' if varianta else '') + poznamka
+def save_todo_resolution(sid, num, done='ne', varianta='', poznamka=''):
+    """Zapiš řešení audit položky do TODO listu sešitu (sdílí web i desktop).
+    Vrací sloučenou poznámku. Nezávislé na Flasku."""
+    num = str(num)
+    combined = (f'[{varianta.strip()}] ' if varianta.strip() else '') + poznamka.strip()
     path = os.path.join(DATA, f'S{sid}_FINAL.xlsx')
     wb = openpyxl.load_workbook(path)
     ws = wb['TODO']
@@ -819,6 +823,16 @@ def audit_save(sid):
             if cpoz: row[cpoz - 1].value = combined or None
             break
     wb.save(path); wb.close()
+    return combined
+
+
+@app.route('/s/<sid>/audit/save', methods=['POST'])
+def audit_save(sid):
+    if sid not in CACHE: abort(404)
+    save_todo_resolution(sid, request.form.get('num', ''),
+                         request.form.get('done', 'ne'),
+                         request.form.get('varianta', ''),
+                         request.form.get('poznamka', ''))
     reload_season(sid)
     return redirect(url_for('audit', sid=sid, saved=1))
 

@@ -1,0 +1,6 @@
+@echo off
+cd /d "%~dp0"
+echo Instaluji potrebne knihovny (jen poprve)...
+python -m pip install --quiet flask openpyxl reportlab
+echo Spoustim Almanach (desktop)...
+start "" pythonw desktop.py
