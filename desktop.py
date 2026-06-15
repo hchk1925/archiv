@@ -388,7 +388,13 @@ def lane_label(lev):
 class OrgChart(tk.Toplevel):
     """Org chart sezóny: patra dle úrovní, přetahováním se mění úroveň (svisle)
     a nadřazenost (puštění na jinou soutěž). Uloží se do SYSTEM listu xlsx."""
-    BOXW, BOXH, GAPX, GAPY, HEADER, COLS = 184, 40, 14, 10, 22, 8
+    BOXW, BOXH, GAPX, GAPY, HEADER, COLS, PAD = 190, 46, 18, 16, 30, 7, 16
+    # jemné barvy pater (fill, okraj) — cyklicky podle úrovně
+    PALETTE = [('#e3edff', '#8fb0e6'), ('#dcf4e8', '#74c19c'),
+               ('#fdecc9', '#e0b76e'), ('#ece0f7', '#b194d6'),
+               ('#fde0e2', '#e0939a'), ('#ddf0f3', '#83bdc7'),
+               ('#eef1d6', '#bcc47e')]
+    BAND_BG = ('#f6f8fc', '#eef2f8')
 
     def __init__(self, master, sid, d, on_saved=None):
         super().__init__(master)
@@ -402,10 +408,20 @@ class OrgChart(tk.Toplevel):
                             'level': n['level']}
                       for nid, n in self.nodes.items()}
         self.orig = {nid: dict(v) for nid, v in self.model.items()}
-        self.item_node = {}     # canvas item id -> nid
+        self.item_node = {}     # canvas item id -> nid (boxy = drag)
+        self.toggle_node = {}   # canvas item id -> nid (▸/▾ = sbalit)
         self.box = {}           # nid -> (x, y)
         self.bands = []         # [(level, y0, y1)]
         self.drag = None
+        self.tier_item = {}     # canvas item id -> level (pruh patra = sbalit)
+        # výchozí stav: rodiče sbalené + regionální patra (úroveň ≥ 30) sbalená
+        # do jednoho „chlívku", ať to není přeplácané
+        kids = self._children()
+        self.collapsed = {nid for nid in self.nodes if kids.get(nid)}
+        # rozbalené necháme jen vrchní patra (liga/kvalifikace/oblastní, úroveň < 30);
+        # regiony a „bez úrovně" jsou sbalené do chlívku
+        self.tier_collapsed = {lev for lev in {v['level'] for v in self.model.values()}
+                               if not (core.lvl(lev) and core.lvl(lev) < 30)}
         self._build()
         self.relayout()
 
@@ -433,6 +449,8 @@ class OrgChart(tk.Toplevel):
         self.cv.tag_bind('box', '<ButtonPress-1>', self._press)
         self.cv.tag_bind('box', '<B1-Motion>', self._motion)
         self.cv.tag_bind('box', '<ButtonRelease-1>', self._release)
+        self.cv.tag_bind('tier', '<ButtonPress-1>', self._toggle_tier)
+        self.cv.tag_bind('toggle', '<ButtonPress-1>', self._toggle_node)
 
     # -- model helpers --
     def _children(self):
@@ -465,55 +483,102 @@ class OrgChart(tk.Toplevel):
         return sorted({v['level'] for v in self.model.values()},
                       key=lambda l: (core.lvl(l) or 9999))
 
+    def _visible(self, nid):
+        """Uzel je vidět, pokud žádný jeho předek není sbalený."""
+        p = self.model[nid]['parent']
+        while p and p in self.model:
+            if p in self.collapsed:
+                return False
+            p = self.model[p]['parent']
+        return True
+
+    def _round_rect(self, x1, y1, x2, y2, r=9, **kw):
+        pts = [x1 + r, y1, x2 - r, y1, x2, y1, x2, y1 + r, x2, y2 - r, x2, y2,
+               x2 - r, y2, x1 + r, y2, x1, y2, x1, y2 - r, x1, y1 + r, x1, y1]
+        return self.cv.create_polygon(pts, smooth=True, **kw)
+
     # -- kreslení --
     def relayout(self):
         self.cv.delete('all')
         self.item_node = {}
+        self.toggle_node = {}
+        self.tier_item = {}
         self.box = {}
         self.bands = []
+        kids = self._children()
         per = collections.defaultdict(list)
         for nid, v in self.model.items():
             per[v['level']].append(nid)
         rootname = lambda n: str(self.nodes[self._root_of(n)]['name'])
-        y = 10
-        x0 = 12
-        for lev in self._levels():
-            ids = sorted(per[lev], key=lambda n: (rootname(n), str(self.nodes[n]['name'])))
-            rows = max(1, ceil(len(ids) / self.COLS))
-            self.cv.create_rectangle(2, y, 2, y, outline='')  # placeholder
-            self.cv.create_text(x0, y + 2, anchor='nw', text=f'{lane_label(lev)}  ({len(ids)})',
-                                font=('TkDefaultFont', 9, 'bold'), fill='#1a3050')
+        W = self.PAD + self.COLS * (self.BOXW + self.GAPX) + 30
+        nodecol = {}
+        plan = []          # (nid, x, y, fill, edge, has_kids, collapsed)
+        y = self.PAD
+        for ti, lev in enumerate(self._levels()):
+            fill, edge = self.PALETTE[ti % len(self.PALETTE)]
+            ids = per[lev]
+            tcol = lev in self.tier_collapsed
+            vis = ([] if tcol else
+                   [n for n in sorted(ids, key=lambda n: (rootname(n), str(self.nodes[n]['name'])))
+                    if self._visible(n)])
+            rows = ceil(len(vis) / self.COLS) if vis else 0
+            body_h = rows * (self.BOXH + self.GAPY) if vis else 0
+            self._draw_tier_header(lev, len(ids), tcol, edge, y, W)
+            if body_h:
+                self.cv.create_rectangle(0, y + self.HEADER - 6, W,
+                                         y + self.HEADER + body_h + 4,
+                                         fill=self.BAND_BG[ti % 2], outline='', tags='bandbg')
             top = y + self.HEADER
-            for i, nid in enumerate(ids):
+            for i, nid in enumerate(vis):
                 col, row = i % self.COLS, i // self.COLS
-                bx = x0 + col * (self.BOXW + self.GAPX)
+                bx = self.PAD + col * (self.BOXW + self.GAPX)
                 by = top + row * (self.BOXH + self.GAPY)
-                self._draw_box(nid, bx, by)
-            band_h = self.HEADER + rows * (self.BOXH + self.GAPY) + 14
-            self.cv.create_line(0, y + band_h - 7, 4000, y + band_h - 7,
-                                fill='#e0e3e8')
+                self.box[nid] = (bx, by)
+                nodecol[nid] = (fill, edge)
+                plan.append((nid, bx, by, fill, edge, bool(kids.get(nid)),
+                             nid in self.collapsed))
+            band_h = self.HEADER + (body_h + 12 if body_h else 4)
             self.bands.append((lev, y, y + band_h))
-            y += band_h
+            y += band_h + 6
         self._draw_links()
-        self.cv.configure(scrollregion=(0, 0,
-                          x0 + self.COLS * (self.BOXW + self.GAPX) + 40, y + 20))
+        for args in plan:
+            self._draw_box(*args)
+        self.cv.configure(scrollregion=(0, 0, W + 10, y + 20))
         self._refresh_info()
 
-    def _draw_box(self, nid, x, y):
+    def _draw_tier_header(self, lev, count, collapsed, edge, y, W):
+        tri = '▸' if collapsed else '▾'
+        hint = '  — klikni pro rozbalení' if collapsed and count > 1 else ''
+        bar = self._round_rect(self.PAD, y, W - 18, y + self.HEADER - 8, r=8,
+                               fill=edge, outline='', tags=('tier', f'tier_{lev}'))
+        t = self.cv.create_text(self.PAD + 12, y + (self.HEADER - 8) / 2, anchor='w',
+                                text=f'{tri}  {lane_label(lev)}   ({count}){hint}',
+                                fill='white', font=('TkDefaultFont', 10, 'bold'),
+                                tags=('tier', f'tier_{lev}'))
+        self.tier_item[bar] = lev
+        self.tier_item[t] = lev
+
+    def _draw_box(self, nid, x, y, fill, edge, has_kids, collapsed):
         changed = self.model[nid] != self.orig.get(nid)
-        fill = '#fde8c8' if changed else '#ffffff'
-        rect = self.cv.create_rectangle(x, y, x + self.BOXW, y + self.BOXH,
-                                        fill=fill, outline='#9aa7b8', width=1.2,
-                                        tags=('box', f'g_{nid}'))
-        nm = str(self.nodes[nid]['name'])
-        if len(nm) > 46:
-            nm = nm[:44] + '…'
-        txt = self.cv.create_text(x + 7, y + self.BOXH / 2, anchor='w', text=nm,
-                                  width=self.BOXW - 14, font=('TkDefaultFont', 8),
+        f = '#fbd38d' if changed else fill
+        e = '#d97706' if changed else edge
+        rect = self._round_rect(x, y, x + self.BOXW, y + self.BOXH, r=9,
+                                fill=f, outline=e, width=1.5, tags=('box', f'g_{nid}'))
+        nm = str(self.nodes[nid]['name']).strip() or '(bez názvu)'
+        if len(nm) > 54:
+            nm = nm[:52] + '…'
+        offx = 24 if has_kids else 11
+        txt = self.cv.create_text(x + offx, y + self.BOXH / 2, anchor='w', text=nm,
+                                  width=self.BOXW - offx - 8, font=('TkDefaultFont', 8),
                                   tags=('box', f'g_{nid}'))
         self.item_node[rect] = nid
         self.item_node[txt] = nid
-        self.box[nid] = (x, y)
+        if has_kids:
+            tri = self.cv.create_text(x + 12, y + self.BOXH / 2, anchor='w',
+                                      text=('▸' if collapsed else '▾'),
+                                      font=('TkDefaultFont', 9, 'bold'), fill=e,
+                                      tags=('toggle',))
+            self.toggle_node[tri] = nid
 
     def _draw_links(self):
         for nid, v in self.model.items():
@@ -521,10 +586,29 @@ class OrgChart(tk.Toplevel):
             if p and p in self.box and nid in self.box:
                 px, py = self.box[p]
                 cx, cy = self.box[nid]
-                self.cv.create_line(px + self.BOXW / 2, py + self.BOXH,
-                                    cx + self.BOXW / 2, cy,
-                                    fill='#b9c2cf', width=1, tags='link')
+                x1, y1 = px + self.BOXW / 2, py + self.BOXH
+                x2, y2 = cx + self.BOXW / 2, cy
+                my = (y1 + y2) / 2 if y2 > y1 else y1 + 12
+                self.cv.create_line(x1, y1, x1, my, x2, my, x2, y2,
+                                    fill='#aab4c2', width=1.2, tags='link')
         self.cv.tag_lower('link')
+        self.cv.tag_lower('bandbg')
+
+    def _toggle_tier(self, e):
+        cur = self.cv.find_withtag('current')
+        lev = self.tier_item.get(cur[0]) if cur else None
+        if lev is None:
+            return
+        self.tier_collapsed ^= {lev}
+        self.relayout()
+
+    def _toggle_node(self, e):
+        cur = self.cv.find_withtag('current')
+        nid = self.toggle_node.get(cur[0]) if cur else None
+        if nid is None:
+            return
+        self.collapsed ^= {nid}
+        self.relayout()
 
     # -- drag --
     def _press(self, e):

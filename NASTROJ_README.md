@@ -23,6 +23,10 @@ macOS/Linux:  ./run_desktop.sh
 - nahoře **Org chart ✎** (patra dle úrovní; přetažením soutěže změníš úroveň/nadřazenost
   a uložíš do xlsx) a **PDF plný / PDF audit** pro tisk.
 
+V **Org chartu** jsou regionální patra sbalená do barevných „chlívků" (klikni na pruh
+patra = rozbalit, ▸ u soutěže = rozbalit její skupiny). Přetažení boxu: svisle do jiného
+patra mění úroveň, puštění na jinou soutěž mění nadřazenost. **Uložit do xlsx** zapíše.
+
 ### Plné názvy soutěží (blbuvzdorné)
 Názvy v datech jsou už rozbalené z kódů na čitelné (`30_Jihlavský L30` → `Jihlavský,
 3. úroveň (krajský přebor)`). Skript `expand_names.py` to umí spustit znovu:
