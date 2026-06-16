@@ -1163,13 +1163,13 @@ def _pdf_core(name):
 
 _GENERIC_RULES = [
     (r'extraliga', 'extraliga'),
-    (r'\bII\.?\s*[ČC]NHL', '2. ČNHL'),
-    (r'\bI\.?\s*[ČC]NHL|^[ČC]NHL', 'ČNHL'),
-    (r'\bII\.?\s*SNHL', '2. SNHL'),
-    (r'\bI\.?\s*SNHL|^SNHL', 'SNHL'),
+    (r'\b(II|2)\.?\s*[ČC]NHL', '2. ČNHL'),
+    (r'\b(I|1)\.?\s*[ČC]NHL|^[ČC]NHL', 'ČNHL'),     # ČNHL = 1.ČNHL (synonyma)
+    (r'\b(II|2)\.?\s*SNHL', '2. SNHL'),
+    (r'\b(I|1)\.?\s*SNHL|^SNHL', 'SNHL'),           # SNHL = 1.SNHL
+    (r'\b(II|2)\.?\s*liga|druhá liga', '2. liga'),
+    (r'\b(I|1)\.?\s*liga|první liga|^liga|státní liga|celostátní', 'liga'),
     (r'národní hokejová liga|\bNHL\b', 'NHL'),
-    (r'\bII\.?\s*liga|2\.\s*liga|druhá liga', '2. liga'),
-    (r'\bI\.?\s*liga|1\.\s*liga|první liga|^liga|státní liga|celostátní', 'liga'),
     (r'divize', 'divize'),
     (r'oblast', 'oblastní soutěž'),
     (r'župa|župn', 'župa'),
@@ -1177,12 +1177,18 @@ _GENERIC_RULES = [
 
 
 def _generic(name):
-    """Generické označení soutěže (liga, 2. liga, ČNHL, SNHL, 2. ČNHL…)."""
+    """Zemská generická forma (liga, 2. liga, ČNHL, SNHL, 2. ČNHL…)."""
     s = str(name or '')
     for pat, rep in _GENERIC_RULES:
         if re.search(pat, s, re.I):
             return rep
     return s
+
+
+def _tier_concept(generic_name):
+    """Zastřešující úroveň: ČNHL/SNHL → NHL, 2.ČNHL/2.SNHL → 2. NHL (jinak beze změny)."""
+    return {'ČNHL': 'NHL', 'SNHL': 'NHL',
+            '2. ČNHL': '2. NHL', '2. SNHL': '2. NHL'}.get(generic_name, generic_name)
 
 
 def _pdf_tier_name(level, names):
@@ -1361,11 +1367,11 @@ def build_orgchart_pdf(d, sid):
                         h + 2 * mm, 3, stroke=1, fill=1)
             c.setFillColor(colors.HexColor('#b07d10')); c.setFont(PDF_FONT_BOLD, 7)
             c.drawRightString(W - M - 2, cur_y + 1, '◄ šejdr: ČR liga · SK už kraje')
-        # generický štítek úrovně (z lig, jinak druh krajské soutěže)
-        glabels = list(dict.fromkeys(
-            [_generic(x) for x in lg_cz] + [_generic(x) for x in lg_sk]))
-        if glabels:
-            tlabel = ' / '.join(glabels[:3])
+        # štítek úrovně = zastřešující koncept (NHL / 2. NHL), jinak druh kraj. soutěže
+        concepts = list(dict.fromkeys(
+            _tier_concept(_generic(x)) for x in (lg_cz + lg_sk)))
+        if concepts:
+            tlabel = ' / '.join(concepts[:3])
         elif rc or rs:
             tlabel = reg_label(lev, 'CZ' if rc else 'SK')
         else:
