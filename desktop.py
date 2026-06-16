@@ -371,18 +371,15 @@ class AlmanachDesktop(tk.Tk):
             self.status.config(text=f'Org chart uložen do data/S{self.sid}_FINAL.xlsx.')
 
 
-LANE_LABEL = {
-    'L10': 'Nejvyšší soutěž', 'L15': 'Kvalifikace',
-    'L20': '2. úroveň (oblastní)', 'L30': '3. úroveň (krajský přebor)',
-    'L40': '4. úroveň', 'L50': '5. úroveň',
-}
-
-
 def lane_label(lev):
-    if lev in LANE_LABEL:
-        return LANE_LABEL[lev]
+    """Úroveň = hloubka v pyramidě. Stejné číslo může v ČR a SK znamenat jinou
+    soutěž (pyramida bývá asymetrická), proto jen číslo, ne semantika."""
     n = core.lvl(lev)
-    return f'{n // 10}. úroveň' if n else '(bez úrovně)'
+    if n is None:
+        return '(bez úrovně)'
+    if n % 10 == 5:
+        return 'Kvalifikace'
+    return f'{n // 10}. úroveň' + (' (nejvyšší)' if n == 10 else '')
 
 
 SK_RE = re.compile(

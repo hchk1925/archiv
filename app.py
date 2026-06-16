@@ -1152,27 +1152,14 @@ def _pdf_core(name):
 
 
 def _pdf_tier_name(level, names):
-    cores = []
-    for n in names:
-        c = _pdf_core(n)
-        if c and c not in cores:
-            cores.append(c)
-    low = ' '.join(names).lower()
-    if sum('kvalifik' in c.lower() for c in cores) >= max(1, (len(cores) + 1) // 2):
-        return 'Kvalifikace o postup'
-    leagues = [c for c in cores if re.search(r'(ČNHL|SNHL|CHL|liga|extraliga)', c, re.I)]
-    if leagues:
-        seen = []
-        for c in leagues:
-            if c not in seen:
-                seen.append(c)
-        return ' / '.join(seen[:3])
-    m = re.search(r'(\d+)\.\s*úroveň', low)
-    if m:
-        return f'Krajské soutěže ({m.group(1)}. úroveň)'
-    if re.search(r'přebor|kraj|třída', low):
-        return 'Krajské soutěže'
-    return cores[0] if cores else (str(level) or '—')
+    """Štítek úrovně = hloubka v pyramidě (10/20/30…). Stejná úroveň může mít
+    v ČR národní ligu a na SK už kraje (asymetrie) — proto jen číslo úrovně."""
+    n = lvl(level)
+    if n is None:
+        return '(bez úrovně)'
+    if n % 10 == 5:
+        return 'Kvalifikace'
+    return f'{n // 10}. úroveň' + (' (nejvyšší)' if n == 10 else '')
 
 
 def build_orgchart_pdf(d, sid):
@@ -1229,8 +1216,9 @@ def build_orgchart_pdf(d, sid):
         c.drawString(M, H - M + 1, f'Org chart soutěží — sezóna {d["label"]}')
         c.setFont(PDF_FONT, 8.5)
         c.setFillColor(colors.HexColor('#666666'))
-        c.drawString(M, H - M - 11, 'Pyramida úrovní shora (nejvyšší) dolů · '
-                                    'hlavní soutěže (vnitřní kola sloučena) · ČR/SK auto z názvu')
+        c.drawString(M, H - M - 11,
+                     'Úroveň = hloubka v pyramidě (10/20/30…); na téže úrovni může '
+                     'ČR mít národní ligu a SK už kraje (asymetrie). Vnitřní kola sloučena.')
         c.setFont(PDF_FONT_BOLD, 9)
         c.setFillColor(colors.HexColor('#1a3050'))
         c.drawString(CONTENT_X + 2, H - M - 26, 'ČECHY / celostátní')
