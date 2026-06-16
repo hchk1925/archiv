@@ -1140,6 +1140,16 @@ def _pdf_region(name):
     return 'SK' if _SK_RE.search(str(name or '')) else 'CZ'
 
 
+def _pdf_kind(cores):
+    """Druh soutěží na straně: 'league' (národní liga) / 'region' (kraje) / 'other'."""
+    s = ' '.join(n for n, _ in cores).lower()
+    if re.search(r'kraj|přebor|oblast|župa|okres|třída', s):
+        return 'region'
+    if re.search(r'liga|nhl|extraliga', s):
+        return 'league'
+    return 'other'
+
+
 def _pdf_core(name):
     s = str(name or '')
     s = re.sub(r',?\s*\d+\.\s*úroveň(\s*\([^)]*\))?', '', s, flags=re.I)
@@ -1275,6 +1285,15 @@ def build_orgchart_pdf(d, sid):
             h = rows_h(len(cz or sk) or 1)
         if cur_y - h < M:
             c.showPage(); header(); cur_y = H - M - 32
+        # zvýraznění „šejdr": na téže úrovni ČR národní liga vs SK už kraje
+        shejdr = bool(cz and sk) and {_pdf_kind(cz), _pdf_kind(sk)} == {'league', 'region'}
+        if shejdr:
+            c.setFillColor(colors.HexColor('#fff6da'))
+            c.setStrokeColor(colors.HexColor('#eccf80')); c.setLineWidth(0.8)
+            c.roundRect(M - 1 * mm, cur_y - h - 1.5 * mm, W - 2 * M + 2 * mm,
+                        h + 2 * mm, 3, stroke=1, fill=1)
+            c.setFillColor(colors.HexColor('#b07d10')); c.setFont(PDF_FONT_BOLD, 7)
+            c.drawRightString(W - M - 2, cur_y + 1, '◄ šejdr: ČR liga · SK už kraje')
         # popisek úrovně vlevo
         c.setFillColor(colors.HexColor('#555555')); c.setFont(PDF_FONT_BOLD, 8)
         c.drawString(M, cur_y - 7, _pdf_tier_name(lev, []))
