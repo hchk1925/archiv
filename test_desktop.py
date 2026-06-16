@@ -83,46 +83,42 @@ def main():
     pdf = core.build_full_pdf(win.d, torzo_sid)
     check(pdf[:5] == b'%PDF-', 'build_full_pdf z desktopu → PDF')
 
-    # 6) ORG CHART — sestavení, re-parent, zápis do SYSTEM listu
+    # 6) ÚROVNĚ (matice úroveň × ČR/SK) — sestavení, přesun úrovně, zápis do SYSTEM
+    import openpyxl
+    check(desktop.region_of('Západoslovenský krajský přebor') == 'SK',
+          'ČR/SK: Slovensko z názvu')
+    check(desktop.region_of('Středočeský, 3. úroveň') == 'CZ',
+          'ČR/SK: Čechy z názvu')
+    check(desktop.chip_name('Středočeský, 3. úroveň (krajský přebor), skupina A')
+          == 'Středočeský', 'štítek: bez úrovně a skupiny')
     osid = next(s for s in core.list_season_ids()
-                if any(n['parent_node_id'] for n in core.load_season(s)['system']))
+                if len({n['level'] for n in core.load_season(s)['system']}) > 1)
     od = core.load_season(osid)
     oc = desktop.OrgChart(win, osid, od)
     oc.update()
-    check(len(oc.item_node) > 0, 'org chart: boxy vykresleny')
-    check(len(oc.bands) > 0, 'org chart: patra (úrovně) sestavena')
-    # vyber uzel s rodičem a přepni ho pod jiný kořenový uzel
-    child = next(n['node_id'] for n in od['system']
-                 if n['parent_node_id'] in oc.nodes)
-    newpar = next(n['node_id'] for n in od['system']
-                  if not n['parent_node_id'] and n['node_id'] != oc.model[child]['parent']
-                  and child not in oc._descendants(n['node_id']))
-    oc.apply_change(child, newpar, oc.model[newpar]['level'])
-    check(oc.model[child]['parent'] == newpar, 'org chart: re-parent v modelu')
-    check(child in oc._changes(), 'org chart: změna zaevidována')
-    # cyklus se nesmí povolit
-    kid = next((k for k in oc._descendants(newpar)), None)
-    if kid:
-        oc.apply_change(newpar, kid, oc.model[newpar]['level'])
-        check(oc.model[newpar]['parent'] != kid, 'org chart: cyklus zakázán')
-    # zápis do xlsx + obnovení
+    check(len(oc.inner.winfo_children()) > 0, 'matice: buňky vykresleny')
+    check(len(oc._levels()) > 1, 'matice: víc úrovní (řádků)')
+    nid = next(iter(oc.model))
+    cur = oc.model[nid]['level']
+    other = next(l for l in oc._levels() if l != cur)
+    oc.set_level([nid], other)
+    check(oc.model[nid]['level'] == other, 'matice: změna úrovně v modelu')
+    check(nid in oc._changes(), 'matice: změna zaevidována')
     opath = os.path.join(core.DATA, f'S{osid}_FINAL.xlsx')
     obackup = open(opath, 'rb').read()
     try:
-        oc.apply_change(child, newpar, oc.model[newpar]['level'])
         oc.save()
-        import openpyxl
         ws = openpyxl.load_workbook(opath, read_only=True)['SYSTEM']
         H = {c.value: j for j, c in enumerate(next(ws.iter_rows(max_row=1)), 0)}
         got = None
         for row in ws.iter_rows(min_row=2, values_only=True):
-            if row[H['node_id']] == child:
-                got = row[H['parent_node_id']]
+            if row[H['node_id']] == nid:
+                got = row[H['level']]
                 break
-        check(got == newpar, 'org chart: nadřazenost zapsána do SYSTEM listu')
+        check(got == other, 'matice: úroveň zapsána do SYSTEM listu')
     finally:
         open(opath, 'wb').write(obackup)
-    check(open(opath, 'rb').read() == obackup, 'org chart: sešit obnoven')
+    check(open(opath, 'rb').read() == obackup, 'matice: sešit obnoven')
     oc.destroy()
 
     win.destroy()

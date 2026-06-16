@@ -385,316 +385,176 @@ def lane_label(lev):
     return f'{n // 10}. úroveň' if n else '(bez úrovně)'
 
 
+SK_RE = re.compile(
+    r'(Sloven|Západoslov|Východoslov|St[řr]edoslov|Bratislav|'
+    r'Košic|Nitran|Prešov|Žilin|Banskobystr|Trnav|Trenč)', re.I)
+
+
+def region_of(name):
+    """ČR/SK podle názvu (auto). Slovenské kraje/„Slovensko" → SK, jinak CZ."""
+    return 'SK' if SK_RE.search(str(name or '')) else 'CZ'
+
+
+_CHIP_STRIP = [
+    r',?\s*\d+\.\s*úroveň(\s*\([^)]*\))?',
+    r',?\s*(skupina|Skupina|sk\.)\s*[^,]*',
+    r',?\s*(semifinále|čtvrtfinále|finále|základní část|play-?off|nadstavba)[^,]*',
+]
+
+
+def chip_name(name):
+    """Štítek soutěže bez úrovně a skupin (řádek matice = úroveň, štítek = identita)."""
+    s = str(name or '')
+    for pat in _CHIP_STRIP:
+        s = re.sub(pat, '', s, flags=re.I)
+    s = re.sub(r'\s+', ' ', s).strip().strip(',').strip(' -–').strip()
+    return s or str(name or '')
+
+
 class OrgChart(tk.Toplevel):
-    """Org chart sezóny: patra dle úrovní, přetahováním se mění úroveň (svisle)
-    a nadřazenost (puštění na jinou soutěž). Uloží se do SYSTEM listu xlsx."""
-    BOXW, BOXH, GAPX, GAPY, HEADER, COLS, PAD = 190, 46, 18, 16, 30, 7, 16
-    # jemné barvy pater (fill, okraj) — cyklicky podle úrovně
-    PALETTE = [('#e3edff', '#8fb0e6'), ('#dcf4e8', '#74c19c'),
-               ('#fdecc9', '#e0b76e'), ('#ece0f7', '#b194d6'),
-               ('#fde0e2', '#e0939a'), ('#ddf0f3', '#83bdc7'),
-               ('#eef1d6', '#bcc47e')]
-    BAND_BG = ('#f6f8fc', '#eef2f8')
+    """Přehled ÚROVNÍ jako matice úroveň × ČR/SK. Klik na soutěž → přesun do jiné
+    úrovně (oprava level chyby) → zápis do SYSTEM listu xlsx. ČR/SK auto z názvu."""
+    REGIONS = [('CZ', 'ČECHY / celostátní'), ('SK', 'SLOVENSKO')]
 
     def __init__(self, master, sid, d, on_saved=None):
         super().__init__(master)
-        self.title(f'Org chart — {d["label"]}')
-        self.geometry('1240x760')
+        self.title(f'Úrovně (levely) — {d["label"]}')
+        self.geometry('1100x720')
         self.sid = sid
         self.on_saved = on_saved
         self.nodes = {n['node_id']: dict(n) for n in d['system']}
-        self.model = {nid: {'parent': (n['parent_node_id']
-                                       if n['parent_node_id'] in self.nodes else None),
-                            'level': n['level']}
-                      for nid, n in self.nodes.items()}
+        self.model = {nid: {'level': n['level']} for nid, n in self.nodes.items()}
         self.orig = {nid: dict(v) for nid, v in self.model.items()}
-        self.item_node = {}     # canvas item id -> nid (boxy = drag)
-        self.toggle_node = {}   # canvas item id -> nid (▸/▾ = sbalit)
-        self.box = {}           # nid -> (x, y)
-        self.bands = []         # [(level, y0, y1)]
-        self.drag = None
-        self.tier_item = {}     # canvas item id -> level (pruh patra = sbalit)
-        # výchozí stav: rodiče sbalené + regionální patra (úroveň ≥ 30) sbalená
-        # do jednoho „chlívku", ať to není přeplácané
-        kids = self._children()
-        self.collapsed = {nid for nid in self.nodes if kids.get(nid)}
-        # rozbalené necháme jen vrchní patra (liga/kvalifikace/oblastní, úroveň < 30);
-        # regiony a „bez úrovně" jsou sbalené do chlívku
-        self.tier_collapsed = {lev for lev in {v['level'] for v in self.model.values()}
-                               if not (core.lvl(lev) and core.lvl(lev) < 30)}
         self._build()
-        self.relayout()
+        self.rebuild()
 
-    # -- UI --
     def _build(self):
         bar = ttk.Frame(self)
         bar.pack(fill='x')
         ttk.Label(bar, foreground='#555',
-                  text='Táhni soutěž:  svisle = změna úrovně (patro)  ·  '
-                       'puštění na jinou soutěž = nadřazenost.').pack(side='left', padx=6, pady=4)
+                  text='Klikni na soutěž → vyber správnou úroveň. '
+                       'ČR/SK se dělí automaticky podle názvu.').pack(side='left', padx=6, pady=4)
         self.save_btn = ttk.Button(bar, text='Uložit do xlsx', command=self.save)
         self.save_btn.pack(side='right', padx=4)
         ttk.Button(bar, text='Vrátit změny', command=self.reset).pack(side='right')
         self.info = ttk.Label(bar, text='')
         self.info.pack(side='right', padx=10)
-        wrap = ttk.Frame(self)
-        wrap.pack(fill='both', expand=True)
-        self.cv = tk.Canvas(wrap, background='#fbfbfd', highlightthickness=0)
-        ysb = ttk.Scrollbar(wrap, orient='vertical', command=self.cv.yview)
+        outer = ttk.Frame(self)
+        outer.pack(fill='both', expand=True)
+        self.cv = tk.Canvas(outer, background='#ffffff', highlightthickness=0)
+        ysb = ttk.Scrollbar(outer, orient='vertical', command=self.cv.yview)
         xsb = ttk.Scrollbar(self, orient='horizontal', command=self.cv.xview)
         self.cv.configure(yscrollcommand=ysb.set, xscrollcommand=xsb.set)
         xsb.pack(side='bottom', fill='x')
         ysb.pack(side='right', fill='y')
         self.cv.pack(side='left', fill='both', expand=True)
-        self.cv.tag_bind('box', '<ButtonPress-1>', self._press)
-        self.cv.tag_bind('box', '<B1-Motion>', self._motion)
-        self.cv.tag_bind('box', '<ButtonRelease-1>', self._release)
-        self.cv.tag_bind('tier', '<ButtonPress-1>', self._toggle_tier)
-        self.cv.tag_bind('toggle', '<ButtonPress-1>', self._toggle_node)
+        self.inner = ttk.Frame(self.cv)
+        self.cv.create_window((0, 0), window=self.inner, anchor='nw')
+        self.inner.bind('<Configure>',
+                        lambda e: self.cv.configure(scrollregion=self.cv.bbox('all')))
+        self.cv.bind('<Enter>', lambda e: self.cv.bind_all('<MouseWheel>', self._wheel))
+        self.cv.bind('<Leave>', lambda e: self.cv.unbind_all('<MouseWheel>'))
 
-    # -- model helpers --
-    def _children(self):
-        kids = collections.defaultdict(list)
-        for nid, v in self.model.items():
-            if v['parent']:
-                kids[v['parent']].append(nid)
-        return kids
-
-    def _root_of(self, nid):
-        seen = set()
-        while True:
-            p = self.model[nid]['parent']
-            if not p or p not in self.model or p in seen:
-                return nid
-            seen.add(nid)
-            nid = p
-
-    def _descendants(self, nid):
-        kids = self._children()
-        out, stack = set(), [nid]
-        while stack:
-            for c in kids[stack.pop()]:
-                if c not in out:
-                    out.add(c)
-                    stack.append(c)
-        return out
+    def _wheel(self, e):
+        self.cv.yview_scroll(-1 if e.delta > 0 else 1, 'units')
 
     def _levels(self):
         return sorted({v['level'] for v in self.model.values()},
                       key=lambda l: (core.lvl(l) or 9999))
 
-    def _visible(self, nid):
-        """Uzel je vidět, pokud žádný jeho předek není sbalený."""
-        p = self.model[nid]['parent']
-        while p and p in self.model:
-            if p in self.collapsed:
-                return False
-            p = self.model[p]['parent']
-        return True
-
-    def _round_rect(self, x1, y1, x2, y2, r=9, **kw):
-        pts = [x1 + r, y1, x2 - r, y1, x2, y1, x2, y1 + r, x2, y2 - r, x2, y2,
-               x2 - r, y2, x1 + r, y2, x1, y2, x1, y2 - r, x1, y1 + r, x1, y1]
-        return self.cv.create_polygon(pts, smooth=True, **kw)
-
-    # -- kreslení --
-    def relayout(self):
-        self.cv.delete('all')
-        self.item_node = {}
-        self.toggle_node = {}
-        self.tier_item = {}
-        self.box = {}
-        self.bands = []
-        kids = self._children()
-        per = collections.defaultdict(list)
+    def _matrix(self):
+        cells = collections.defaultdict(lambda: collections.defaultdict(list))
         for nid, v in self.model.items():
-            per[v['level']].append(nid)
-        rootname = lambda n: str(self.nodes[self._root_of(n)]['name'])
-        W = self.PAD + self.COLS * (self.BOXW + self.GAPX) + 30
-        nodecol = {}
-        plan = []          # (nid, x, y, fill, edge, has_kids, collapsed)
-        y = self.PAD
-        for ti, lev in enumerate(self._levels()):
-            fill, edge = self.PALETTE[ti % len(self.PALETTE)]
-            ids = per[lev]
-            tcol = lev in self.tier_collapsed
-            vis = ([] if tcol else
-                   [n for n in sorted(ids, key=lambda n: (rootname(n), str(self.nodes[n]['name'])))
-                    if self._visible(n)])
-            rows = ceil(len(vis) / self.COLS) if vis else 0
-            body_h = rows * (self.BOXH + self.GAPY) if vis else 0
-            self._draw_tier_header(lev, len(ids), tcol, edge, y, W)
-            if body_h:
-                self.cv.create_rectangle(0, y + self.HEADER - 6, W,
-                                         y + self.HEADER + body_h + 4,
-                                         fill=self.BAND_BG[ti % 2], outline='', tags='bandbg')
-            top = y + self.HEADER
-            for i, nid in enumerate(vis):
-                col, row = i % self.COLS, i // self.COLS
-                bx = self.PAD + col * (self.BOXW + self.GAPX)
-                by = top + row * (self.BOXH + self.GAPY)
-                self.box[nid] = (bx, by)
-                nodecol[nid] = (fill, edge)
-                plan.append((nid, bx, by, fill, edge, bool(kids.get(nid)),
-                             nid in self.collapsed))
-            band_h = self.HEADER + (body_h + 12 if body_h else 4)
-            self.bands.append((lev, y, y + band_h))
-            y += band_h + 6
-        self._draw_links()
-        for args in plan:
-            self._draw_box(*args)
-        self.cv.configure(scrollregion=(0, 0, W + 10, y + 20))
+            reg = region_of(self.nodes[nid]['name'])
+            cells[(reg, v['level'])][chip_name(self.nodes[nid]['name'])].append(nid)
+        return cells
+
+    def rebuild(self):
+        for w in self.inner.winfo_children():
+            w.destroy()
+        levels = self._levels()
+        cells = self._matrix()
+        col = {'CZ': 1, 'SK': 2}
+        tk.Label(self.inner, text='ÚROVEŇ', font=('TkDefaultFont', 9, 'bold'),
+                 bg='#1a3050', fg='white', padx=8, pady=4).grid(
+                     row=0, column=0, sticky='nsew', padx=1, pady=1)
+        for reg, lbl in self.REGIONS:
+            tk.Label(self.inner, text=lbl, font=('TkDefaultFont', 9, 'bold'),
+                     bg='#1a3050', fg='white', padx=8, pady=4).grid(
+                         row=0, column=col[reg], sticky='nsew', padx=1, pady=1)
+        self.inner.grid_columnconfigure(0, minsize=190)
+        self.inner.grid_columnconfigure(1, weight=1, uniform='c')
+        self.inner.grid_columnconfigure(2, weight=1, uniform='c')
+        for i, lev in enumerate(levels, 1):
+            shade = '#eef2f8' if i % 2 else '#e6ebf3'
+            tk.Label(self.inner, text=lane_label(lev), font=('TkDefaultFont', 9, 'bold'),
+                     bg=shade, anchor='nw', padx=8, pady=6, wraplength=180,
+                     justify='left').grid(row=i, column=0, sticky='nsew', padx=1, pady=1)
+            for reg, _ in self.REGIONS:
+                cell = tk.Frame(self.inner, bg='#ffffff')
+                cell.grid(row=i, column=col[reg], sticky='nsew', padx=1, pady=1)
+                self._fill_cell(cell, cells.get((reg, lev), {}))
         self._refresh_info()
 
-    def _draw_tier_header(self, lev, count, collapsed, edge, y, W):
-        tri = '▸' if collapsed else '▾'
-        hint = '  — klikni pro rozbalení' if collapsed and count > 1 else ''
-        bar = self._round_rect(self.PAD, y, W - 18, y + self.HEADER - 8, r=8,
-                               fill=edge, outline='', tags=('tier', f'tier_{lev}'))
-        t = self.cv.create_text(self.PAD + 12, y + (self.HEADER - 8) / 2, anchor='w',
-                                text=f'{tri}  {lane_label(lev)}   ({count}){hint}',
-                                fill='white', font=('TkDefaultFont', 10, 'bold'),
-                                tags=('tier', f'tier_{lev}'))
-        self.tier_item[bar] = lev
-        self.tier_item[t] = lev
-
-    def _draw_box(self, nid, x, y, fill, edge, has_kids, collapsed):
-        changed = self.model[nid] != self.orig.get(nid)
-        f = '#fbd38d' if changed else fill
-        e = '#d97706' if changed else edge
-        rect = self._round_rect(x, y, x + self.BOXW, y + self.BOXH, r=9,
-                                fill=f, outline=e, width=1.5, tags=('box', f'g_{nid}'))
-        nm = str(self.nodes[nid]['name']).strip() or '(bez názvu)'
-        if len(nm) > 54:
-            nm = nm[:52] + '…'
-        offx = 24 if has_kids else 11
-        txt = self.cv.create_text(x + offx, y + self.BOXH / 2, anchor='w', text=nm,
-                                  width=self.BOXW - offx - 8, font=('TkDefaultFont', 8),
-                                  tags=('box', f'g_{nid}'))
-        self.item_node[rect] = nid
-        self.item_node[txt] = nid
-        if has_kids:
-            tri = self.cv.create_text(x + 12, y + self.BOXH / 2, anchor='w',
-                                      text=('▸' if collapsed else '▾'),
-                                      font=('TkDefaultFont', 9, 'bold'), fill=e,
-                                      tags=('toggle',))
-            self.toggle_node[tri] = nid
-
-    def _draw_links(self):
-        for nid, v in self.model.items():
-            p = v['parent']
-            if p and p in self.box and nid in self.box:
-                px, py = self.box[p]
-                cx, cy = self.box[nid]
-                x1, y1 = px + self.BOXW / 2, py + self.BOXH
-                x2, y2 = cx + self.BOXW / 2, cy
-                my = (y1 + y2) / 2 if y2 > y1 else y1 + 12
-                self.cv.create_line(x1, y1, x1, my, x2, my, x2, y2,
-                                    fill='#aab4c2', width=1.2, tags='link')
-        self.cv.tag_lower('link')
-        self.cv.tag_lower('bandbg')
-
-    def _toggle_tier(self, e):
-        cur = self.cv.find_withtag('current')
-        lev = self.tier_item.get(cur[0]) if cur else None
-        if lev is None:
+    def _fill_cell(self, cell, groups):
+        if not groups:
+            tk.Label(cell, text='—', fg='#cccccc', bg='#ffffff').grid(
+                row=0, column=0, sticky='w', padx=4, pady=2)
             return
-        self.tier_collapsed ^= {lev}
-        self.relayout()
+        COLS = 3
+        for j, name in enumerate(sorted(groups)):
+            nids = groups[name]
+            changed = any(self.model[n]['level'] != self.orig[n]['level'] for n in nids)
+            label = name if len(name) <= 24 else name[:22] + '…'
+            if len(nids) > 1:
+                label += f'  ×{len(nids)}'
+            tk.Button(cell, text=label, font=('TkDefaultFont', 8), anchor='w',
+                      relief='groove', bd=1, padx=4, pady=1,
+                      bg=('#fbd38d' if changed else '#eef5ff'),
+                      activebackground='#dbe7ff',
+                      command=lambda ns=list(nids): self._menu(ns)).grid(
+                          row=j // COLS, column=j % COLS, sticky='ew', padx=2, pady=2)
+        for c in range(COLS):
+            cell.grid_columnconfigure(c, weight=1, uniform='chip')
 
-    def _toggle_node(self, e):
-        cur = self.cv.find_withtag('current')
-        nid = self.toggle_node.get(cur[0]) if cur else None
-        if nid is None:
-            return
-        self.collapsed ^= {nid}
-        self.relayout()
+    def _menu(self, nids):
+        m = tk.Menu(self, tearoff=0)
+        m.add_command(label='Přesunout na úroveň:', state='disabled')
+        m.add_separator()
+        cur = self.model[nids[0]]['level']
+        for lev in self._levels():
+            mark = '● ' if lev == cur else '    '
+            m.add_command(label=mark + lane_label(lev),
+                          command=lambda l=lev: self.set_level(nids, l))
+        m.tk_popup(self.winfo_pointerx(), self.winfo_pointery())
 
-    # -- drag --
-    def _press(self, e):
-        cur = self.cv.find_withtag('current')
-        if not cur:
-            return
-        nid = self.item_node.get(cur[0])
-        if nid is None:
-            return
-        self.drag = {'nid': nid, 'x': self.cv.canvasx(e.x), 'y': self.cv.canvasy(e.y)}
-        self.cv.tag_raise(f'g_{nid}')
+    def set_level(self, nids, lev):
+        for n in nids:
+            self.model[n]['level'] = lev
+        self.rebuild()
 
-    def _motion(self, e):
-        if not self.drag:
-            return
-        cx, cy = self.cv.canvasx(e.x), self.cv.canvasy(e.y)
-        self.cv.move(f'g_{self.drag["nid"]}', cx - self.drag['x'], cy - self.drag['y'])
-        self.drag['x'], self.drag['y'] = cx, cy
-        self._highlight(cx, cy)
-
-    def _highlight(self, cx, cy):
-        self.cv.delete('hl')
-        tgt = self._target_at(cx, cy, self.drag['nid'])
-        if tgt and tgt in self.box:
-            x, y = self.box[tgt]
-            self.cv.create_rectangle(x - 2, y - 2, x + self.BOXW + 2, y + self.BOXH + 2,
-                                     outline='#1b7a32', width=2, tags='hl')
-
-    def _band_at(self, cy):
-        for lev, y0, y1 in self.bands:
-            if y0 <= cy < y1:
-                return lev
-        return self.bands[-1][0] if self.bands and cy >= self.bands[-1][2] else (
-               self.bands[0][0] if self.bands else None)
-
-    def _target_at(self, cx, cy, nid):
-        skip = self._descendants(nid) | {nid}
-        for item in reversed(self.cv.find_overlapping(cx - 1, cy - 1, cx + 1, cy + 1)):
-            t = self.item_node.get(item)
-            if t and t not in skip:
-                return t
-        return None
-
-    def _release(self, e):
-        if not self.drag:
-            return
-        nid = self.drag['nid']
-        cx, cy = self.cv.canvasx(e.x), self.cv.canvasy(e.y)
-        self.cv.delete('hl')
-        new_parent = self._target_at(cx, cy, nid)
-        new_level = (self.model[new_parent]['level'] if new_parent
-                     else self._band_at(cy)) or self.model[nid]['level']
-        self.drag = None
-        self.apply_change(nid, new_parent, new_level)
-
-    def apply_change(self, nid, new_parent, new_level):
-        """Změní nadřazenost/úroveň uzlu (testovatelné bez myši)."""
-        if new_parent in (self._descendants(nid) | {nid}):
-            new_parent = self.model[nid]['parent']     # zákaz cyklu
-        self.model[nid]['parent'] = new_parent
-        self.model[nid]['level'] = new_level
-        self.relayout()
-
-    # -- akce --
     def _changes(self):
-        return {nid: v for nid, v in self.model.items() if v != self.orig.get(nid)}
+        return {n: v for n, v in self.model.items()
+                if v['level'] != self.orig[n]['level']}
 
     def _refresh_info(self):
-        n = len(self._changes())
-        self.info.config(text=(f'{n} změn k uložení' if n else 'beze změn'))
+        k = len(self._changes())
+        self.info.config(text=(f'{k} změn k uložení' if k else 'beze změn'))
 
     def reset(self):
-        self.model = {nid: dict(v) for nid, v in self.orig.items()}
-        self.relayout()
+        self.model = {n: dict(v) for n, v in self.orig.items()}
+        self.rebuild()
 
     def save(self):
         ch = self._changes()
         if not ch:
-            messagebox.showinfo('Org chart', 'Žádné změny k uložení.')
+            messagebox.showinfo('Úrovně', 'Žádné změny k uložení.')
             return
-        payload = {nid: {'parent_node_id': v['parent'], 'level': v['level']}
-                   for nid, v in ch.items()}
-        n = core.save_system_layout(self.sid, payload)
+        n = core.save_system_layout(
+            self.sid, {nid: {'level': v['level']} for nid, v in ch.items()})
         self.orig = {nid: dict(v) for nid, v in self.model.items()}
-        self.relayout()
-        messagebox.showinfo('Org chart', f'Uloženo {n} změn do xlsx.')
+        self.rebuild()
+        messagebox.showinfo('Úrovně', f'Uloženo {n} změn úrovní do xlsx.')
         if self.on_saved:
             self.on_saved()
 

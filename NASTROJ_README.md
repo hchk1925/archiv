@@ -20,12 +20,15 @@ macOS/Linux:  ./run_desktop.sh
   torzo = ⚑, vyřešené = ✓,
 - vpravo **tabulka týmů** a žlutý **komentář „co chybí"**,
 - dole **Řešení** (stav + typ + poznámka) → **Uložit do xlsx** zapíše rovnou do sešitu,
-- nahoře **Org chart ✎** (patra dle úrovní; přetažením soutěže změníš úroveň/nadřazenost
-  a uložíš do xlsx) a **PDF plný / PDF audit** pro tisk.
+- nahoře **Org chart ✎** (přehled úrovní pro opravu level chyb) a
+  **PDF plný / PDF audit** pro tisk.
 
-V **Org chartu** jsou regionální patra sbalená do barevných „chlívků" (klikni na pruh
-patra = rozbalit, ▸ u soutěže = rozbalit její skupiny). Přetažení boxu: svisle do jiného
-patra mění úroveň, puštění na jinou soutěž mění nadřazenost. **Uložit do xlsx** zapíše.
+### Org chart ✎ — přehled úrovní (matice)
+Tlačítko otevře **matici úroveň × ČR/SK**: řádky = úrovně (Liga → kvalifikace →
+2. úroveň → krajský přebor → nižší krajské → bez úrovně), sloupce = **Čechy** a
+**Slovensko** (dělí se automaticky podle názvu). V buňkách jsou soutěže jako štítky
+(`×N` = počet skupin). Slouží k **rychlému odhalení a opravě chyb v zařazení do úrovní**.
+Klik na štítek → vyber správnou úroveň → **Uložit do xlsx** zapíše do SYSTEM listu.
 
 ### Plné názvy soutěží (blbuvzdorné)
 Názvy v datech jsou už rozbalené z kódů na čitelné (`30_Jihlavský L30` → `Jihlavský,
