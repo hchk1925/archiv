@@ -1162,14 +1162,19 @@ def _pdf_core(name):
 
 
 _GENERIC_RULES = [
+    # POZOR: stejný název je v různých érách na jiné úrovni (liga L10 → později
+    # extraliga L10 / 1.liga L20 / 2.liga L30). Proto odvozujeme z NÁZVU, ne z úrovně,
+    # a číslovku necháváme (1. liga ≠ liga ≠ extraliga).
     (r'extraliga', 'extraliga'),
     (r'\b(II|2)\.?\s*[ČC]NHL', '2. ČNHL'),
     (r'\b(I|1)\.?\s*[ČC]NHL|^[ČC]NHL', 'ČNHL'),     # ČNHL = 1.ČNHL (synonyma)
     (r'\b(II|2)\.?\s*SNHL', '2. SNHL'),
     (r'\b(I|1)\.?\s*SNHL|^SNHL', 'SNHL'),           # SNHL = 1.SNHL
-    (r'\b(II|2)\.?\s*liga|druhá liga', '2. liga'),
-    (r'\b(I|1)\.?\s*liga|první liga|^liga|státní liga|celostátní', 'liga'),
     (r'národní hokejová liga|\bNHL\b', 'NHL'),
+    (r'\b(III|3)\.?\s*liga', '3. liga'),
+    (r'\b(II|2)\.?\s*liga|druhá liga', '2. liga'),
+    (r'\b(I|1)\.?\s*liga|první liga', '1. liga'),
+    (r'státní liga|celostátní', 'liga'),            # prvorepubliková nejvyšší
     (r'divize', 'divize'),
     (r'oblast', 'oblastní soutěž'),
     (r'župa|župn', 'župa'),
@@ -1229,9 +1234,9 @@ def build_orgchart_pdf(d, sid):
     PER = max(1, int((half_w + GAP) // (BW + GAP)))      # boxů na řádek a stranu
 
     phase = re.compile(
-        r'^(Play\-?off|Playoff|Finále|Semifinále|Čtvrtfinále|Předkolo|Baráž|'
-        r'Nadstavba|Základní část|Skupina o udržení|O\s+\d.*m[ií]sto|O umístění|'
-        r'O postup|Finálová skupina|kolo\b)', re.I)
+        r'^(Play\s*\-?\s*off|Play\s*Out|Finále|Semifinále|Čtvrtfinále|Předkolo|'
+        r'Baráž|Nadstavba|Základní část|Skupina o udržení|O udržení|'
+        r'O\s+\d.*m[ií]sto|O umístění|O postup|Finálová skupina|kolo\b)', re.I)
     node_ids = {n['node_id'] for n in d['system']}
     tops = [n for n in d['system']
             if (n['parent_node_id'] not in node_ids
