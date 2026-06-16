@@ -1207,11 +1207,44 @@ def build_orgchart_pdf(d, sid):
             if (n['parent_node_id'] not in node_ids
                 or not phase.match(str(n['name']).strip()))
             and 'kontejner' not in str(n['name']).lower()]
-    levels = sorted({n['level'] for n in tops}, key=lambda l: (lvl(l) or 9999))
-    by = _c.defaultdict(lambda: _c.defaultdict(lambda: _c.defaultdict(int)))
+    levels = sorted({n['level'] for n in tops if lvl(n['level']) is not None},
+                    key=lambda l: lvl(l))
+
+    NAT = re.compile(r'(liga|[ČS]NHL|\bNHL\b|extraliga|\bCHL\b)', re.I)
+    REGM = re.compile(r'kraj|přebor|okres|župa|oblast|úroveň|třída', re.I)
+
+    def is_league(nm):
+        return bool(NAT.search(nm)) and not REGM.search(nm)
+
+    KVc, KVe = colors.HexColor('#f0ecf6'), colors.HexColor('#c3b6da')
+    REGc, REGe = colors.HexColor('#dcEEF1'), colors.HexColor('#6fb0bb')
+
+    kval = _c.defaultdict(list)                       # lev -> [core]
+    leagues = _c.defaultdict(lambda: _c.defaultdict(dict))   # lev -> reg -> {core:cnt}
+    regcores = _c.defaultdict(lambda: _c.defaultdict(set))   # lev -> reg -> {core}
     for n in tops:
-        by[n['level']][_pdf_region(n['name'])][_pdf_core(n['name'])] += 1
-    items_of = lambda lev, reg: sorted(by[lev][reg].items())
+        nm = str(n['name']); lev = n['level']; reg = _pdf_region(nm); nn = lvl(lev)
+        core_ = _pdf_core(nm)
+        if nn is None:                                # bez úrovně — do pyramidy nepatří
+            continue
+        if nn % 10 == 5:
+            if core_ not in kval[lev]:
+                kval[lev].append(core_)
+        elif is_league(nm):
+            leagues[lev][reg][core_] = leagues[lev][reg].get(core_, 0) + 1
+        else:
+            regcores[lev][reg].add(core_)
+
+    reg_levels = {'CZ': [], 'SK': []}
+    for lev in levels:
+        for r in ('CZ', 'SK'):
+            if regcores[lev][r]:
+                reg_levels[r].append(lev)
+    REGLAB = ['Krajské přebory', 'Nižší krajské třídy', 'Okresní soutěže', 'Nejnižší soutěže']
+
+    def reg_label(lev, r):
+        idx = reg_levels[r].index(lev) if lev in reg_levels[r] else 0
+        return REGLAB[min(idx, len(REGLAB) - 1)]
 
     def swatch(x, y, fill, edge, text):
         c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1)
@@ -1224,69 +1257,78 @@ def build_orgchart_pdf(d, sid):
         c.drawString(M, H - M + 1, f'Org chart soutěží — sezóna {d["label"]}')
         c.setFont(PDF_FONT, 8.5); c.setFillColor(colors.HexColor('#666666'))
         c.drawString(M, H - M - 11,
-                     'Pyramida shora dolů: nejvyšší soutěž nahoře, níž = nižší úroveň. '
-                     'Úroveň = hloubka; ČR a SK mohou mít na téže úrovni jinou soutěž (asymetrie).')
+                     'Pyramida shora dolů. Ligy jednotlivě; krajské přebory sloučené '
+                     'do jednoho boxu (×N krajů). Šejdr = ČR a SK na téže úrovni jinak.')
         y = H - M - 24
-        swatch(M, y, CZc, CZe, 'Čechy / celostátní')
-        swatch(M + 52 * mm, y, SKc, SKe, 'Slovensko')
-        swatch(M + 92 * mm, y, KVc, KVe, 'kvalifikace (mezi úrovněmi)')
+        swatch(M, y, CZc, CZe, 'Čechy / liga')
+        swatch(M + 42 * mm, y, SKc, SKe, 'Slovensko / liga')
+        swatch(M + 90 * mm, y, REGc, REGe, 'krajské přebory (sloučené)')
+        swatch(M + 150 * mm, y, KVc, KVe, 'kvalifikace')
 
     def box(x, y, w, h, fill, edge, nm, fs=7.2):
         c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1.1)
         c.roundRect(x, y, w, h, 3.5, stroke=1, fill=1)
-        lab = nm if len(nm) <= 32 else nm[:30] + '…'
+        lab = nm if len(nm) <= 34 else nm[:32] + '…'
         c.setFillColor(colors.HexColor('#173153')); c.setFont(PDF_FONT, fs)
         c.drawCentredString(x + w / 2, y + h / 2 - fs * 0.34, lab)
 
     def rows_h(n):
         return max(1, -(-n // PER)) * (BH + GAP)
 
-    def draw_block(items, side, top, fill, edge):
-        for i, (nm, cnt) in enumerate(items):
+    def draw_block(labels, side, top, fill, edge):
+        for i, lab in enumerate(labels):
             row, col = i // PER, i % PER
             yy = top - row * (BH + GAP) - BH
-            cnt_in_row = min(PER, len(items) - row * PER)
-            if side == 'L':                       # ČR: doleva od osy
+            cir = min(PER, len(labels) - row * PER)
+            if side == 'L':
                 xx = CX - GC - col * (BW + GAP) - BW
-            elif side == 'R':                     # SK: doprava od osy
+            elif side == 'R':
                 xx = CX + GC + col * (BW + GAP)
-            else:                                  # C: na osu (federální)
-                tot = cnt_in_row * (BW + GAP) - GAP
+            else:
+                tot = cir * (BW + GAP) - GAP
                 xx = CX - tot / 2 + col * (BW + GAP)
-            box(xx, yy, BW, BH, fill, edge, nm)
+            box(xx, yy, BW, BH, fill, edge, lab)
 
     header()
     cur_y = H - M - 32
     for lev in levels:
-        n = lvl(lev)
-        cz, sk = items_of(lev, 'CZ'), items_of(lev, 'SK')
-        if n is not None and n % 10 == 5:          # KVALIFIKACE — tenký proužek
-            allk = cz + sk
-            kn = len(allk)
-            per = max(1, int((W - 2 * M + GAP) // (40 * mm + GAP)))
-            h = max(1, -(-kn // per)) * (KBH + 2 * mm) + 2 * mm
-            if cur_y - h < M:
+        nn = lvl(lev)
+        if nn % 10 == 5:                                          # kvalifikace = 1 pill
+            kn = len(kval[lev])
+            if cur_y - KBH < M:
                 c.showPage(); header(); cur_y = H - M - 32
             c.setFillColor(colors.HexColor('#999999')); c.setFont(PDF_FONT, 7)
             c.drawString(M, cur_y - KBH + 1.5, 'kvalifikace')
-            for i, (nm, _) in enumerate(allk):
-                row, col = i // per, i % per
-                cir = min(per, kn - row * per)
-                tot = cir * (40 * mm + GAP) - GAP
-                xx = CX - tot / 2 + col * (40 * mm + GAP)
-                yy = cur_y - row * (KBH + 2 * mm) - KBH
-                box(xx, yy, 40 * mm, KBH, KVc, KVe, nm, fs=6.6)
-            cur_y -= h + 1.5 * mm
+            lab = 'Kvalifikace' + (f'  ×{kn}' if kn > 1 else '')
+            box(CX - 30 * mm, cur_y - KBH, 60 * mm, KBH, KVc, KVe, lab, fs=6.8)
+            cur_y -= KBH + 1.5 * mm
             continue
-        # HLAVNÍ ÚROVEŇ
-        if cz and sk:
-            h = max(rows_h(len(cz)), rows_h(len(sk)))
+        lg_cz = sorted(leagues[lev]['CZ'])
+        lg_sk = sorted(leagues[lev]['SK'])
+        rc, rs = len(regcores[lev]['CZ']), len(regcores[lev]['SK'])
+        left = list(lg_cz)
+        right = list(lg_sk)
+        center = None
+        if rc and rs:                                            # stejná úroveň → 1 box
+            center = f'{reg_label(lev, "CZ")} — ČR+SK  ×{rc + rs}'
         else:
-            h = rows_h(len(cz or sk) or 1)
+            if rc:
+                left.append(f'{reg_label(lev, "CZ")} ČR  ×{rc}')
+            if rs:
+                right.append(f'{reg_label(lev, "SK")} SK  ×{rs}')
+        h_sides = max(rows_h(len(left)) if left else 0,
+                      rows_h(len(right)) if right else 0)
+        h_center = (BH + GAP) if center else 0
+        h = (h_sides + h_center) or rows_h(1)
         if cur_y - h < M:
             c.showPage(); header(); cur_y = H - M - 32
-        # zvýraznění „šejdr": na téže úrovni ČR národní liga vs SK už kraje
-        shejdr = bool(cz and sk) and {_pdf_kind(cz), _pdf_kind(sk)} == {'league', 'region'}
+        # šejdr: kraje na jedné straně, liga na druhé (stejná úroveň)
+        if rs and not rc:
+            shejdr = bool(lg_cz)
+        elif rc and not rs:
+            shejdr = bool(lg_sk)
+        else:
+            shejdr = False
         if shejdr:
             c.setFillColor(colors.HexColor('#fff6da'))
             c.setStrokeColor(colors.HexColor('#eccf80')); c.setLineWidth(0.8)
@@ -1294,22 +1336,27 @@ def build_orgchart_pdf(d, sid):
                         h + 2 * mm, 3, stroke=1, fill=1)
             c.setFillColor(colors.HexColor('#b07d10')); c.setFont(PDF_FONT_BOLD, 7)
             c.drawRightString(W - M - 2, cur_y + 1, '◄ šejdr: ČR liga · SK už kraje')
-        # popisek úrovně vlevo
         c.setFillColor(colors.HexColor('#555555')); c.setFont(PDF_FONT_BOLD, 8)
         c.drawString(M, cur_y - 7, _pdf_tier_name(lev, []))
         c.setFont(PDF_FONT, 6.5); c.setFillColor(colors.HexColor('#9aa0aa'))
         c.drawString(M, cur_y - 15, str(lev))
-        if cz and sk:
-            draw_block(cz, 'L', cur_y, CZc, CZe)
-            draw_block(sk, 'R', cur_y, SKc, SKe)
+
+        def regfill(lab):
+            return (REGc, REGe) if 'ČR' not in lab[:3] and ('přebor' in lab.lower()
+                    or 'krajsk' in lab.lower() or 'okres' in lab.lower()) else None
+
+        if left and right:
+            draw_block(left, 'L', cur_y, CZc, CZe)
+            draw_block(right, 'R', cur_y, SKc, SKe)
             c.setStrokeColor(colors.HexColor('#e1e5ec')); c.setLineWidth(0.7)
-            c.line(CX, cur_y + 1, CX, cur_y - h)
-        else:
-            one = cz or sk
-            fc, ec = (CZc, CZe) if cz else (SKc, SKe)
-            if n == 10:                            # špička = federální, na osu
-                fc, ec = FEc, FEe
-            draw_block(one, 'C', cur_y, fc, ec)
+            c.line(CX, cur_y + 1, CX, cur_y - h_sides)
+        elif left:
+            fc, ec = (FEc, FEe) if nn == 10 else (CZc, CZe)
+            draw_block(left, 'C', cur_y, fc, ec)
+        elif right:
+            draw_block(right, 'C', cur_y, SKc, SKe)
+        if center:
+            box(CX - BW / 2, cur_y - h_sides - BH, BW, BH, REGc, REGe, center)
         cur_y -= h + 3 * mm
     c.showPage(); c.save()
     return buf.getvalue()
