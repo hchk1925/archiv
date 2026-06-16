@@ -1229,7 +1229,7 @@ def build_orgchart_pdf(d, sid):
     CZc, CZe = colors.HexColor('#e3edff'), colors.HexColor('#7d9fd6')
     SKc, SKe = colors.HexColor('#fde3c2'), colors.HexColor('#d99f44')
     FEc, FEe = colors.HexColor('#dcf4e8'), colors.HexColor('#5cae86')
-    KVc, KVe = colors.HexColor('#f0ecf6'), colors.HexColor('#c3b6da')
+    KVc, KVe = colors.HexColor('#ececec'), colors.HexColor('#b4b4b4')  # vždy šedá
     half_w = (W - 2 * M) / 2 - GC
     PER = max(1, int((half_w + GAP) // (BW + GAP)))      # boxů na řádek a stranu
 
@@ -1251,7 +1251,7 @@ def build_orgchart_pdf(d, sid):
     def is_league(nm):
         return bool(NAT.search(nm)) and not REGM.search(nm)
 
-    KVc, KVe = colors.HexColor('#f0ecf6'), colors.HexColor('#c3b6da')
+    KVc, KVe = colors.HexColor('#ececec'), colors.HexColor('#b4b4b4')  # vždy šedá
     REGc, REGe = colors.HexColor('#dcEEF1'), colors.HexColor('#6fb0bb')
 
     kval = _c.defaultdict(list)                       # lev -> [core]
@@ -1300,11 +1300,11 @@ def build_orgchart_pdf(d, sid):
         swatch(M + 90 * mm, y, REGc, REGe, 'krajské přebory (sloučené)')
         swatch(M + 150 * mm, y, KVc, KVe, 'kvalifikace')
 
-    def box(x, y, w, h, fill, edge, nm, fs=7.2):
+    def box(x, y, w, h, fill, edge, nm, fs=7.2, tc='#173153'):
         c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1.1)
         c.roundRect(x, y, w, h, 3.5, stroke=1, fill=1)
         lab = nm if len(nm) <= 34 else nm[:32] + '…'
-        c.setFillColor(colors.HexColor('#173153')); c.setFont(PDF_FONT, fs)
+        c.setFillColor(colors.HexColor(tc)); c.setFont(PDF_FONT, fs)
         c.drawCentredString(x + w / 2, y + h / 2 - fs * 0.34, lab)
 
     def rows_h(n):
@@ -1334,8 +1334,8 @@ def build_orgchart_pdf(d, sid):
                 c.showPage(); header(); cur_y = H - M - 32
             c.setFillColor(colors.HexColor('#999999')); c.setFont(PDF_FONT, 7)
             c.drawString(M, cur_y - KBH + 1.5, 'kvalifikace')
-            lab = 'Kvalifikace' + (f'  ×{kn}' if kn > 1 else '')
-            box(CX - 30 * mm, cur_y - KBH, 60 * mm, KBH, KVc, KVe, lab, fs=6.8)
+            lab = 'kvalifikace' + (f'  ×{kn}' if kn > 1 else '')
+            box(CX - 30 * mm, cur_y - KBH, 60 * mm, KBH, KVc, KVe, lab, fs=6.8, tc='#777777')
             cur_y -= KBH + 1.5 * mm
             continue
         lg_cz = sorted(leagues[lev]['CZ'])
