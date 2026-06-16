@@ -1177,100 +1177,121 @@ def build_orgchart_pdf(d, sid):
     c = canvas.Canvas(buf, pagesize=landscape(A4))
     c.setTitle(f'Org chart {d["label"]}')
     M = 12 * mm
-    GUT = 50 * mm                      # levý sloupec s názvem úrovně
-    CONTENT_X = M + GUT
-    CZ_W = 130 * mm
-    DIV_X = CONTENT_X + CZ_W
-    SK_X = DIV_X + 4 * mm
-    SK_W = W - M - SK_X
-    BW, BH, GAP = 41 * mm, 11 * mm, 3 * mm
-    PAL = [(colors.HexColor('#e3edff'), colors.HexColor('#8fb0e6')),
-           (colors.HexColor('#dcf4e8'), colors.HexColor('#74c19c')),
-           (colors.HexColor('#fdecc9'), colors.HexColor('#e0b76e')),
-           (colors.HexColor('#ece0f7'), colors.HexColor('#b194d6')),
-           (colors.HexColor('#fde0e2'), colors.HexColor('#e0939a')),
-           (colors.HexColor('#ddf0f3'), colors.HexColor('#83bdc7')),
-           (colors.HexColor('#eef1d6'), colors.HexColor('#bcc47e'))]
+    BW, BH, GAP = 44 * mm, 10 * mm, 3.2 * mm
+    GC = 4 * mm                                   # mezera kolem osy (ČR|SK)
+    KBH = 6.5 * mm                                # tenký proužek kvalifikace
+    CX = W / 2
+    CZc, CZe = colors.HexColor('#e3edff'), colors.HexColor('#7d9fd6')
+    SKc, SKe = colors.HexColor('#fde3c2'), colors.HexColor('#d99f44')
+    FEc, FEe = colors.HexColor('#dcf4e8'), colors.HexColor('#5cae86')
+    KVc, KVe = colors.HexColor('#f0ecf6'), colors.HexColor('#c3b6da')
+    half_w = (W - 2 * M) / 2 - GC
+    PER = max(1, int((half_w + GAP) // (BW + GAP)))      # boxů na řádek a stranu
 
-    # hlavní soutěže: vrchol vždy; vnitřní kola/fáze (Playoff, Finále…) ven,
-    # ale podsoutěže (I.ČNHL, II.SNHL…) necháme. Sloučení do jádra pak řeší _pdf_core.
     phase = re.compile(
         r'^(Play\-?off|Playoff|Finále|Semifinále|Čtvrtfinále|Předkolo|Baráž|'
         r'Nadstavba|Základní část|Skupina o udržení|O\s+\d.*m[ií]sto|O umístění|'
         r'O postup|Finálová skupina|kolo\b)', re.I)
     node_ids = {n['node_id'] for n in d['system']}
     tops = [n for n in d['system']
-            if n['parent_node_id'] not in node_ids
-            or not phase.match(str(n['name']).strip())]
+            if (n['parent_node_id'] not in node_ids
+                or not phase.match(str(n['name']).strip()))
+            and 'kontejner' not in str(n['name']).lower()]
     levels = sorted({n['level'] for n in tops}, key=lambda l: (lvl(l) or 9999))
     by = _c.defaultdict(lambda: _c.defaultdict(lambda: _c.defaultdict(int)))
-    names_at = _c.defaultdict(list)
     for n in tops:
-        reg = _pdf_region(n['name'])
-        by[n['level']][reg][_pdf_core(n['name'])] += 1
-        names_at[n['level']].append(str(n['name']))
+        by[n['level']][_pdf_region(n['name'])][_pdf_core(n['name'])] += 1
+    items_of = lambda lev, reg: sorted(by[lev][reg].items())
+
+    def swatch(x, y, fill, edge, text):
+        c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1)
+        c.roundRect(x, y, 5 * mm, 3.4 * mm, 1.2, stroke=1, fill=1)
+        c.setFillColor(colors.HexColor('#333333')); c.setFont(PDF_FONT, 8)
+        c.drawString(x + 6 * mm, y + 0.4, text)
 
     def header():
-        c.setFillColor(colors.HexColor('#1a3050'))
-        c.setFont(PDF_FONT_BOLD, 15)
+        c.setFillColor(colors.HexColor('#1a3050')); c.setFont(PDF_FONT_BOLD, 15)
         c.drawString(M, H - M + 1, f'Org chart soutěží — sezóna {d["label"]}')
-        c.setFont(PDF_FONT, 8.5)
-        c.setFillColor(colors.HexColor('#666666'))
+        c.setFont(PDF_FONT, 8.5); c.setFillColor(colors.HexColor('#666666'))
         c.drawString(M, H - M - 11,
-                     'Úroveň = hloubka v pyramidě (10/20/30…); na téže úrovni může '
-                     'ČR mít národní ligu a SK už kraje (asymetrie). Vnitřní kola sloučena.')
-        c.setFont(PDF_FONT_BOLD, 9)
-        c.setFillColor(colors.HexColor('#1a3050'))
-        c.drawString(CONTENT_X + 2, H - M - 26, 'ČECHY / celostátní')
-        c.drawString(SK_X + 2, H - M - 26, 'SLOVENSKO')
+                     'Pyramida shora dolů: nejvyšší soutěž nahoře, níž = nižší úroveň. '
+                     'Úroveň = hloubka; ČR a SK mohou mít na téže úrovni jinou soutěž (asymetrie).')
+        y = H - M - 24
+        swatch(M, y, CZc, CZe, 'Čechy / celostátní')
+        swatch(M + 52 * mm, y, SKc, SKe, 'Slovensko')
+        swatch(M + 92 * mm, y, KVc, KVe, 'kvalifikace (mezi úrovněmi)')
 
-    def boxes_height(groups, width):
-        per = max(1, int((width + GAP) // (BW + GAP)))
-        rows = max(1, -(-len(groups) // per)) if groups else 1
-        return rows * (BH + GAP)
+    def box(x, y, w, h, fill, edge, nm, fs=7.2):
+        c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1.1)
+        c.roundRect(x, y, w, h, 3.5, stroke=1, fill=1)
+        lab = nm if len(nm) <= 32 else nm[:30] + '…'
+        c.setFillColor(colors.HexColor('#173153')); c.setFont(PDF_FONT, fs)
+        c.drawCentredString(x + w / 2, y + h / 2 - fs * 0.34, lab)
 
-    def draw_boxes(groups, x0, width, fill, edge):
-        if not groups:
-            c.setFillColor(colors.HexColor('#bbbbbb')); c.setFont(PDF_FONT, 8)
-            c.drawString(x0 + 2, cur_y - BH + 3, '—')
-            return
-        per = max(1, int((width + GAP) // (BW + GAP)))
-        for i, (core_nm, cnt) in enumerate(sorted(groups.items())):
-            col, row = i % per, i // per
-            bx = x0 + col * (BW + GAP)
-            byy = cur_y - row * (BH + GAP) - BH
-            c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1)
-            c.roundRect(bx, byy, BW, BH, 4, stroke=1, fill=1)
-            label = core_nm if len(core_nm) <= 33 else core_nm[:31] + '…'
-            c.setFillColor(colors.HexColor('#15314e')); c.setFont(PDF_FONT, 7.4)
-            c.drawString(bx + 3, byy + BH / 2 - 2.4, label)
+    def rows_h(n):
+        return max(1, -(-n // PER)) * (BH + GAP)
+
+    def draw_block(items, side, top, fill, edge):
+        for i, (nm, cnt) in enumerate(items):
+            row, col = i // PER, i % PER
+            yy = top - row * (BH + GAP) - BH
+            cnt_in_row = min(PER, len(items) - row * PER)
+            if side == 'L':                       # ČR: doleva od osy
+                xx = CX - GC - col * (BW + GAP) - BW
+            elif side == 'R':                     # SK: doprava od osy
+                xx = CX + GC + col * (BW + GAP)
+            else:                                  # C: na osu (federální)
+                tot = cnt_in_row * (BW + GAP) - GAP
+                xx = CX - tot / 2 + col * (BW + GAP)
+            box(xx, yy, BW, BH, fill, edge, nm)
 
     header()
-    cur_y = H - M - 34
-    for ti, lev in enumerate(levels):
-        cz = by[lev]['CZ']; sk = by[lev]['SK']
-        th = max(boxes_height(cz, CZ_W), boxes_height(sk, SK_W)) + 4 * mm
-        if cur_y - th < M:
-            c.showPage(); header(); cur_y = H - M - 34
-        fill, edge = PAL[ti % len(PAL)]
-        # pruh úrovně (levý sloupec)
-        c.setFillColor(edge)
-        c.roundRect(M, cur_y - th + 3, GUT - 4 * mm, th - 4, 5, stroke=0, fill=1)
-        c.setFillColor(colors.white); c.setFont(PDF_FONT_BOLD, 8.6)
-        tname = _pdf_tier_name(lev, names_at[lev])
-        ty = cur_y - 6
-        for line in _wrap_words(tname, 26):
-            c.drawString(M + 4, ty, line); ty -= 10
-        c.setFont(PDF_FONT, 7); c.drawString(M + 4, cur_y - th + 8, str(lev))
-        # boxy
-        draw_boxes(cz, CONTENT_X, CZ_W, fill, edge)
-        draw_boxes(sk, SK_X, SK_W, fill, edge)
-        # dělící čára CZ|SK
-        c.setStrokeColor(colors.HexColor('#cfd6e0')); c.setLineWidth(0.8)
-        c.line(DIV_X + 2, cur_y - th + 4, DIV_X + 2, cur_y)
-        c.setStrokeColor(colors.HexColor('#e6e9ee'))
-        c.line(M, cur_y - th + 2, W - M, cur_y - th + 2)
-        cur_y -= th + 2 * mm
+    cur_y = H - M - 32
+    for lev in levels:
+        n = lvl(lev)
+        cz, sk = items_of(lev, 'CZ'), items_of(lev, 'SK')
+        if n is not None and n % 10 == 5:          # KVALIFIKACE — tenký proužek
+            allk = cz + sk
+            kn = len(allk)
+            per = max(1, int((W - 2 * M + GAP) // (40 * mm + GAP)))
+            h = max(1, -(-kn // per)) * (KBH + 2 * mm) + 2 * mm
+            if cur_y - h < M:
+                c.showPage(); header(); cur_y = H - M - 32
+            c.setFillColor(colors.HexColor('#999999')); c.setFont(PDF_FONT, 7)
+            c.drawString(M, cur_y - KBH + 1.5, 'kvalifikace')
+            for i, (nm, _) in enumerate(allk):
+                row, col = i // per, i % per
+                cir = min(per, kn - row * per)
+                tot = cir * (40 * mm + GAP) - GAP
+                xx = CX - tot / 2 + col * (40 * mm + GAP)
+                yy = cur_y - row * (KBH + 2 * mm) - KBH
+                box(xx, yy, 40 * mm, KBH, KVc, KVe, nm, fs=6.6)
+            cur_y -= h + 1.5 * mm
+            continue
+        # HLAVNÍ ÚROVEŇ
+        if cz and sk:
+            h = max(rows_h(len(cz)), rows_h(len(sk)))
+        else:
+            h = rows_h(len(cz or sk) or 1)
+        if cur_y - h < M:
+            c.showPage(); header(); cur_y = H - M - 32
+        # popisek úrovně vlevo
+        c.setFillColor(colors.HexColor('#555555')); c.setFont(PDF_FONT_BOLD, 8)
+        c.drawString(M, cur_y - 7, _pdf_tier_name(lev, []))
+        c.setFont(PDF_FONT, 6.5); c.setFillColor(colors.HexColor('#9aa0aa'))
+        c.drawString(M, cur_y - 15, str(lev))
+        if cz and sk:
+            draw_block(cz, 'L', cur_y, CZc, CZe)
+            draw_block(sk, 'R', cur_y, SKc, SKe)
+            c.setStrokeColor(colors.HexColor('#e1e5ec')); c.setLineWidth(0.7)
+            c.line(CX, cur_y + 1, CX, cur_y - h)
+        else:
+            one = cz or sk
+            fc, ec = (CZc, CZe) if cz else (SKc, SKe)
+            if n == 10:                            # špička = federální, na osu
+                fc, ec = FEc, FEe
+            draw_block(one, 'C', cur_y, fc, ec)
+        cur_y -= h + 3 * mm
     c.showPage(); c.save()
     return buf.getvalue()
 
