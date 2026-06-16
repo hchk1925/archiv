@@ -44,9 +44,10 @@ def main():
     sp = c.get(f'/s/{sid}').get_data(as_text=True)
     check('note-callout' in sp, 'sezónní pohled má inline callout „co chybí"')
 
-    # 3. PDF plný + audit
+    # 3. PDF plný + audit + org chart
     for url, magic in [(f'/s/{sid}/full.pdf', b'%PDF-'),
-                       (f'/s/{sid}/audit.pdf', b'%PDF-')]:
+                       (f'/s/{sid}/audit.pdf', b'%PDF-'),
+                       (f'/s/{sid}/orgchart.pdf', b'%PDF-')]:
         r = c.get(url)
         check(r.status_code == 200 and r.data[:5] == magic and len(r.data) > 1500,
               f'GET {url} → validní PDF ({len(r.data)} B)')
@@ -87,6 +88,11 @@ def main():
     check(pdf_full[:5] == b'%PDF-' and len(pdf_full) > len(pdf_aud) // 2,
           'build_full_pdf → bytes PDF')
     check(pdf_aud[:5] == b'%PDF-', 'build_season_pdf → bytes PDF')
+    pdf_org = app.build_orgchart_pdf(app.CACHE[sid], sid)
+    check(pdf_org[:5] == b'%PDF-' and len(pdf_org) > 1500,
+          'build_orgchart_pdf → bytes PDF')
+    check(app._pdf_region('Západoslovenský kraj') == 'SK'
+          and app._pdf_region('Středočeský') == 'CZ', 'org chart ČR/SK z názvu')
 
     print('\n' + ('VŠE OK' if not FAIL else f'SELHALO: {len(FAIL)} testů'))
     sys.exit(1 if FAIL else 0)

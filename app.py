@@ -1131,6 +1131,184 @@ def build_full_pdf(d, sid):
     return buf.getvalue()
 
 
+_SK_RE = re.compile(
+    r'(Sloven|Západoslov|Východoslov|St[řr]edoslov|Bratislav|Košic|Nitran|'
+    r'Prešov|Žilin|Banskobystr|Trnav|Trenč|SNHL)', re.I)
+
+
+def _pdf_region(name):
+    return 'SK' if _SK_RE.search(str(name or '')) else 'CZ'
+
+
+def _pdf_core(name):
+    s = str(name or '')
+    s = re.sub(r',?\s*\d+\.\s*úroveň(\s*\([^)]*\))?', '', s, flags=re.I)
+    s = re.sub(r',?\s*(skupina|Skupina|sk\.)\s*[^,]*', '', s, flags=re.I)
+    s = re.sub(r',?\s*(semifinále|čtvrtfinále|finále|základní (část|skupina)|'
+               r'finálová skupina|o udržení|o umístění|play\-?off|nadstavba|'
+               r'červená|modrá|O \d)[^,]*', '', s, flags=re.I)
+    s = re.sub(r'\s+', ' ', s).strip().strip(',').strip(' -–').strip()
+    return s or str(name or '')
+
+
+def _pdf_tier_name(level, names):
+    cores = []
+    for n in names:
+        c = _pdf_core(n)
+        if c and c not in cores:
+            cores.append(c)
+    low = ' '.join(names).lower()
+    if sum('kvalifik' in c.lower() for c in cores) >= max(1, (len(cores) + 1) // 2):
+        return 'Kvalifikace o postup'
+    leagues = [c for c in cores if re.search(r'(ČNHL|SNHL|CHL|liga|extraliga)', c, re.I)]
+    if leagues:
+        seen = []
+        for c in leagues:
+            if c not in seen:
+                seen.append(c)
+        return ' / '.join(seen[:3])
+    m = re.search(r'(\d+)\.\s*úroveň', low)
+    if m:
+        return f'Krajské soutěže ({m.group(1)}. úroveň)'
+    if re.search(r'přebor|kraj|třída', low):
+        return 'Krajské soutěže'
+    return cores[0] if cores else (str(level) or '—')
+
+
+def build_orgchart_pdf(d, sid):
+    """Org chart sezóny jako pyramida: úrovně shora dolů, ČECHY | SLOVENSKO,
+    názvy úrovní odvozené z obsahu. Soutěže sloučené (×N skupin)."""
+    from reportlab.lib.pagesizes import A4, landscape
+    from reportlab.lib import colors
+    from reportlab.lib.units import mm
+    from reportlab.pdfgen import canvas
+    _ensure_font()
+    import collections as _c
+    import io
+    buf = io.BytesIO()
+    W, H = landscape(A4)
+    c = canvas.Canvas(buf, pagesize=landscape(A4))
+    c.setTitle(f'Org chart {d["label"]}')
+    M = 12 * mm
+    GUT = 50 * mm                      # levý sloupec s názvem úrovně
+    CONTENT_X = M + GUT
+    CZ_W = 130 * mm
+    DIV_X = CONTENT_X + CZ_W
+    SK_X = DIV_X + 4 * mm
+    SK_W = W - M - SK_X
+    BW, BH, GAP = 41 * mm, 11 * mm, 3 * mm
+    PAL = [(colors.HexColor('#e3edff'), colors.HexColor('#8fb0e6')),
+           (colors.HexColor('#dcf4e8'), colors.HexColor('#74c19c')),
+           (colors.HexColor('#fdecc9'), colors.HexColor('#e0b76e')),
+           (colors.HexColor('#ece0f7'), colors.HexColor('#b194d6')),
+           (colors.HexColor('#fde0e2'), colors.HexColor('#e0939a')),
+           (colors.HexColor('#ddf0f3'), colors.HexColor('#83bdc7')),
+           (colors.HexColor('#eef1d6'), colors.HexColor('#bcc47e'))]
+
+    # hlavní soutěže: vrchol vždy; vnitřní kola/fáze (Playoff, Finále…) ven,
+    # ale podsoutěže (I.ČNHL, II.SNHL…) necháme. Sloučení do jádra pak řeší _pdf_core.
+    phase = re.compile(
+        r'^(Play\-?off|Playoff|Finále|Semifinále|Čtvrtfinále|Předkolo|Baráž|'
+        r'Nadstavba|Základní část|Skupina o udržení|O\s+\d.*m[ií]sto|O umístění|'
+        r'O postup|Finálová skupina|kolo\b)', re.I)
+    node_ids = {n['node_id'] for n in d['system']}
+    tops = [n for n in d['system']
+            if n['parent_node_id'] not in node_ids
+            or not phase.match(str(n['name']).strip())]
+    levels = sorted({n['level'] for n in tops}, key=lambda l: (lvl(l) or 9999))
+    by = _c.defaultdict(lambda: _c.defaultdict(lambda: _c.defaultdict(int)))
+    names_at = _c.defaultdict(list)
+    for n in tops:
+        reg = _pdf_region(n['name'])
+        by[n['level']][reg][_pdf_core(n['name'])] += 1
+        names_at[n['level']].append(str(n['name']))
+
+    def header():
+        c.setFillColor(colors.HexColor('#1a3050'))
+        c.setFont(PDF_FONT_BOLD, 15)
+        c.drawString(M, H - M + 1, f'Org chart soutěží — sezóna {d["label"]}')
+        c.setFont(PDF_FONT, 8.5)
+        c.setFillColor(colors.HexColor('#666666'))
+        c.drawString(M, H - M - 11, 'Pyramida úrovní shora (nejvyšší) dolů · '
+                                    'hlavní soutěže (vnitřní kola sloučena) · ČR/SK auto z názvu')
+        c.setFont(PDF_FONT_BOLD, 9)
+        c.setFillColor(colors.HexColor('#1a3050'))
+        c.drawString(CONTENT_X + 2, H - M - 26, 'ČECHY / celostátní')
+        c.drawString(SK_X + 2, H - M - 26, 'SLOVENSKO')
+
+    def boxes_height(groups, width):
+        per = max(1, int((width + GAP) // (BW + GAP)))
+        rows = max(1, -(-len(groups) // per)) if groups else 1
+        return rows * (BH + GAP)
+
+    def draw_boxes(groups, x0, width, fill, edge):
+        if not groups:
+            c.setFillColor(colors.HexColor('#bbbbbb')); c.setFont(PDF_FONT, 8)
+            c.drawString(x0 + 2, cur_y - BH + 3, '—')
+            return
+        per = max(1, int((width + GAP) // (BW + GAP)))
+        for i, (core_nm, cnt) in enumerate(sorted(groups.items())):
+            col, row = i % per, i // per
+            bx = x0 + col * (BW + GAP)
+            byy = cur_y - row * (BH + GAP) - BH
+            c.setFillColor(fill); c.setStrokeColor(edge); c.setLineWidth(1)
+            c.roundRect(bx, byy, BW, BH, 4, stroke=1, fill=1)
+            label = core_nm if len(core_nm) <= 33 else core_nm[:31] + '…'
+            c.setFillColor(colors.HexColor('#15314e')); c.setFont(PDF_FONT, 7.4)
+            c.drawString(bx + 3, byy + BH / 2 - 2.4, label)
+
+    header()
+    cur_y = H - M - 34
+    for ti, lev in enumerate(levels):
+        cz = by[lev]['CZ']; sk = by[lev]['SK']
+        th = max(boxes_height(cz, CZ_W), boxes_height(sk, SK_W)) + 4 * mm
+        if cur_y - th < M:
+            c.showPage(); header(); cur_y = H - M - 34
+        fill, edge = PAL[ti % len(PAL)]
+        # pruh úrovně (levý sloupec)
+        c.setFillColor(edge)
+        c.roundRect(M, cur_y - th + 3, GUT - 4 * mm, th - 4, 5, stroke=0, fill=1)
+        c.setFillColor(colors.white); c.setFont(PDF_FONT_BOLD, 8.6)
+        tname = _pdf_tier_name(lev, names_at[lev])
+        ty = cur_y - 6
+        for line in _wrap_words(tname, 26):
+            c.drawString(M + 4, ty, line); ty -= 10
+        c.setFont(PDF_FONT, 7); c.drawString(M + 4, cur_y - th + 8, str(lev))
+        # boxy
+        draw_boxes(cz, CONTENT_X, CZ_W, fill, edge)
+        draw_boxes(sk, SK_X, SK_W, fill, edge)
+        # dělící čára CZ|SK
+        c.setStrokeColor(colors.HexColor('#cfd6e0')); c.setLineWidth(0.8)
+        c.line(DIV_X + 2, cur_y - th + 4, DIV_X + 2, cur_y)
+        c.setStrokeColor(colors.HexColor('#e6e9ee'))
+        c.line(M, cur_y - th + 2, W - M, cur_y - th + 2)
+        cur_y -= th + 2 * mm
+    c.showPage(); c.save()
+    return buf.getvalue()
+
+
+def _wrap_words(text, width):
+    out, line = [], ''
+    for w in str(text).split():
+        if len(line) + len(w) + 1 > width and line:
+            out.append(line); line = w
+        else:
+            line = (line + ' ' + w).strip()
+    if line:
+        out.append(line)
+    return out[:3]
+
+
+@app.route('/s/<sid>/orgchart.pdf')
+def orgchart_pdf(sid):
+    if sid not in CACHE or not CACHE[sid]: abort(404)
+    from flask import Response
+    pdf = build_orgchart_pdf(CACHE[sid], sid)
+    return Response(pdf, mimetype='application/pdf',
+                    headers={'Content-Disposition':
+                             f'inline; filename=orgchart_{sid}.pdf'})
+
+
 @app.route('/s/<sid>/full.pdf')
 def full_pdf(sid):
     if sid not in CACHE or not CACHE[sid]: abort(404)

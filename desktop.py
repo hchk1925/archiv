@@ -421,6 +421,7 @@ class OrgChart(tk.Toplevel):
         self.title(f'Úrovně (levely) — {d["label"]}')
         self.geometry('1100x720')
         self.sid = sid
+        self.d = d
         self.on_saved = on_saved
         self.nodes = {n['node_id']: dict(n) for n in d['system']}
         self.model = {nid: {'level': n['level']} for nid, n in self.nodes.items()}
@@ -437,6 +438,7 @@ class OrgChart(tk.Toplevel):
         self.save_btn = ttk.Button(bar, text='Uložit do xlsx', command=self.save)
         self.save_btn.pack(side='right', padx=4)
         ttk.Button(bar, text='Vrátit změny', command=self.reset).pack(side='right')
+        ttk.Button(bar, text='Export PDF', command=self.export_pdf).pack(side='right', padx=4)
         self.info = ttk.Label(bar, text='')
         self.info.pack(side='right', padx=10)
         outer = ttk.Frame(self)
@@ -532,6 +534,25 @@ class OrgChart(tk.Toplevel):
         for n in nids:
             self.model[n]['level'] = lev
         self.rebuild()
+
+    def export_pdf(self):
+        # PDF org chartu odráží i neuložené změny úrovní
+        dd = dict(self.d)
+        dd['system'] = [{**n, 'level': self.model[n['node_id']]['level']}
+                        for n in self.d['system']]
+        try:
+            data = core.build_orgchart_pdf(dd, self.sid)
+        except Exception as e:
+            messagebox.showerror('PDF', f'Org chart PDF se nepodařilo vytvořit:\n{e}')
+            return
+        path = filedialog.asksaveasfilename(defaultextension='.pdf',
+                                            initialfile=f'orgchart_S{self.sid}.pdf',
+                                            filetypes=[('PDF', '*.pdf')])
+        if not path:
+            return
+        with open(path, 'wb') as f:
+            f.write(data)
+        open_file(path)
 
     def _changes(self):
         return {n: v for n, v in self.model.items()

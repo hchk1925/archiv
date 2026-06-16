@@ -29,6 +29,9 @@ Tlačítko otevře **matici úroveň × ČR/SK**: řádky = úrovně (Liga → k
 **Slovensko** (dělí se automaticky podle názvu). V buňkách jsou soutěže jako štítky
 (`×N` = počet skupin). Slouží k **rychlému odhalení a opravě chyb v zařazení do úrovní**.
 Klik na štítek → vyber správnou úroveň → **Uložit do xlsx** zapíše do SYSTEM listu.
+Tlačítko **Export PDF** vytvoří org chart sezóny jako pyramidu (úrovně shora dolů,
+ČECHY | SLOVENSKO, hlavní soutěže) — vhodné na revizi zařazení do úrovní na papíře.
+(Na webu: `/s/<sid>/orgchart.pdf`.)
 
 ### Plné názvy soutěží (blbuvzdorné)
 Názvy v datech jsou už rozbalené z kódů na čitelné (`30_Jihlavský L30` → `Jihlavský,
