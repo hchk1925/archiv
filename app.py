@@ -1161,6 +1161,30 @@ def _pdf_core(name):
     return s or str(name or '')
 
 
+_GENERIC_RULES = [
+    (r'extraliga', 'extraliga'),
+    (r'\bII\.?\s*[ČC]NHL', '2. ČNHL'),
+    (r'\bI\.?\s*[ČC]NHL|^[ČC]NHL', 'ČNHL'),
+    (r'\bII\.?\s*SNHL', '2. SNHL'),
+    (r'\bI\.?\s*SNHL|^SNHL', 'SNHL'),
+    (r'národní hokejová liga|\bNHL\b', 'NHL'),
+    (r'\bII\.?\s*liga|2\.\s*liga|druhá liga', '2. liga'),
+    (r'\bI\.?\s*liga|1\.\s*liga|první liga|^liga|státní liga|celostátní', 'liga'),
+    (r'divize', 'divize'),
+    (r'oblast', 'oblastní soutěž'),
+    (r'župa|župn', 'župa'),
+]
+
+
+def _generic(name):
+    """Generické označení soutěže (liga, 2. liga, ČNHL, SNHL, 2. ČNHL…)."""
+    s = str(name or '')
+    for pat, rep in _GENERIC_RULES:
+        if re.search(pat, s, re.I):
+            return rep
+    return s
+
+
 def _pdf_tier_name(level, names):
     """Štítek úrovně = hloubka v pyramidě (10/20/30…). Stejná úroveň může mít
     v ČR národní ligu a na SK už kraje (asymetrie) — proto jen číslo úrovně."""
@@ -1240,7 +1264,7 @@ def build_orgchart_pdf(d, sid):
         for r in ('CZ', 'SK'):
             if regcores[lev][r]:
                 reg_levels[r].append(lev)
-    REGLAB = ['Krajské přebory', 'Nižší krajské třídy', 'Okresní soutěže', 'Nejnižší soutěže']
+    REGLAB = ['krajský přebor', 'krajská soutěž', 'okresní soutěž', 'nejnižší soutěž']
 
     def reg_label(lev, r):
         idx = reg_levels[r].index(lev) if lev in reg_levels[r] else 0
@@ -1306,8 +1330,9 @@ def build_orgchart_pdf(d, sid):
         lg_cz = sorted(leagues[lev]['CZ'])
         lg_sk = sorted(leagues[lev]['SK'])
         rc, rs = len(regcores[lev]['CZ']), len(regcores[lev]['SK'])
-        left = list(lg_cz)
-        right = list(lg_sk)
+        # generická označení lig (dedup se zachováním pořadí)
+        left = list(dict.fromkeys(_generic(x) for x in lg_cz))
+        right = list(dict.fromkeys(_generic(x) for x in lg_sk))
         center = None
         if rc and rs:                                            # stejná úroveň → 1 box
             center = f'{reg_label(lev, "CZ")} — ČR+SK  ×{rc + rs}'
@@ -1336,14 +1361,18 @@ def build_orgchart_pdf(d, sid):
                         h + 2 * mm, 3, stroke=1, fill=1)
             c.setFillColor(colors.HexColor('#b07d10')); c.setFont(PDF_FONT_BOLD, 7)
             c.drawRightString(W - M - 2, cur_y + 1, '◄ šejdr: ČR liga · SK už kraje')
+        # generický štítek úrovně (z lig, jinak druh krajské soutěže)
+        glabels = list(dict.fromkeys(
+            [_generic(x) for x in lg_cz] + [_generic(x) for x in lg_sk]))
+        if glabels:
+            tlabel = ' / '.join(glabels[:3])
+        elif rc or rs:
+            tlabel = reg_label(lev, 'CZ' if rc else 'SK')
+        else:
+            tlabel = _pdf_tier_name(lev, [])
         c.setFillColor(colors.HexColor('#555555')); c.setFont(PDF_FONT_BOLD, 8)
-        c.drawString(M, cur_y - 7, _pdf_tier_name(lev, []))
-        c.setFont(PDF_FONT, 6.5); c.setFillColor(colors.HexColor('#9aa0aa'))
-        c.drawString(M, cur_y - 15, str(lev))
-
-        def regfill(lab):
-            return (REGc, REGe) if 'ČR' not in lab[:3] and ('přebor' in lab.lower()
-                    or 'krajsk' in lab.lower() or 'okres' in lab.lower()) else None
+        for j, ln in enumerate(_wrap_words(tlabel, 18)):
+            c.drawString(M, cur_y - 7 - j * 9, ln)
 
         if left and right:
             draw_block(left, 'L', cur_y, CZc, CZe)
