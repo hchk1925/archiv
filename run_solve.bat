@@ -1,0 +1,6 @@
+@echo off
+cd /d "%~dp0"
+echo Instaluji knihovnu openpyxl (jen poprve)...
+python -m pip install --quiet openpyxl
+echo Spoustim resitko flagu...
+start "" pythonw solve_flags_gui.py
