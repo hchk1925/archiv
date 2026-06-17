@@ -143,12 +143,15 @@ def analyze(path):
         unresolved = [r for r in rowsby[base] if r[5] in ('postup', 'sestup')]
         if not unresolved:
             continue
-        sibs = [{'name': nodes[s]['name'], 'type': nodes[s]['competition_type'],
-                 'pos': sorted([x[2] for x in rowsby[s]], key=_poskey)}
-                for s in tphases if s != base]
+        ordered = sorted(tphases, key=lambda p: (_lvl(nodes.get(p, {}).get('level')) or 0,
+                                                 str(nodes.get(p, {}).get('name', ''))))
+        phases = [{'name': nodes.get(p, {}).get('name', p),
+                   'type': nodes.get(p, {}).get('competition_type', ''),
+                   'rows': sorted(rowsby[p], key=lambda v: _poskey(v[2]))}
+                  for p in ([base] + [p for p in ordered if p != base])]
         items.append({'comp': bn.get('name', base), 'level': bn.get('level', ''),
                       'base': sorted(rowsby[base], key=lambda v: _poskey(v[2])),
-                      'unresolved': unresolved, 'sibs': sibs})
+                      'unresolved': unresolved, 'phases': phases})
     return items
 
 
@@ -178,7 +181,7 @@ def build_queue(data_dir):
                     'sid': sid, 'path': path, 'sheet': sh, 'row': row,
                     'pos': pos, 'club': club, 'fate': fate,
                     'comp': fl['comp'], 'level': fl['level'],
-                    'base': fl['base'], 'sibs': fl['sibs'],
+                    'base': fl['base'], 'phases': fl['phases'],
                     'key': f'{sid}|{sh}|{row}'})
     return items
 
@@ -238,17 +241,21 @@ class FlagSolver(tk.Tk):
                                    wraplength=1100, justify='left')
         self.title_lbl.pack(anchor='w')
 
+        # kompletní tabulky všech fází soutěže (fáze → týmy)
+        tf = ttk.Frame(mid); tf.pack(fill='both', expand=True, pady=4)
         cols = ('pos', 'klub', 'osud')
-        self.tbl = ttk.Treeview(mid, columns=cols, show='headings', height=12)
-        for c, w in zip(cols, (50, 360, 220)):
+        self.tbl = ttk.Treeview(tf, columns=cols, show='tree headings', height=15)
+        self.tbl.heading('#0', text='FÁZE / SKUPINA'); self.tbl.column('#0', width=240)
+        for c, w in zip(cols, (50, 330, 200)):
             self.tbl.heading(c, text=c.upper()); self.tbl.column(c, width=w, anchor='w')
         self.tbl.column('pos', anchor='center')
-        self.tbl.pack(fill='x', pady=4)
-        self.tbl.tag_configure('q', background='#fff6da')
-
-        self.sibs_lbl = ttk.Label(mid, text='', foreground='#555',
-                                  wraplength=1100, justify='left')
-        self.sibs_lbl.pack(anchor='w', pady=(2, 6))
+        ysb = ttk.Scrollbar(tf, command=self.tbl.yview); ysb.pack(side='right', fill='y')
+        self.tbl.configure(yscrollcommand=ysb.set)
+        self.tbl.pack(side='left', fill='both', expand=True)
+        self.tbl.tag_configure('q', background='#fff6da')          # sporný (postup/sestup)
+        self.tbl.tag_configure('cur', background='#ffe0a3')         # právě řešený tým
+        self.tbl.tag_configure('phase', font=('TkDefaultFont', 9, 'bold'),
+                               foreground='#1a3050')
 
         self.team_lbl = ttk.Label(mid, text='', font=('TkDefaultFont', 12, 'bold'),
                                   foreground='#b07d10')
@@ -310,18 +317,23 @@ class FlagSolver(tk.Tk):
         self.title_lbl.config(
             text=f"[{self.idx+1}/{n}]  {it['sid'].replace('_','/')}  ·  {it['comp']}  ({it['level']})")
         self.tbl.delete(*self.tbl.get_children())
-        for (sh, row, pos, cid, club, fate) in it['base']:
-            q = '⟵ ?' if fate in ('postup', 'sestup') else ''
-            cur = ' ✔' if (f"{it['sid']}|{sh}|{row}" in self.progress
-                           and self.progress[f"{it['sid']}|{sh}|{row}"] not in (None, SKIP)) else ''
-            tag = 'q' if (row == it['row']) else ''
-            self.tbl.insert('', 'end', values=(pos, club, f'{fate}{cur}  {q}'),
-                            tags=(tag,) if tag else ())
-        sib = '  ·  '.join(f"{s['name']} [{s['type']}]" for s in it['sibs'])
-        self.sibs_lbl.config(text='Další fáze v soutěži:  ' + (sib or '(žádné)'))
+        for ph in it['phases']:
+            pid = self.tbl.insert('', 'end', text=f"{ph['name']}  [{ph['type']}]",
+                                  open=True, tags=('phase',))
+            for k, (sh, row, pos, cid, club, fate) in enumerate(ph['rows'], 1):
+                dpos = pos if pos not in (None, '') else k
+                key = f"{it['sid']}|{sh}|{row}"
+                done = self.progress.get(key)
+                mark = (' ✔ ' + done) if (done and done != SKIP) else (
+                    '  ⟵ ?' if fate in ('postup', 'sestup') else '')
+                tag = 'cur' if (sh == it['sheet'] and row == it['row']) else (
+                    'q' if fate in ('postup', 'sestup') else '')
+                self.tbl.insert(pid, 'end', values=(dpos, club, f'{fate or "—"}{mark}'),
+                                tags=(tag,) if tag else ())
         st = self.progress.get(it['key'])
         stx = '' if not st else (f'  — už vyřešeno: {st}' if st != SKIP else '  — přeskočeno')
-        self.team_lbl.config(text=f"→  {it['pos']}. {it['club']}   (teď: {it['fate']}){stx}")
+        pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
+        self.team_lbl.config(text=f"→  {pre}{it['club']}   (teď: {it['fate']}){stx}")
         self.custom.delete(0, 'end')
 
     def move(self, d):
