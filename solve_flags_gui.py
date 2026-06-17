@@ -161,6 +161,7 @@ VARIANTS = [('play off', 'play off'), ('o udržení', 'o udržení'),
             ('sestup (přímý)', 'sestup'), ('udržel se', 'udržel se'),
             ('setrval', 'setrval'), ('zůstal', 'zůstal')]
 SKIP = '__skip__'
+CHAT = '__chat__'
 
 
 def find_data_dir():
@@ -269,10 +270,11 @@ class FlagSolver(tk.Tk):
                            row=i // 5, column=i % 5, padx=3, pady=3, sticky='w')
 
         cf = ttk.Frame(mid); cf.pack(anchor='w', pady=4)
-        ttk.Label(cf, text='Vlastní text:').pack(side='left')
-        self.custom = ttk.Entry(cf, width=40); self.custom.pack(side='left', padx=4)
-        self.custom.bind('<Return>', lambda e: self._choose_custom())
-        ttk.Button(cf, text='Uložit vlastní', command=self._choose_custom).pack(side='left')
+        ttk.Label(cf, text='Můj koment / vlastní:').pack(side='left')
+        self.custom = ttk.Entry(cf, width=46); self.custom.pack(side='left', padx=4)
+        self.custom.bind('<Return>', lambda e: self._to_prompt())
+        ttk.Button(cf, text='➜ Do promptu pro chat (p)', command=self._to_prompt).pack(side='left')
+        ttk.Button(cf, text='Zapsat jako osud', command=self._choose_custom).pack(side='left', padx=6)
         ttk.Button(cf, text='Přeskočit (s)', command=self.skip).pack(side='left', padx=12)
 
         nav = ttk.Frame(mid); nav.pack(anchor='w', pady=6)
@@ -292,6 +294,8 @@ class FlagSolver(tk.Tk):
             self.choose(VARIANTS[self._keys.index(ch)][1])
         elif ch == 's':
             self.skip()
+        elif ch == 'p':
+            self._to_prompt()
         elif e.keysym == 'Right':
             self.move(1)
         elif e.keysym == 'Left':
@@ -308,8 +312,10 @@ class FlagSolver(tk.Tk):
     def show(self):
         n = len(self.queue)
         done = self._done_count()
-        self.pbar['maximum'] = max(1, n); self.pbar['value'] = done
-        self.count_lbl.config(text=f'{done} / {n} vyřešeno')
+        chat = sum(1 for v in self.progress.values() if v == CHAT)
+        skip = sum(1 for v in self.progress.values() if v == SKIP)
+        self.pbar['maximum'] = max(1, n); self.pbar['value'] = done + chat
+        self.count_lbl.config(text=f'{done} vyřešeno · {chat} do chatu · {skip} skip  /  {n}')
         if not self.queue:
             self.title_lbl.config(text='Žádné flagy — vše vyřešeno 🎉')
             return
@@ -324,14 +330,22 @@ class FlagSolver(tk.Tk):
                 dpos = pos if pos not in (None, '') else k
                 key = f"{it['sid']}|{sh}|{row}"
                 done = self.progress.get(key)
-                mark = (' ✔ ' + done) if (done and done != SKIP) else (
-                    '  ⟵ ?' if fate in ('postup', 'sestup') else '')
+                if done == CHAT:
+                    mark = '  ➜ chat'
+                elif done and done != SKIP:
+                    mark = ' ✔ ' + done
+                elif fate in ('postup', 'sestup'):
+                    mark = '  ⟵ ?'
+                else:
+                    mark = ''
                 tag = 'cur' if (sh == it['sheet'] and row == it['row']) else (
                     'q' if fate in ('postup', 'sestup') else '')
                 self.tbl.insert(pid, 'end', values=(dpos, club, f'{fate or "—"}{mark}'),
                                 tags=(tag,) if tag else ())
         st = self.progress.get(it['key'])
-        stx = '' if not st else (f'  — už vyřešeno: {st}' if st != SKIP else '  — přeskočeno')
+        stx = ('' if not st else ('  — přeskočeno' if st == SKIP else
+               ('  — odloženo do promptu pro chat' if st == CHAT
+                else f'  — už vyřešeno: {st}')))
         pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
         self.team_lbl.config(text=f"→  {pre}{it['club']}   (teď: {it['fate']}){stx}")
         self.custom.delete(0, 'end')
@@ -357,6 +371,39 @@ class FlagSolver(tk.Tk):
         if v:
             self.choose(v)
 
+    def _build_prompt_block(self, it, comment):
+        """Hotový prompt do chatu: dotaz + tabulky (výpis z Excelu) + můj koment."""
+        L = ['=' * 64,
+             f"Sezóna: {it['sid'].replace('_', '/')}",
+             f"Soutěž: {it['comp']}  ({it['level']})"]
+        pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
+        L.append(f"OTÁZKA: jaký osud má  {pre}{it['club']}  (teď v Excelu: {it['fate']})?")
+        L.append('')
+        L.append('Tabulky soutěže (výpis z Excelu):')
+        for ph in it['phases']:
+            L.append(f"  [{ph['name']}]  ({ph['type']})")
+            for k, (sh, row, pos, cid, club, fate) in enumerate(ph['rows'], 1):
+                dpos = pos if pos not in (None, '') else k
+                mark = '   <-- TENTO TÝM' if (sh == it['sheet'] and row == it['row']) else ''
+                L.append(f"     {str(dpos):>3}. {str(club)[:34]:34} {fate or '—'}{mark}")
+        L.append('')
+        L.append(f"MŮJ KOMENT: {comment or '(bez komentáře)'}")
+        L.append('Doplň prosím osud: postup / sestup / udržel se / setrval / zůstal,')
+        L.append('  nebo fázový štítek: play off / o udržení / o umístění / kvalifikace / prolínací.')
+        L.append('')
+        return '\n'.join(L)
+
+    def _to_prompt(self):
+        it = self.queue[self.idx]
+        block = self._build_prompt_block(it, self.custom.get().strip())
+        pf = os.path.join(self.data_dir, 'prompty_k_chatu.txt')
+        with open(pf, 'a', encoding='utf-8') as f:
+            f.write(block + '\n')
+        self.progress[it['key']] = CHAT
+        self._save_progress()
+        self.status.config(text=f"➜ Do promptu pro chat: {it['club']}  (soubor prompty_k_chatu.txt)")
+        self._advance()
+
     def skip(self):
         it = self.queue[self.idx]
         self.progress[it['key']] = SKIP
@@ -379,8 +426,6 @@ class FlagSolver(tk.Tk):
 
     # -- export / zavření --
     def export_zip(self):
-        for wb in self.wbcache.values():
-            pass
         out = filedialog.asksaveasfilename(
             defaultextension='.zip',
             initialfile=f'almanach_opraveno_{datetime.date.today()}.zip',
@@ -388,7 +433,9 @@ class FlagSolver(tk.Tk):
         if not out:
             return
         done = self._done_count()
+        chat = sum(1 for v in self.progress.values() if v == CHAT)
         skipped = sum(1 for v in self.progress.values() if v == SKIP)
+        pf = os.path.join(self.data_dir, 'prompty_k_chatu.txt')
         readme = (
             'ALMANACH — opravené sešity\n'
             f'Vytvořeno: {datetime.datetime.now():%Y-%m-%d %H:%M}\n\n'
@@ -398,15 +445,20 @@ class FlagSolver(tk.Tk):
             '  o umístění / kvalifikace / prolínací.\n'
             '• Skupina o udržení: poslední = sestup, ostatní = udržel se.\n'
             '• Jednofázové soutěže (přímý postup) beze změny.\n\n'
-            f'Ruční dořešení flagů (tato appka): {done} rozhodnutí'
-            + (f', {skipped} přeskočeno (zatím nevyřešeno)' if skipped else '') + '.\n\n'
+            f'Ruční dořešení flagů: {done} rozhodnutí, {chat} odloženo do chatu, '
+            f'{skipped} přeskočeno.\n'
+            + ('• prompty_k_chatu.txt = hotové prompty (dotaz + tabulky + koment) '
+               'k dořešení v chatu.\n' if chat else '') + '\n'
             'Slovník osudů: postup, sestup, udržel se, setrval, zůstal\n'
             '  + fázové štítky: play off, o udržení, o umístění, kvalifikace, prolínací.\n')
         with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
             for p in sorted(glob.glob(os.path.join(self.data_dir, 'S*_FINAL.xlsx'))):
                 z.write(p, os.path.join('data', os.path.basename(p)))
             z.writestr('PRECTI_ME.txt', readme)
-        messagebox.showinfo('ZIP', f'Hotovo:\n{out}\n\n{done} rozhodnutí, {skipped} přeskočeno.')
+            if os.path.exists(pf):
+                z.write(pf, 'prompty_k_chatu.txt')
+        messagebox.showinfo('ZIP', f'Hotovo:\n{out}\n\n{done} rozhodnutí, '
+                                   f'{chat} do chatu, {skipped} přeskočeno.')
 
     def _on_close(self):
         self._save_progress()
