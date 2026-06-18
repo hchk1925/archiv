@@ -155,6 +155,63 @@ def analyze(path):
     return items
 
 
+TORZO_PHASE = re.compile(
+    r'play.?off|finále|čtvrtfinále|semifinále|předkolo|o umístění|o udržení|'
+    r'skupina o|baráž|kvalif|nadstavba|o \d+\.\s*m[ií]sto|prolín', re.I)
+TORZO_TYPES = {'league', 'group', 'regional_championship', ''}
+
+
+def scan_torzo(path, thresh=0.8):
+    """Tabulky-torza: mají vyplněné pořadí, ale odehráno < thresh jednoho kola (N-1)."""
+    wb = openpyxl.load_workbook(path, data_only=True)
+    nodes = _load_system(wb)
+    rowsby = collections.defaultdict(list)
+    for sh in wb.sheetnames:
+        if sh in NON_DATA:
+            continue
+        rr = list(wb[sh].iter_rows(values_only=True))
+        if not rr:
+            continue
+        H = {c: j for j, c in enumerate(rr[0]) if c}
+        if 'node_id' not in H or 'row_type' not in H:
+            continue
+        for i, r in enumerate(rr[1:], start=2):
+            if r[H['row_type']] != 'T':
+                continue
+            nid = r[H['node_id']]
+            if not nid:
+                continue
+            pos = r[H.get('pos', -1)] if 'pos' in H else None
+            gp = r[H.get('GP', -1)] if 'GP' in H else None
+            club = r[H.get('club_name', -1)] if 'club_name' in H else ''
+            fate = r[H.get('season_fate', -1)] if 'season_fate' in H else ''
+            rowsby[nid].append((sh, i, pos, gp, club, fate))
+    wb.close()
+    items = []
+    for nid, rows in rowsby.items():
+        nd = nodes.get(nid, {})
+        if str(nd.get('competition_type') or '') not in TORZO_TYPES:
+            continue
+        if TORZO_PHASE.search(str(nd.get('name') or '')):
+            continue
+        N = len(rows)
+        if N < 4 or N > 18:                          # ne registry/agregáty
+            continue
+        nposs = sum(1 for r in rows if r[2] not in (None, ''))
+        if nposs < max(3, 0.6 * N):                  # pořadí reálně není
+            continue
+        gps = [r[3] for r in rows if isinstance(r[3], (int, float))]
+        if len(gps) < max(3, 0.5 * N):               # málo GP dat → nelze posoudit
+            continue
+        comp = (sum(gps) / len(gps)) / (N - 1) if N > 1 else 1.0
+        if comp < thresh:
+            items.append({'name': str(nd.get('name') or nid), 'level': nd.get('level', ''),
+                          'node': nid, 'pct': round(comp * 100),
+                          'rows': sorted(rows, key=lambda v: _poskey(v[2])),
+                          'sheet': rows[0][0]})
+    return items
+
+
 VARIANTS = [('play off', 'play off'), ('o udržení', 'o udržení'),
             ('o umístění', 'o umístění'), ('kvalifikace', 'kvalifikace'),
             ('prolínací', 'prolínací'), ('postup (přímý)', 'postup'),
@@ -180,10 +237,20 @@ def build_queue(data_dir):
             for (sh, row, pos, cid, club, fate) in fl['unresolved']:
                 items.append({
                     'sid': sid, 'path': path, 'sheet': sh, 'row': row,
-                    'pos': pos, 'club': club, 'fate': fate,
+                    'pos': pos, 'club': club, 'fate': fate, 'kind': 'fate',
                     'comp': fl['comp'], 'level': fl['level'],
                     'base': fl['base'], 'phases': fl['phases'],
                     'key': f'{sid}|{sh}|{row}'})
+        for tz in scan_torzo(path):
+            items.append({
+                'sid': sid, 'path': path, 'sheet': tz['sheet'], 'kind': 'torzo',
+                'comp': tz['name'], 'level': tz['level'], 'node': tz['node'],
+                'pct': tz['pct'],
+                'phases': [{'name': tz['name'],
+                            'type': f"tabulka · odehráno ~{tz['pct']}%",
+                            'rows': [(sh, i, pos, None, club, fate)
+                                     for (sh, i, pos, gp, club, fate) in tz['rows']]}],
+                'key': f"{sid}|torzo|{tz['node']}"})
     return items
 
 
@@ -262,12 +329,19 @@ class FlagSolver(tk.Tk):
                                   foreground='#b07d10')
         self.team_lbl.pack(anchor='w')
 
-        bf = ttk.Frame(mid); bf.pack(anchor='w', pady=6)
+        self.action = ttk.Frame(mid); self.action.pack(anchor='w', pady=6)
+        self.bf = ttk.Frame(self.action)        # varianty osudu (fate)
         self._keys = '1234567890'
         for i, (label, val) in enumerate(VARIANTS):
-            ttk.Button(bf, text=f'{self._keys[i]}  {label}', width=20,
+            ttk.Button(self.bf, text=f'{self._keys[i]}  {label}', width=20,
                        command=lambda v=val: self.choose(v)).grid(
                            row=i // 5, column=i % 5, padx=3, pady=3, sticky='w')
+        self.tzf = ttk.Frame(self.action)       # torzo: ponechat / odstranit pořadí
+        ttk.Button(self.tzf, text='1  Ponechat pořadí', width=24,
+                   command=self.keep_order).grid(row=0, column=0, padx=3, pady=3)
+        ttk.Button(self.tzf, text='2  Odstranit pořadí (jen seznam týmů) + poznámka',
+                   width=46, command=self.remove_order).grid(row=0, column=1, padx=3, pady=3)
+        self.bf.pack(anchor='w')
 
         cf = ttk.Frame(mid); cf.pack(anchor='w', pady=4)
         ttk.Label(cf, text='Můj koment / vlastní:').pack(side='left')
@@ -290,9 +364,9 @@ class FlagSolver(tk.Tk):
         if self.focus_get() is self.custom:
             return
         ch = (e.char or '').lower()
-        if ch in self._keys:
-            self.choose(VARIANTS[self._keys.index(ch)][1])
-        elif ch == 's':
+        it = self.queue[self.idx] if self.queue else None
+        torzo = bool(it and it['kind'] == 'torzo')
+        if ch == 's':
             self.skip()
         elif ch == 'p':
             self._to_prompt()
@@ -300,6 +374,13 @@ class FlagSolver(tk.Tk):
             self.move(1)
         elif e.keysym == 'Left':
             self.move(-1)
+        elif torzo:
+            if ch == '1':
+                self.keep_order()
+            elif ch == '2':
+                self.remove_order()
+        elif ch in self._keys:
+            self.choose(VARIANTS[self._keys.index(ch)][1])
 
     # -- navigace/zobrazení --
     def _goto_first_pending(self):
@@ -338,16 +419,22 @@ class FlagSolver(tk.Tk):
                     mark = '  ⟵ ?'
                 else:
                     mark = ''
-                tag = 'cur' if (sh == it['sheet'] and row == it['row']) else (
+                tag = 'cur' if (sh == it['sheet'] and row == it.get('row')) else (
                     'q' if fate in ('postup', 'sestup') else '')
                 self.tbl.insert(pid, 'end', values=(dpos, club, f'{fate or "—"}{mark}'),
                                 tags=(tag,) if tag else ())
         st = self.progress.get(it['key'])
         stx = ('' if not st else ('  — přeskočeno' if st == SKIP else
                ('  — odloženo do promptu pro chat' if st == CHAT
-                else f'  — už vyřešeno: {st}')))
-        pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
-        self.team_lbl.config(text=f"→  {pre}{it['club']}   (teď: {it['fate']}){stx}")
+                else f'  — již: {st}')))
+        if it['kind'] == 'torzo':
+            self.team_lbl.config(text=f"⚠ TORZO — pořadí je, ale odehráno jen ~{it['pct']}% "
+                                      f"jednoho kola. Ponechat, nebo odstranit pořadí?{stx}")
+            self.bf.pack_forget(); self.tzf.pack(anchor='w')
+        else:
+            pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
+            self.team_lbl.config(text=f"→  {pre}{it['club']}   (teď: {it['fate']}){stx}")
+            self.tzf.pack_forget(); self.bf.pack(anchor='w')
         self.custom.delete(0, 'end')
 
     def move(self, d):
@@ -357,6 +444,8 @@ class FlagSolver(tk.Tk):
 
     def choose(self, val):
         it = self.queue[self.idx]
+        if it['kind'] == 'torzo':
+            return
         wb = self._wb(it['path']); col = self._fatecol(wb, it['sheet'])
         if col:
             wb[it['sheet']].cell(row=it['row'], column=col).value = val
@@ -364,6 +453,40 @@ class FlagSolver(tk.Tk):
         self.progress[it['key']] = val
         self._save_progress()
         self.status.config(text=f"Zapsáno: {it['club']} → {val}")
+        self._advance()
+
+    def keep_order(self):
+        it = self.queue[self.idx]
+        if it['kind'] != 'torzo':
+            return
+        self.progress[it['key']] = 'pořadí ponecháno'
+        self._save_progress()
+        self.status.config(text=f"Torzo: pořadí ponecháno — {it['comp']}")
+        self._advance()
+
+    def remove_order(self):
+        it = self.queue[self.idx]
+        if it['kind'] != 'torzo':
+            return
+        wb = self._wb(it['path'])
+        for (sh, row, pos, cid, club, fate) in it['phases'][0]['rows']:
+            ws = wb[sh]; head = [c.value for c in ws[1]]
+            if 'pos' in head:
+                ws.cell(row=row, column=head.index('pos') + 1).value = None
+        if 'NOTES' in wb.sheetnames:
+            nws = wb['NOTES']; nh = [c.value for c in nws[1]]
+            nr = [None] * len(nh)
+            for col, val in (('node_id', it['node']),
+                             ('note_text', f"torzo: pořadí odstraněno "
+                                           f"(odehráno ~{it['pct']}% jednoho kola)"),
+                             ('source_type', 'torzo-manual')):
+                if col in nh:
+                    nr[nh.index(col)] = val
+            nws.append(nr)
+        wb.save(it['path'])
+        self.progress[it['key']] = 'pořadí odstraněno + poznámka'
+        self._save_progress()
+        self.status.config(text=f"Torzo: pořadí odstraněno + poznámka — {it['comp']}")
         self._advance()
 
     def _choose_custom(self):
@@ -376,20 +499,27 @@ class FlagSolver(tk.Tk):
         L = ['=' * 64,
              f"Sezóna: {it['sid'].replace('_', '/')}",
              f"Soutěž: {it['comp']}  ({it['level']})"]
-        pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
-        L.append(f"OTÁZKA: jaký osud má  {pre}{it['club']}  (teď v Excelu: {it['fate']})?")
+        if it['kind'] == 'torzo':
+            L.append(f"OTÁZKA (TORZO): tabulka má pořadí, ale odehráno jen ~{it['pct']}% "
+                     f"jednoho kola. Ponechat pořadí, nebo odstranit (jen seznam týmů)?")
+        else:
+            pre = f"{it['pos']}. " if it['pos'] not in (None, '') else ''
+            L.append(f"OTÁZKA: jaký osud má  {pre}{it['club']}  (teď v Excelu: {it['fate']})?")
         L.append('')
         L.append('Tabulky soutěže (výpis z Excelu):')
         for ph in it['phases']:
             L.append(f"  [{ph['name']}]  ({ph['type']})")
             for k, (sh, row, pos, cid, club, fate) in enumerate(ph['rows'], 1):
                 dpos = pos if pos not in (None, '') else k
-                mark = '   <-- TENTO TÝM' if (sh == it['sheet'] and row == it['row']) else ''
+                mark = '   <-- TENTO' if (sh == it['sheet'] and row == it.get('row')) else ''
                 L.append(f"     {str(dpos):>3}. {str(club)[:34]:34} {fate or '—'}{mark}")
         L.append('')
         L.append(f"MŮJ KOMENT: {comment or '(bez komentáře)'}")
-        L.append('Doplň prosím osud: postup / sestup / udržel se / setrval / zůstal,')
-        L.append('  nebo fázový štítek: play off / o udržení / o umístění / kvalifikace / prolínací.')
+        if it['kind'] == 'torzo':
+            L.append('Rozhodni: ponechat pořadí / odstranit pořadí (jen seznam) + poznámka.')
+        else:
+            L.append('Doplň osud: postup / sestup / udržel se / setrval / zůstal,')
+            L.append('  nebo štítek: play off / o udržení / o umístění / kvalifikace / prolínací.')
         L.append('')
         return '\n'.join(L)
 
@@ -401,14 +531,14 @@ class FlagSolver(tk.Tk):
             f.write(block + '\n')
         self.progress[it['key']] = CHAT
         self._save_progress()
-        self.status.config(text=f"➜ Do promptu pro chat: {it['club']}  (soubor prompty_k_chatu.txt)")
+        self.status.config(text=f"➜ Do promptu pro chat: {it.get('club', it['comp'])}  (soubor prompty_k_chatu.txt)")
         self._advance()
 
     def skip(self):
         it = self.queue[self.idx]
         self.progress[it['key']] = SKIP
         self._save_progress()
-        self.status.config(text=f"Přeskočeno: {it['club']}")
+        self.status.config(text=f"Přeskočeno: {it.get('club', it['comp'])}")
         self._advance()
 
     def _advance(self):
