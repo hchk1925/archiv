@@ -1038,6 +1038,28 @@ class ChainEditor(tk.Toplevel):
         wb.close()
         return nodes, standings, occ
 
+    def _levels(self, sid):
+        """{club_id: level dané soutěže} — pro zobrazení (L10) apod. u x-1 / x+1.
+        Když klub hrál ve více tabulkách, bere tu nejvýš (nejmenší číslo levelu)."""
+        if not sid:
+            return {}
+        nodes, standings, _ = self._read(sid)
+        out = {}
+        for nid, rows in standings.items():
+            lv = nodes.get(nid, {}).get('level', '')
+            for r in rows:
+                cid = r['cid']
+                if not cid:
+                    continue
+                cur = out.get(cid)
+                if cur is None or (_lvl(lv) or 9999) < (_lvl(cur) or 9999):
+                    out[cid] = lv
+        return out
+
+    @staticmethod
+    def _withlv(name, lv):
+        return f'{name}  ({lv})' if (name and lv) else (name or '')
+
     def _build(self):
         top = ttk.Frame(self); top.pack(fill='x', padx=8, pady=6)
         ttk.Label(top, text='Sezóna:').pack(side='left')
@@ -1086,6 +1108,8 @@ class ChainEditor(tk.Toplevel):
         self.cur_occ = self._read(sid)[2]
         self.nodes, self.standings, _ = self._read(sid)
         self.prev_names = {pid: c['name'] for pid, c in self._read_clubs(self.prev_sid).items()}
+        self.prev_levels = self._levels(self.prev_sid)
+        self.next_levels = self._levels(self.next_sid)
         self.next_clubs = self._read_clubs(self.next_sid)
         self.next_occ = self._read(self.next_sid)[2] if self.next_sid else collections.defaultdict(list)
         self._rebuild_succ()
@@ -1114,9 +1138,11 @@ class ChainEditor(tk.Toplevel):
         for i, r in enumerate(sorted(self.standings[nid], key=lambda x: _poskey(x['pos'])), 1):
             cid = r['cid']
             pid = self.cur_clubs.get(cid, {}).get('prev')
-            prevn = self.prev_names.get(pid, '') if pid else ''
+            prevn = (self._withlv(self.prev_names.get(pid, ''), self.prev_levels.get(pid, ''))
+                     if pid else '')
             succ = self.succ.get(cid, [])
-            nextn = self.next_clubs.get(succ[0], {}).get('name', '') if succ else ''
+            nextn = (self._withlv(self.next_clubs.get(succ[0], {}).get('name', ''),
+                                  self.next_levels.get(succ[0], '')) if succ else '')
             skore = (f"{r['gf'] if r['gf'] not in (None,'') else ''}:"
                      f"{r['ga'] if r['ga'] not in (None,'') else ''}")
             dpos = r['pos'] if r['pos'] not in (None, '') else i
