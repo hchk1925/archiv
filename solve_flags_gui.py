@@ -352,9 +352,12 @@ class FlagSolver(tk.Tk):
         ttk.Button(cf, text='Přeskočit (s)', command=self.skip).pack(side='left', padx=12)
 
         nav = ttk.Frame(mid); nav.pack(anchor='w', pady=6)
-        ttk.Button(nav, text='◀ předchozí', command=lambda: self.move(-1)).pack(side='left')
+        ttk.Button(nav, text='◀ zpět', command=lambda: self.move(-1)).pack(side='left')
         ttk.Button(nav, text='další ▶', command=lambda: self.move(1)).pack(side='left', padx=6)
-        ttk.Label(nav, text='   (klávesy: 1–0 = varianta, s = přeskočit, ←/→ = listovat)',
+        ttk.Button(nav, text='⏭ další nevyřešený (n)',
+                   command=self.next_pending).pack(side='left', padx=6)
+        ttk.Label(nav, text='   (←/→ = zpět/další · n = další nevyřešený · '
+                            's = přeskočit · p = do chatu)',
                   foreground='#888').pack(side='left')
         self.bind('<Key>', self._key)
         self.status = ttk.Label(self, text='', relief='sunken', anchor='w')
@@ -370,6 +373,8 @@ class FlagSolver(tk.Tk):
             self.skip()
         elif ch == 'p':
             self._to_prompt()
+        elif ch == 'n':
+            self.next_pending()
         elif e.keysym == 'Right':
             self.move(1)
         elif e.keysym == 'Left':
@@ -475,14 +480,20 @@ class FlagSolver(tk.Tk):
                 ws.cell(row=row, column=head.index('pos') + 1).value = None
         if 'NOTES' in wb.sheetnames:
             nws = wb['NOTES']; nh = [c.value for c in nws[1]]
-            nr = [None] * len(nh)
-            for col, val in (('node_id', it['node']),
-                             ('note_text', f"torzo: pořadí odstraněno "
-                                           f"(odehráno ~{it['pct']}% jednoho kola)"),
-                             ('source_type', 'torzo-manual')):
-                if col in nh:
-                    nr[nh.index(col)] = val
-            nws.append(nr)
+            ncol = nh.index('node_id') if 'node_id' in nh else None
+            scol = nh.index('source_type') if 'source_type' in nh else None
+            exists = ncol is not None and any(
+                r[ncol] == it['node'] and (scol is None or r[scol] == 'torzo-manual')
+                for r in nws.iter_rows(min_row=2, values_only=True))
+            if not exists:                       # ať nevznikne duplicitní poznámka
+                nr = [None] * len(nh)
+                for col, val in (('node_id', it['node']),
+                                 ('note_text', f"torzo: pořadí odstraněno "
+                                               f"(odehráno ~{it['pct']}% jednoho kola)"),
+                                 ('source_type', 'torzo-manual')):
+                    if col in nh:
+                        nr[nh.index(col)] = val
+                nws.append(nr)
         wb.save(it['path'])
         self.progress[it['key']] = 'pořadí odstraněno + poznámka'
         self._save_progress()
@@ -542,17 +553,19 @@ class FlagSolver(tk.Tk):
         self._advance()
 
     def _advance(self):
-        nxt = None
+        # lineárně na další položku (NE skok na další nevyřešený) — 8/9/10 popořadě,
+        # zpět šipkou kdykoliv; rozhodnutí jednoho týmu nemění ostatní
+        if self.idx < len(self.queue) - 1:
+            self.idx += 1
+        self.show()
+
+    def next_pending(self):
         for off in range(1, len(self.queue) + 1):
             j = (self.idx + off) % len(self.queue)
             st = self.progress.get(self.queue[j]['key'])
             if not st or st == SKIP:
-                nxt = j; break
-        if nxt is None:
-            self.show()
-            messagebox.showinfo('Hotovo', 'Všechny flagy vyřešené! Můžeš zabalit do ZIP.')
-        else:
-            self.idx = nxt; self.show()
+                self.idx = j; self.show(); return
+        self.status.config(text='Žádné další nevyřešené.')
 
     # -- export / zavření --
     def export_zip(self):
