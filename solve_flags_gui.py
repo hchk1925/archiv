@@ -222,14 +222,27 @@ SKIP = '__skip__'
 CHAT = '__chat__'
 
 
-def find_data_dir():
-    # funguje i jako .exe (PyInstaller): hledá vedle exe / skriptu i v podsložce data/
+def _app_workspace():
+    """Jako .exe: vedle exe vznikne přehledná složka pojmenovaná podle programu
+    (Almanach), do ní se rozbalí data. Mimo .exe: None."""
     if getattr(sys, 'frozen', False):
-        base = os.path.dirname(sys.executable)
-    else:
-        base = os.path.abspath(os.path.dirname(__file__))
-    for cand in (os.path.join(base, 'data'), base, os.getcwd(),
-                 os.path.join(os.getcwd(), 'data')):
+        exe_dir = os.path.dirname(sys.executable)
+        name = os.path.splitext(os.path.basename(sys.executable))[0]
+        return os.path.join(exe_dir, name)
+    return None
+
+
+def find_data_dir():
+    # funguje i jako .exe (PyInstaller): nejdřív složka programu (Almanach/data)
+    base = (os.path.dirname(sys.executable) if getattr(sys, 'frozen', False)
+            else os.path.abspath(os.path.dirname(__file__)))
+    cands = []
+    ws = _app_workspace()
+    if ws:
+        cands += [os.path.join(ws, 'data'), ws]
+    cands += [os.path.join(base, 'data'), base,
+              os.path.join(os.getcwd(), 'data'), os.getcwd()]
+    for cand in cands:
         if glob.glob(os.path.join(cand, 'S*_FINAL.xlsx')):
             return cand
     return None
@@ -774,10 +787,14 @@ def extract_payload():
     payload = os.path.join(getattr(sys, '_MEIPASS', ''), '_payload')
     if not os.path.isdir(payload):
         return
-    exe_dir = os.path.dirname(sys.executable)
+    ws = _app_workspace()
+    try:
+        os.makedirs(ws, exist_ok=True)
+    except Exception:
+        return
     for name in os.listdir(payload):
         src = os.path.join(payload, name)
-        dst = os.path.join(exe_dir, name)
+        dst = os.path.join(ws, name)
         if os.path.isdir(src) and not os.path.exists(dst):
             try:
                 shutil.copytree(src, dst)

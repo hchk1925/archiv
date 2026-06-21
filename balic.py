@@ -44,9 +44,10 @@ def list_apps(base):
             if n.endswith('.py') and n not in ('balic.py',)]
 
 
-def build_cmd(app, name, folders, sep=None):
+def build_cmd(app, name, folders, console=False, sep=None):
     sep = sep or os.pathsep
-    cmd = [sys.executable, '-m', 'PyInstaller', '--onefile', '--windowed',
+    cmd = [sys.executable, '-m', 'PyInstaller', '--onefile',
+           '--console' if console else '--windowed',
            '--noconfirm', '--clean', '--name', name]
     for f in folders:
         cmd += ['--add-data', f'{f}{sep}_payload/{os.path.basename(f)}']
@@ -98,6 +99,9 @@ class Balic(tk.Tk):
         self.build_btn = ttk.Button(bar, text='▶ Vytvořit .exe pro kolegu', command=self.build)
         self.build_btn.pack(side='left')
         ttk.Button(bar, text='Otevřít složku dist', command=self.open_dist).pack(side='left', padx=8)
+        self.console_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(bar, text='Zobrazit konzoli (pro ladění – verze pro mě)',
+                        variable=self.console_var).pack(side='left', padx=12)
 
         self.log = tk.Text(self, height=14, wrap='word', bg='#111', fg='#cfc',
                            font=('Courier', 9))
@@ -148,7 +152,7 @@ class Balic(tk.Tk):
         if not self._check_pyinstaller():
             return
         self.build_btn.config(state='disabled')
-        cmd = build_cmd(app, name, folders)
+        cmd = build_cmd(app, name, folders, console=self.console_var.get())
         self._log('\n$ ' + ' '.join(cmd) + '\n\n')
         threading.Thread(target=self._run, args=(cmd, name), daemon=True).start()
 
