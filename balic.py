@@ -55,9 +55,9 @@ def build_cmd(app, name, folders, console=False, sep=None):
     return cmd
 
 
-class Balic(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class Balic(tk.Toplevel):
+    def __init__(self, master=None):
+        super().__init__(master)
         self.title('Balič — vytvoř .exe pro kolegu')
         self.geometry('820x620')
         self.base = base_dir()
@@ -74,7 +74,8 @@ class Balic(tk.Tk):
         ttk.Label(row, text='Program (.py):').pack(side='left')
         self.app_var = tk.StringVar()
         apps = list_apps(self.base)
-        default_app = 'solve_flags_gui.py' if 'solve_flags_gui.py' in apps else (apps[0] if apps else '')
+        default_app = next((a for a in ('Almanach.py', 'solve_flags_gui.py') if a in apps),
+                           apps[0] if apps else '')
         self.app_var.set(default_app)
         ttk.Combobox(row, textvariable=self.app_var, values=apps, width=30,
                      state='readonly').pack(side='left', padx=4)
@@ -181,5 +182,12 @@ class Balic(tk.Tk):
                                       'se mu data sama rozbalí vedle .exe.')
 
 
+def main():
+    root = tk.Tk(); root.withdraw()
+    app = Balic(root)
+    app.protocol('WM_DELETE_WINDOW', root.destroy)
+    root.mainloop()
+
+
 if __name__ == '__main__':
-    Balic().mainloop()
+    main()

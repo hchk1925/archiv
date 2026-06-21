@@ -88,9 +88,9 @@ def load_season(path):
     return nodes, order, standings
 
 
-class SystemEditor(tk.Tk):
-    def __init__(self, data_dir):
-        super().__init__()
+class SystemEditor(tk.Toplevel):
+    def __init__(self, master, data_dir):
+        super().__init__(master)
         self.title('Almanach — editor soutěží (levely / nodes / názvy)')
         self.geometry('1240x800')
         self.data_dir = data_dir
@@ -275,14 +275,15 @@ class SystemEditor(tk.Tk):
 
 
 def main():
+    root = tk.Tk(); root.withdraw()
     data_dir = find_data_dir()
-    probe = tk.Tk(); probe.withdraw()
     if not data_dir:
         data_dir = filedialog.askdirectory(title='Vyber složku se sešity S*_FINAL.xlsx')
-    probe.destroy()
     if not data_dir or not glob.glob(os.path.join(data_dir, 'S*_FINAL.xlsx')):
         print('Nenašel jsem žádné S*_FINAL.xlsx.'); return
-    SystemEditor(data_dir).mainloop()
+    app = SystemEditor(root, data_dir)
+    app.protocol('WM_DELETE_WINDOW', lambda: (app._on_close(), root.destroy()))
+    root.mainloop()
 
 
 if __name__ == '__main__':

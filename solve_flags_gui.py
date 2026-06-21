@@ -278,9 +278,9 @@ def build_queue(data_dir):
     return items
 
 
-class FlagSolver(tk.Tk):
-    def __init__(self, data_dir):
-        super().__init__()
+class FlagSolver(tk.Toplevel):
+    def __init__(self, master, data_dir):
+        super().__init__(master)
         self.title('Almanach — dořešení osudů (flagy)')
         self.geometry('1180x780')
         self.data_dir = data_dir
@@ -804,14 +804,15 @@ def extract_payload():
 
 def main():
     extract_payload()
+    root = tk.Tk(); root.withdraw()
     data_dir = find_data_dir()
-    root_probe = tk.Tk(); root_probe.withdraw()
     if not data_dir:
         data_dir = filedialog.askdirectory(title='Vyber složku se sešity S*_FINAL.xlsx')
-    root_probe.destroy()
     if not data_dir or not glob.glob(os.path.join(data_dir, 'S*_FINAL.xlsx')):
         print('Nenašel jsem žádné S*_FINAL.xlsx.'); return
-    FlagSolver(data_dir).mainloop()
+    app = FlagSolver(root, data_dir)
+    app.protocol('WM_DELETE_WINDOW', lambda: (app._on_close(), root.destroy()))
+    root.mainloop()
 
 
 if __name__ == '__main__':
