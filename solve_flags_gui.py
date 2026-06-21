@@ -1022,7 +1022,8 @@ class ChainEditor(tk.Toplevel):
                         'name': r[SH.get('name', -1)] if 'name' in SH else '',
                         'level': r[SH.get('level', -1)] if 'level' in SH else '',
                         'parent': r[SH.get('parent_node_id', -1)] if 'parent_node_id' in SH else None,
-                        'competition_type': r[SH.get('competition_type', -1)] if 'competition_type' in SH else ''}
+                        'competition_type': r[SH.get('competition_type', -1)] if 'competition_type' in SH else '',
+                        'phase_order': r[SH.get('phase_order', -1)] if 'phase_order' in SH else None}
         for sh in wb.sheetnames:
             if sh in NON_DATA:
                 continue
@@ -1117,6 +1118,8 @@ class ChainEditor(tk.Toplevel):
         for c in ('pos', 'gp', 'w', 'd', 'l', 'skore', 'pts'):
             self.tree.column(c, anchor='center')
         self.tree.tag_configure('miss', background='#fff6e6')
+        self.tree.tag_configure('phase', background='#e8edf5',
+                                font=('TkDefaultFont', 9, 'bold'))
         sb = ttk.Scrollbar(self, command=self.tree.yview); sb.pack(side='right', fill='y')
         self.tree.configure(yscrollcommand=sb.set)
         self.tree.pack(fill='both', expand=True, padx=8, pady=4)
@@ -1152,23 +1155,35 @@ class ChainEditor(tk.Toplevel):
 
     def _build_comps(self):
         """Seskup fáze do JEDNÉ vícefázové soutěže (dle kořene). V rozbalovátku je
-        pak jeden řádek na soutěž (extraliga, ne zvlášť ZČ + play off + udržení)."""
+        jeden řádek na soutěž (extraliga); uvnitř se ale zobrazí VŠECHNY fáze
+        (základní část → play off → finále → o udržení…), aby šla sledovat cesta
+        týmu sezónou a řešily se případné nesrovnalosti."""
         groups = collections.defaultdict(list)
         for nid in self.standings:
             if self.standings[nid]:
                 groups[_root_of(self.nodes, nid)].append(nid)
+
+        def phase_key(p):
+            po = self.nodes.get(p, {}).get('phase_order')
+            try:
+                pon = int(re.match(r'\d+', str(po)).group())
+            except Exception:
+                pon = 999
+            return (0 if p == p_root else 1, pon, _lvl(self.nodes.get(p, {}).get('level')) or 0,
+                    str(self.nodes.get(p, {}).get('name', p)))
+
         comps = []
-        self.comp_rows = {}
+        self.comp_phases = {}
         for root, nids in groups.items():
-            rows = self._comp_table(root, nids)
-            if not rows:
-                continue
+            p_root = root
+            ordered = sorted(nids, key=phase_key)
+            self.comp_phases[root] = ordered
             nm = self.nodes.get(root, {}).get('name', root)
             lv = self.nodes.get(root, {}).get('level', '')
-            comps.append((root, nm, lv, rows))
+            comps.append((root, nm, lv))
         comps.sort(key=lambda x: (_lvl(x[2]) or 9999, str(x[1])))
         self.comp_map = {}
-        for root, nm, lv, rows in comps:
+        for root, nm, lv in comps:
             label = f'{nm}  ({lv})'
             if label in self.comp_map:                 # kolize názvů → odliš
                 k = 2
@@ -1176,35 +1191,6 @@ class ChainEditor(tk.Toplevel):
                     k += 1
                 label = f'{label}  #{k}'
             self.comp_map[label] = root
-            self.comp_rows[root] = rows
-
-    def _comp_table(self, root, nids):
-        """Tabulka soutěže přes všechny fáze: každý klub jednou. Bere základní
-        fázi/skupiny (ne play off / o umístění / kvalifikaci); když klub hrál víc
-        fází, nechá řádek s nejvíc odehranými zápasy (tj. tu hlavní tabulku)."""
-        base = [p for p in nids if _sibling_label(self.nodes.get(p, {})) is None]
-        if root in nids and self.standings.get(root):
-            primary = [root]
-        elif base:
-            primary = base
-        else:
-            primary = nids
-        primary.sort(key=lambda p: str(self.nodes.get(p, {}).get('name', p)))
-        def gpn(v):
-            try:
-                return int(re.match(r'\d+', str(v)).group())
-            except Exception:
-                return 0
-        seen = {}; order = []
-        for p in primary:
-            for r in sorted(self.standings[p], key=lambda x: _poskey(x['pos'])):
-                key = r['cid'] if r['cid'] else f'_{id(r)}'
-                if key in seen:
-                    if gpn(r['gp']) > gpn(seen[key]['gp']):
-                        seen[key].update(r)
-                    continue
-                seen[key] = dict(r); order.append(key)
-        return [seen[k] for k in order]
 
     def _rebuild_succ(self):
         self.succ = {}
@@ -1218,23 +1204,35 @@ class ChainEditor(tk.Toplevel):
         root = self.comp_map.get(self.comp_var.get())
         if not root:
             return
-        for i, r in enumerate(self.comp_rows.get(root, []), 1):
-            cid = r['cid']
-            pid = self.cur_clubs.get(cid, {}).get('prev')
-            prevn = (self._withlv(self.prev_names.get(pid, ''), self.prev_levels.get(pid, ''))
-                     if pid else '')
-            succ = self.succ.get(cid, [])
-            nextn = (self._withlv(self.next_clubs.get(succ[0], {}).get('name', ''),
-                                  self.next_levels.get(succ[0], '')) if succ else '')
-            skore = (f"{r['gf'] if r['gf'] not in (None,'') else ''}:"
-                     f"{r['ga'] if r['ga'] not in (None,'') else ''}")
-            dpos = r['pos'] if r['pos'] not in (None, '') else i
-            vals = (prevn or '— (klik)', dpos, r['name'], r['gp'] or '', r['w'] or '',
-                    r['d'] or '', r['l'] or '', skore, r['pts'] or '', r['fate'] or '',
-                    nextn or '— (klik)')
-            iid = self.tree.insert('', 'end', values=vals,
-                                   tags=('miss',) if (not prevn or not nextn) else ())
-            self.iid_row[iid] = {'cid': cid, 'name': r['name']}
+        phases = self.comp_phases.get(root, [])
+        multi = len(phases) > 1
+        for p in phases:
+            rows = self.standings.get(p, [])
+            if not rows:
+                continue
+            if multi:                                   # hlavička fáze
+                pnm = self.nodes.get(p, {}).get('name', p)
+                if p == root:
+                    pnm = f'{pnm}  — celkové pořadí'
+                hid = self.tree.insert('', 'end', tags=('phase',),
+                                       values=('', '', f'▸ {pnm}', '', '', '', '', '', '', '', ''))
+            for i, r in enumerate(sorted(rows, key=lambda x: _poskey(x['pos'])), 1):
+                cid = r['cid']
+                pid = self.cur_clubs.get(cid, {}).get('prev')
+                prevn = (self._withlv(self.prev_names.get(pid, ''), self.prev_levels.get(pid, ''))
+                         if pid else '')
+                succ = self.succ.get(cid, [])
+                nextn = (self._withlv(self.next_clubs.get(succ[0], {}).get('name', ''),
+                                      self.next_levels.get(succ[0], '')) if succ else '')
+                skore = (f"{r['gf'] if r['gf'] not in (None,'') else ''}:"
+                         f"{r['ga'] if r['ga'] not in (None,'') else ''}")
+                dpos = r['pos'] if r['pos'] not in (None, '') else i
+                vals = (prevn or '— (klik)', dpos, r['name'], r['gp'] or '', r['w'] or '',
+                        r['d'] or '', r['l'] or '', skore, r['pts'] or '', r['fate'] or '',
+                        nextn or '— (klik)')
+                iid = self.tree.insert('', 'end', values=vals,
+                                       tags=('miss',) if (not prevn or not nextn) else ())
+                self.iid_row[iid] = {'cid': cid, 'name': r['name']}
 
     def on_click(self, e):
         col = self.tree.identify_column(e.x); rowid = self.tree.identify_row(e.y)
