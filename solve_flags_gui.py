@@ -325,6 +325,8 @@ class FlagSolver(tk.Toplevel):
         ttk.Button(top, text='❓ Nápověda', command=self.show_help).pack(side='left')
         ttk.Button(top, text='🏷 Opravit názvy klubů',
                    command=self.open_clubs).pack(side='left', padx=8)
+        ttk.Button(top, text='🔗 Návaznost klubů (sezóna→sezóna)',
+                   command=self.open_continuity).pack(side='left')
         ttk.Button(top, text='💾 Hotovo → zabalit do ZIP',
                    command=self.export_zip).pack(side='right')
         self.count_lbl = ttk.Label(top, text='', font=('TkDefaultFont', 10, 'bold'))
@@ -650,6 +652,9 @@ class FlagSolver(tk.Toplevel):
     def open_clubs(self):
         ClubEditor(self, self.data_dir)
 
+    def open_continuity(self):
+        ContinuityEditor(self, self.data_dir)
+
     def _on_close(self):
         self._save_progress()
         for wb in self.wbcache.values():
@@ -779,6 +784,180 @@ class ClubEditor(tk.Toplevel):
         self.status.config(text=f'Opraveno: „{c[1]}" → „{new}"  ({len(c[4])} výskytů)')
         # aktualizuj v paměti + seznam
         self.clubs = [(x[0], new, x[2], x[3], x[4]) if x[0] == c[0] else x for x in self.clubs]
+        self.refresh()
+
+
+class ContinuityEditor(tk.Toplevel):
+    """Návaznost klubů ze sezóny na sezónu (prev_club_id) — kvůli změnám názvů/nepřesnostem.
+    Vidíš, na který klub z předchozí sezóny je tým navázaný, a můžeš to opravit."""
+    def __init__(self, master, data_dir):
+        super().__init__(master)
+        self.title('Návaznost klubů (sezóna → sezóna)')
+        self.geometry('940x680')
+        self.data_dir = data_dir
+        self.seasons = season_ids(data_dir)
+        self.wb = None
+        self.path = None
+        self.clubs = []          # [(cid, name, prev_id, change_note, clubs_row, [(sheet,row)])]
+        self.prev_name = {}      # prev season club_id -> name
+        self.label2id = {}
+        self._build()
+        if self.seasons:
+            self.season_var.set(self.seasons[0])
+            self.load(self.seasons[0])
+
+    def _build(self):
+        top = ttk.Frame(self); top.pack(fill='x', padx=8, pady=6)
+        ttk.Label(top, text='Sezóna:').pack(side='left')
+        self.season_var = tk.StringVar()
+        cb = ttk.Combobox(top, textvariable=self.season_var, values=self.seasons,
+                          width=12, state='readonly'); cb.pack(side='left', padx=4)
+        cb.bind('<<ComboboxSelected>>', lambda e: self.load(self.season_var.get()))
+        self.prev_lbl = ttk.Label(top, text='', foreground='#555'); self.prev_lbl.pack(side='left', padx=10)
+        ttk.Label(top, text='   Hledat:').pack(side='left')
+        self.q = ttk.Entry(top, width=22); self.q.pack(side='left', padx=4)
+        self.q.bind('<KeyRelease>', lambda e: self.refresh())
+        self.only_missing = tk.BooleanVar(value=False)
+        ttk.Checkbutton(top, text='jen nenavázané', variable=self.only_missing,
+                        command=self.refresh).pack(side='left', padx=8)
+
+        cols = ('klub', 'navazba')
+        self.lst = ttk.Treeview(self, columns=cols, show='headings', height=18)
+        self.lst.heading('klub', text='KLUB (tato sezóna)'); self.lst.column('klub', width=380, anchor='w')
+        self.lst.heading('navazba', text='← NAVÁZÁN NA (předchozí sezóna)')
+        self.lst.column('navazba', width=420, anchor='w')
+        self.lst.pack(fill='both', expand=True, padx=8, pady=4)
+        self.lst.bind('<<TreeviewSelect>>', self.on_pick)
+        self.lst.tag_configure('miss', foreground='#b07d10')
+
+        ed = ttk.LabelFrame(self, text='Oprava návaznosti'); ed.pack(fill='x', padx=8, pady=6)
+        self.sel = ttk.Label(ed, text='(vyber klub v seznamu)', foreground='#555')
+        self.sel.pack(anchor='w', padx=6, pady=2)
+        r1 = ttk.Frame(ed); r1.pack(fill='x', padx=6, pady=3)
+        ttk.Label(r1, text='Navázat na klub z předchozí sezóny:').pack(side='left')
+        self.prev_var = tk.StringVar()
+        self.prev_cb = ttk.Combobox(r1, textvariable=self.prev_var, width=46)
+        self.prev_cb.pack(side='left', fill='x', expand=True, padx=4)
+        r2 = ttk.Frame(ed); r2.pack(fill='x', padx=6, pady=3)
+        ttk.Label(r2, text='Poznámka ke změně:').pack(side='left')
+        self.note = ttk.Entry(r2); self.note.pack(side='left', fill='x', expand=True, padx=4)
+        ttk.Button(r2, text='Uložit návaznost', command=self.save).pack(side='left')
+        self.status = ttk.Label(self, text='', relief='sunken', anchor='w'); self.status.pack(fill='x', side='bottom')
+
+    def load(self, sid):
+        self.path = os.path.join(self.data_dir, f'S{sid}_FINAL.xlsx')
+        wb = openpyxl.load_workbook(self.path, data_only=True)
+        meta = {}
+        if 'META' in wb.sheetnames:
+            for r in wb['META'].iter_rows(values_only=True):
+                if r and r[0]:
+                    meta[str(r[0])] = r[1]
+        prev_sid = str(meta.get('prev_season') or '').replace('S', '')
+        if not prev_sid and sid in self.seasons:
+            i = self.seasons.index(sid)
+            prev_sid = self.seasons[i - 1] if i > 0 else ''
+        # výskyty club_id v tabulkách (kvůli prev_club_id v řádcích)
+        occ = collections.defaultdict(list)
+        for sh in wb.sheetnames:
+            if sh in NON_DATA:
+                continue
+            rr = list(wb[sh].iter_rows(values_only=True))
+            if not rr:
+                continue
+            H = {c: j for j, c in enumerate(rr[0]) if c}
+            if 'club_id' not in H or 'row_type' not in H:
+                continue
+            for i, r in enumerate(rr[1:], start=2):
+                if r[H['row_type']] in ('T', 'R') and r[H['club_id']]:
+                    occ[r[H['club_id']]].append((sh, i))
+        cw = list(wb['CLUBS'].iter_rows(values_only=True)); CH = {c: j for j, c in enumerate(cw[0]) if c}
+        self.clubs = []
+        for i, r in enumerate(cw[1:], start=2):
+            cid = r[CH['club_id']] if 'club_id' in CH else None
+            if not cid:
+                continue
+            self.clubs.append((cid, r[CH.get('clean_name', -1)] if 'clean_name' in CH else '',
+                               r[CH.get('prev_club_id', -1)] if 'prev_club_id' in CH else None,
+                               r[CH.get('change_note', -1)] if 'change_note' in CH else '',
+                               i, occ.get(cid, [])))
+        wb.close()
+        # předchozí sezóna: jména klubů
+        self.prev_name = {}
+        ppath = os.path.join(self.data_dir, f'S{prev_sid}_FINAL.xlsx')
+        if prev_sid and os.path.exists(ppath):
+            pw = openpyxl.load_workbook(ppath, data_only=True)
+            pcw = list(pw['CLUBS'].iter_rows(values_only=True)); PH = {c: j for j, c in enumerate(pcw[0]) if c}
+            for r in pcw[1:]:
+                pid = r[PH['club_id']] if 'club_id' in PH else None
+                if pid:
+                    self.prev_name[pid] = r[PH.get('clean_name', -1)] if 'clean_name' in PH else ''
+            pw.close()
+        self.prev_lbl.config(text=('← předchozí: ' + prev_sid.replace('_', '/')) if prev_sid
+                             else '(žádná předchozí sezóna)')
+        opts = ['(žádný / nový klub)'] + [f'{n}  [{i}]' for i, n in
+                                          sorted(self.prev_name.items(), key=lambda x: str(x[1]))]
+        self.label2id = {f'{n}  [{i}]': i for i, n in self.prev_name.items()}
+        self.prev_cb['values'] = opts
+        self.refresh()
+        miss = sum(1 for c in self.clubs if not c[2])
+        self.status.config(text=f'{len(self.clubs)} klubů · {len(self.clubs)-miss} navázáno · {miss} nenavázáno')
+
+    def refresh(self):
+        q = self.q.get().strip().lower()
+        self.lst.delete(*self.lst.get_children())
+        self.iid_club = {}
+        for c in sorted(self.clubs, key=lambda x: str(x[1])):
+            if q and q not in str(c[1]).lower():
+                continue
+            if self.only_missing.get() and c[2]:
+                continue
+            pname = self.prev_name.get(c[2]) if c[2] else None
+            nav = pname if pname else ('—  (nenavázáno / nový klub)' if not c[2]
+                                       else f'?  (id {c[2]} není v předchozí sezóně)')
+            iid = self.lst.insert('', 'end', values=(c[1], nav),
+                                  tags=('miss',) if (not pname) else ())
+            self.iid_club[iid] = c
+
+    def on_pick(self, _e=None):
+        sel = self.lst.selection()
+        if not sel:
+            return
+        c = self.iid_club.get(sel[0])
+        if not c:
+            return
+        self.cur = c
+        self.sel.config(text=f'Klub: {c[1]}   ·   id {c[0]}   ·   {len(c[5])}× v tabulkách')
+        pname = self.prev_name.get(c[2]) if c[2] else None
+        self.prev_var.set(f'{pname}  [{c[2]}]' if pname else '(žádný / nový klub)')
+        self.note.delete(0, 'end'); self.note.insert(0, c[3] or '')
+
+    def save(self):
+        c = getattr(self, 'cur', None)
+        if not c:
+            return
+        label = self.prev_var.get().strip()
+        new_prev = self.label2id.get(label)
+        if new_prev is None:
+            m = re.search(r'\[([^\]]+)\]\s*$', label)
+            new_prev = m.group(1) if (m and m.group(1) in self.prev_name) else None
+        note = self.note.get().strip()
+        if self.wb is None:
+            self.wb = openpyxl.load_workbook(self.path)
+        wb = self.wb
+        cws = wb['CLUBS']; ch = [x.value for x in cws[1]]
+        if 'prev_club_id' in ch:
+            cws.cell(row=c[4], column=ch.index('prev_club_id') + 1).value = new_prev
+        if 'change_note' in ch and note:
+            cws.cell(row=c[4], column=ch.index('change_note') + 1).value = note
+        for (sh, row) in c[5]:                    # sjednoť i prev_club_id v tabulkách
+            head = [x.value for x in wb[sh][1]]
+            if 'prev_club_id' in head:
+                wb[sh].cell(row=row, column=head.index('prev_club_id') + 1).value = new_prev
+        wb.save(self.path)
+        self.clubs = [(x[0], x[1], new_prev, note or x[3], x[4], x[5]) if x[0] == c[0] else x
+                      for x in self.clubs]
+        nm = self.prev_name.get(new_prev, '(nový / žádný)')
+        self.status.config(text=f'Návaznost uložena: {c[1]} ← {nm}')
         self.refresh()
 
 
