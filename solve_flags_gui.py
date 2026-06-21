@@ -653,7 +653,7 @@ class FlagSolver(tk.Toplevel):
         ClubEditor(self, self.data_dir)
 
     def open_continuity(self):
-        ContinuityEditor(self, self.data_dir)
+        ChainEditor(self, self.data_dir)
 
     def _on_close(self):
         self._save_progress()
@@ -959,6 +959,276 @@ class ContinuityEditor(tk.Toplevel):
         nm = self.prev_name.get(new_prev, '(nový / žádný)')
         self.status.config(text=f'Návaznost uložena: {c[1]} ← {nm}')
         self.refresh()
+
+
+class ChainEditor(tk.Toplevel):
+    """Návaznost v TABULCE: vybereš sezónu+soutěž, u každého klubu vidíš vlevo
+    předchozí sezónu (x-1) a vpravo následující (x+1). Klikem na tu buňku změníš,
+    doplníš prázdné, nebo oflaguješ."""
+    def __init__(self, master, data_dir):
+        super().__init__(master)
+        self.title('Návaznost klubů v tabulce  (x-1 ←  tabulka  → x+1)')
+        self.geometry('1300x720')
+        self.data_dir = data_dir
+        self.seasons = season_ids(data_dir)
+        self.wbcache = {}
+        self._build()
+        self.protocol('WM_DELETE_WINDOW', self._on_close)
+        if self.seasons:
+            self.season_var.set(self.seasons[0]); self.load(self.seasons[0])
+
+    def _path(self, sid):
+        return os.path.join(self.data_dir, f'S{sid}_FINAL.xlsx')
+
+    def _wb(self, sid):
+        if sid and sid not in self.wbcache and os.path.exists(self._path(sid)):
+            self.wbcache[sid] = openpyxl.load_workbook(self._path(sid))
+        return self.wbcache.get(sid)
+
+    def _read_clubs(self, sid):
+        out = {}
+        if not sid or not os.path.exists(self._path(sid)):
+            return out
+        wb = openpyxl.load_workbook(self._path(sid), data_only=True)
+        cw = list(wb['CLUBS'].iter_rows(values_only=True)); H = {c: j for j, c in enumerate(cw[0]) if c}
+        for i, r in enumerate(cw[1:], start=2):
+            cid = r[H['club_id']] if 'club_id' in H else None
+            if cid:
+                out[cid] = {'name': r[H.get('clean_name', -1)] if 'clean_name' in H else '',
+                            'prev': r[H.get('prev_club_id', -1)] if 'prev_club_id' in H else None,
+                            'row': i}
+        wb.close()
+        return out
+
+    def _read(self, sid):
+        nodes = {}; standings = collections.defaultdict(list); occ = collections.defaultdict(list)
+        wb = openpyxl.load_workbook(self._path(sid), data_only=True)
+        if 'SYSTEM' in wb.sheetnames:
+            sr = list(wb['SYSTEM'].iter_rows(values_only=True)); SH = {c: j for j, c in enumerate(sr[0]) if c}
+            for r in sr[1:]:
+                nid = r[SH['node_id']] if 'node_id' in SH else None
+                if nid:
+                    nodes[nid] = {'name': r[SH.get('name', -1)] if 'name' in SH else '',
+                                  'level': r[SH.get('level', -1)] if 'level' in SH else ''}
+        for sh in wb.sheetnames:
+            if sh in NON_DATA:
+                continue
+            rr = list(wb[sh].iter_rows(values_only=True))
+            if not rr:
+                continue
+            H = {c: j for j, c in enumerate(rr[0]) if c}
+            if 'node_id' not in H or 'row_type' not in H:
+                continue
+            for i, r in enumerate(rr[1:], start=2):
+                if r[H['row_type']] not in ('T', 'R'):
+                    continue
+                cid = r[H.get('club_id', -1)] if 'club_id' in H else None
+                if cid:
+                    occ[cid].append((sh, i))
+                if r[H['row_type']] != 'T':
+                    continue
+                nid = r[H['node_id']]
+                if not nid:
+                    continue
+                g = lambda k: (r[H[k]] if k in H else None)
+                standings[nid].append({'cid': cid, 'pos': g('pos'), 'name': g('club_name'),
+                                       'gp': g('GP'), 'w': g('W'), 'd': g('D'), 'l': g('L'),
+                                       'gf': g('GF'), 'ga': g('GA'), 'pts': g('PTS'),
+                                       'fate': g('season_fate')})
+        wb.close()
+        return nodes, standings, occ
+
+    def _build(self):
+        top = ttk.Frame(self); top.pack(fill='x', padx=8, pady=6)
+        ttk.Label(top, text='Sezóna:').pack(side='left')
+        self.season_var = tk.StringVar()
+        cb = ttk.Combobox(top, textvariable=self.season_var, values=self.seasons,
+                          width=11, state='readonly'); cb.pack(side='left', padx=4)
+        cb.bind('<<ComboboxSelected>>', lambda e: self.load(self.season_var.get()))
+        ttk.Label(top, text='   Soutěž:').pack(side='left')
+        self.comp_var = tk.StringVar()
+        self.comp_cb = ttk.Combobox(top, textvariable=self.comp_var, width=46, state='readonly')
+        self.comp_cb.pack(side='left', padx=4)
+        self.comp_cb.bind('<<ComboboxSelected>>', lambda e: self.fill())
+        self.hint = ttk.Label(top, text='', foreground='#555'); self.hint.pack(side='left', padx=10)
+
+        ttk.Label(self, foreground='#777',
+                  text='Klikni na sloupec „← předch." nebo „násl. →" a změň / doplň / oflaguj. '
+                       '„— (klik)" = nenavázáno.').pack(anchor='w', padx=10)
+        cols = ('prev', 'pos', 'klub', 'gp', 'w', 'd', 'l', 'skore', 'pts', 'fate', 'next')
+        heads = ('← předch. (x-1)', '#', 'Klub', 'GP', 'W', 'D', 'L', 'GF:GA', 'PTS',
+                 'Osud', 'násl. (x+1) →')
+        widths = (210, 32, 200, 34, 30, 30, 30, 52, 36, 110, 210)
+        self.tree = ttk.Treeview(self, columns=cols, show='headings', height=22)
+        for c, h, w in zip(cols, heads, widths):
+            self.tree.heading(c, text=h); self.tree.column(c, width=w, anchor='w')
+        for c in ('pos', 'gp', 'w', 'd', 'l', 'skore', 'pts'):
+            self.tree.column(c, anchor='center')
+        self.tree.tag_configure('miss', background='#fff6e6')
+        sb = ttk.Scrollbar(self, command=self.tree.yview); sb.pack(side='right', fill='y')
+        self.tree.configure(yscrollcommand=sb.set)
+        self.tree.pack(fill='both', expand=True, padx=8, pady=4)
+        self.tree.bind('<Button-1>', self.on_click)
+        self.status = ttk.Label(self, text='', relief='sunken', anchor='w'); self.status.pack(fill='x', side='bottom')
+
+    def load(self, sid):
+        for s, wb in self.wbcache.items():       # ulož rozpracované
+            try:
+                wb.save(self._path(s))
+            except Exception:
+                pass
+        self.wbcache = {}
+        i = self.seasons.index(sid) if sid in self.seasons else -1
+        self.sid = sid
+        self.prev_sid = self.seasons[i - 1] if i > 0 else None
+        self.next_sid = self.seasons[i + 1] if 0 <= i < len(self.seasons) - 1 else None
+        self.cur_clubs = self._read_clubs(sid)
+        self.cur_occ = self._read(sid)[2]
+        self.nodes, self.standings, _ = self._read(sid)
+        self.prev_names = {pid: c['name'] for pid, c in self._read_clubs(self.prev_sid).items()}
+        self.next_clubs = self._read_clubs(self.next_sid)
+        self.next_occ = self._read(self.next_sid)[2] if self.next_sid else collections.defaultdict(list)
+        self._rebuild_succ()
+        comps = [(nid, self.nodes.get(nid, {}).get('name', nid), self.nodes.get(nid, {}).get('level', ''))
+                 for nid in self.standings if self.standings[nid]]
+        comps.sort(key=lambda x: (_lvl(x[2]) or 9999, str(x[1])))
+        self.comp_map = {f'{nm}  ({lv})': nid for nid, nm, lv in comps}
+        self.comp_cb['values'] = list(self.comp_map)
+        self.hint.config(text=f"← {self.prev_sid.replace('_','/') if self.prev_sid else '(nic)'}   "
+                              f"|   {self.next_sid.replace('_','/') if self.next_sid else '(nic)'} →")
+        if comps:
+            self.comp_var.set(list(self.comp_map)[0]); self.fill()
+
+    def _rebuild_succ(self):
+        self.succ = {}
+        for ncid, info in self.next_clubs.items():
+            if info['prev']:
+                self.succ.setdefault(info['prev'], []).append(ncid)
+
+    def fill(self):
+        self.tree.delete(*self.tree.get_children())
+        self.iid_row = {}
+        nid = self.comp_map.get(self.comp_var.get())
+        if not nid:
+            return
+        for i, r in enumerate(sorted(self.standings[nid], key=lambda x: _poskey(x['pos'])), 1):
+            cid = r['cid']
+            pid = self.cur_clubs.get(cid, {}).get('prev')
+            prevn = self.prev_names.get(pid, '') if pid else ''
+            succ = self.succ.get(cid, [])
+            nextn = self.next_clubs.get(succ[0], {}).get('name', '') if succ else ''
+            skore = (f"{r['gf'] if r['gf'] not in (None,'') else ''}:"
+                     f"{r['ga'] if r['ga'] not in (None,'') else ''}")
+            dpos = r['pos'] if r['pos'] not in (None, '') else i
+            vals = (prevn or '— (klik)', dpos, r['name'], r['gp'] or '', r['w'] or '',
+                    r['d'] or '', r['l'] or '', skore, r['pts'] or '', r['fate'] or '',
+                    nextn or '— (klik)')
+            iid = self.tree.insert('', 'end', values=vals,
+                                   tags=('miss',) if (not prevn or not nextn) else ())
+            self.iid_row[iid] = {'cid': cid, 'name': r['name']}
+
+    def on_click(self, e):
+        col = self.tree.identify_column(e.x); rowid = self.tree.identify_row(e.y)
+        it = self.iid_row.get(rowid) if rowid else None
+        if not it:
+            return
+        if col == '#1':
+            self.edit_dir(it, 'prev')
+        elif col == '#11':
+            self.edit_dir(it, 'next')
+
+    def _pick(self, name_map, title, current_id):
+        top = tk.Toplevel(self); top.title('Vyber klub'); top.geometry('520x170')
+        top.transient(self); top.grab_set()
+        ttk.Label(top, text=title, wraplength=500).pack(padx=10, pady=8)
+        labels = ['(žádný / nový klub)'] + [f'{n}  [{i}]' for i, n in
+                                            sorted(name_map.items(), key=lambda x: str(x[1]))]
+        lab2id = {f'{n}  [{i}]': i for i, n in name_map.items()}
+        var = tk.StringVar(value=(f'{name_map[current_id]}  [{current_id}]'
+                                  if current_id in name_map else '(žádný / nový klub)'))
+        ttk.Combobox(top, textvariable=var, values=labels, width=56).pack(padx=10)
+        res = {'v': ('cancel',)}
+        def setv():
+            lab = var.get().strip()
+            if lab in lab2id:
+                res['v'] = ('set', lab2id[lab])
+            else:
+                m = re.search(r'\[([^\]]+)\]\s*$', lab)
+                res['v'] = ('set', m.group(1)) if (m and m.group(1) in name_map) else ('none',)
+            top.destroy()
+        bf = ttk.Frame(top); bf.pack(pady=12)
+        ttk.Button(bf, text='Nastavit', command=setv).pack(side='left', padx=4)
+        ttk.Button(bf, text='Vymazat (žádný)', command=lambda: (res.update(v=('none',)), top.destroy())).pack(side='left', padx=4)
+        ttk.Button(bf, text='🚩 Flag', command=lambda: (res.update(v=('flag',)), top.destroy())).pack(side='left', padx=4)
+        ttk.Button(bf, text='Zrušit', command=top.destroy).pack(side='left', padx=4)
+        self.wait_window(top)
+        return res['v']
+
+    def edit_dir(self, it, direction):
+        cid = it['cid']
+        if direction == 'prev':
+            if not self.prev_sid:
+                messagebox.showinfo('Návaznost', 'Žádná předchozí sezóna.'); return
+            res = self._pick(self.prev_names,
+                             f"PŘEDCHOZÍ sezóna ({self.prev_sid.replace('_','/')}) pro „{it['name']}\":",
+                             self.cur_clubs.get(cid, {}).get('prev'))
+        else:
+            if not self.next_sid:
+                messagebox.showinfo('Návaznost', 'Žádná následující sezóna.'); return
+            namemap = {ncid: info['name'] for ncid, info in self.next_clubs.items()}
+            cur = (self.succ.get(cid, [None]) or [None])[0]
+            res = self._pick(namemap,
+                             f"NÁSLEDUJÍCÍ sezóna ({self.next_sid.replace('_','/')}) pro „{it['name']}\":", cur)
+        if res[0] == 'cancel':
+            return
+        if res[0] == 'flag':
+            self._flag(it['name'], direction); return
+        target = res[1] if res[0] == 'set' else None
+        if direction == 'prev':
+            self._write_prev(self.sid, cid, target, self.cur_clubs, self.cur_occ)
+            self._wb(self.sid).save(self._path(self.sid))
+        else:
+            for old in list(self.succ.get(cid, [])):
+                if old != target:
+                    self._write_prev(self.next_sid, old, None, self.next_clubs, self.next_occ)
+            if target:
+                self._write_prev(self.next_sid, target, cid, self.next_clubs, self.next_occ)
+            self._wb(self.next_sid).save(self._path(self.next_sid))
+            self._rebuild_succ()
+        self.fill()
+        self.status.config(text='Návaznost uložena.')
+
+    def _write_prev(self, sid, cid, prev_val, clubs_map, occ_map):
+        wb = self._wb(sid)
+        info = clubs_map.get(cid)
+        if info:
+            cws = wb['CLUBS']; ch = [x.value for x in cws[1]]
+            if 'prev_club_id' in ch:
+                cws.cell(row=info['row'], column=ch.index('prev_club_id') + 1).value = prev_val
+            info['prev'] = prev_val
+        for sh, row in occ_map.get(cid, []):
+            head = [x.value for x in wb[sh][1]]
+            if 'prev_club_id' in head:
+                wb[sh].cell(row=row, column=head.index('prev_club_id') + 1).value = prev_val
+
+    def _flag(self, name, direction):
+        d = 'předchozí (x-1)' if direction == 'prev' else 'následující (x+1)'
+        line = (f"{self.sid.replace('_','/')} · {self.comp_var.get()} · klub „{name}\" · "
+                f"návaznost {d} · K OVĚŘENÍ\n")
+        try:
+            with open(os.path.join(self.data_dir, 'navaznost_k_overeni.txt'), 'a', encoding='utf-8') as f:
+                f.write(line)
+        except Exception:
+            pass
+        self.status.config(text=f'Oflagováno: {name} ({d}) → navaznost_k_overeni.txt')
+
+    def _on_close(self):
+        for s, wb in self.wbcache.items():
+            try:
+                wb.save(self._path(s)); wb.close()
+            except Exception:
+                pass
+        self.destroy()
 
 
 def extract_payload():

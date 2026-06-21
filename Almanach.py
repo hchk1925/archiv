@@ -97,7 +97,7 @@ class Hub(tk.Tk):
 
     def open_continuity(self):
         if self._need_data():
-            flags.ContinuityEditor(self, self.data_dir)
+            flags.ChainEditor(self, self.data_dir)
 
     def open_viewer(self):
         if viewer is None:
