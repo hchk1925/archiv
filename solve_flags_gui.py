@@ -233,15 +233,17 @@ def _app_workspace():
 
 
 def find_data_dir():
-    # funguje i jako .exe (PyInstaller): nejdřív složka programu (Almanach/data)
+    # pracovní sešity hledá ve složce 'xlsx' (preferovaně) nebo 'data'; i jako .exe
     base = (os.path.dirname(sys.executable) if getattr(sys, 'frozen', False)
             else os.path.abspath(os.path.dirname(__file__)))
-    cands = []
+    roots = []
     ws = _app_workspace()
     if ws:
-        cands += [os.path.join(ws, 'data'), ws]
-    cands += [os.path.join(base, 'data'), base,
-              os.path.join(os.getcwd(), 'data'), os.getcwd()]
+        roots.append(ws)
+    roots += [base, os.getcwd()]
+    cands = []
+    for r in roots:
+        cands += [os.path.join(r, 'xlsx'), os.path.join(r, 'data'), r]
     for cand in cands:
         if glob.glob(os.path.join(cand, 'S*_FINAL.xlsx')):
             return cand

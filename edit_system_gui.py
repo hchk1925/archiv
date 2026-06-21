@@ -36,9 +36,10 @@ SYS_FIELDS = ['name', 'competition_type', 'level', 'parent_node_id',
 
 def find_data_dir():
     here = os.path.abspath(os.path.dirname(__file__))
-    for cand in (os.path.join(here, 'data'), here, os.getcwd()):
-        if glob.glob(os.path.join(cand, 'S*_FINAL.xlsx')):
-            return cand
+    for r in (here, os.getcwd()):
+        for cand in (os.path.join(r, 'xlsx'), os.path.join(r, 'data'), r):
+            if glob.glob(os.path.join(cand, 'S*_FINAL.xlsx')):
+                return cand
     return None
 
 
