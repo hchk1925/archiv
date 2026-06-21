@@ -21,6 +21,7 @@ import glob
 import json
 import os
 import re
+import shutil
 import sys
 import zipfile
 import tkinter as tk
@@ -766,7 +767,26 @@ class ClubEditor(tk.Toplevel):
         self.refresh()
 
 
+def extract_payload():
+    """Při běhu jako .exe (PyInstaller) rozbal přibalené složky vedle .exe (jen poprvé)."""
+    if not getattr(sys, 'frozen', False):
+        return
+    payload = os.path.join(getattr(sys, '_MEIPASS', ''), '_payload')
+    if not os.path.isdir(payload):
+        return
+    exe_dir = os.path.dirname(sys.executable)
+    for name in os.listdir(payload):
+        src = os.path.join(payload, name)
+        dst = os.path.join(exe_dir, name)
+        if os.path.isdir(src) and not os.path.exists(dst):
+            try:
+                shutil.copytree(src, dst)
+            except Exception:
+                pass
+
+
 def main():
+    extract_payload()
     data_dir = find_data_dir()
     root_probe = tk.Tk(); root_probe.withdraw()
     if not data_dir:
