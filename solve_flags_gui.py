@@ -84,6 +84,16 @@ def _load_system(wb):
     return nodes
 
 
+def _root_of(nodes, nid):
+    """Kořen soutěže: jdi po parent_node_id nahoru. Fáze (ZČ, play off, skupina
+    o udržení…) se tím slijí do JEDNÉ vícefázové soutěže (extraliga apod.)."""
+    seen = set()
+    while nid in nodes and nodes[nid].get('parent') in nodes and nodes[nid].get('parent') not in seen:
+        seen.add(nid)
+        nid = nodes[nid]['parent']
+    return nid
+
+
 def analyze(path):
     """Oflagované soutěže (víc fází, postup/sestup nešel auto-rozhodnout) + kontext."""
     wb = openpyxl.load_workbook(path, data_only=True)
@@ -1008,8 +1018,11 @@ class ChainEditor(tk.Toplevel):
             for r in sr[1:]:
                 nid = r[SH['node_id']] if 'node_id' in SH else None
                 if nid:
-                    nodes[nid] = {'name': r[SH.get('name', -1)] if 'name' in SH else '',
-                                  'level': r[SH.get('level', -1)] if 'level' in SH else ''}
+                    nodes[nid] = {
+                        'name': r[SH.get('name', -1)] if 'name' in SH else '',
+                        'level': r[SH.get('level', -1)] if 'level' in SH else '',
+                        'parent': r[SH.get('parent_node_id', -1)] if 'parent_node_id' in SH else None,
+                        'competition_type': r[SH.get('competition_type', -1)] if 'competition_type' in SH else ''}
         for sh in wb.sheetnames:
             if sh in NON_DATA:
                 continue
@@ -1039,21 +1052,38 @@ class ChainEditor(tk.Toplevel):
         return nodes, standings, occ
 
     def _levels(self, sid):
-        """{club_id: level dané soutěže} — pro zobrazení (L10) apod. u x-1 / x+1.
-        Když klub hrál ve více tabulkách, bere tu nejvýš (nejmenší číslo levelu)."""
+        """{club_id: level soutěže} pro zobrazení (L10) u x-1 / x+1.
+        Level = úroveň KOŘENOVÉ soutěže (vícefázová soutěž = jeden level), bere se
+        ze základní fáze; play off / o umístění / kvalifikace se přeskakují, aby se
+        tým neukázal výš/níž jen kvůli dílčí fázi."""
         if not sid:
             return {}
         nodes, standings, _ = self._read(sid)
         out = {}
-        for nid, rows in standings.items():
-            lv = nodes.get(nid, {}).get('level', '')
-            for r in rows:
-                cid = r['cid']
-                if not cid:
+
+        def consider(only_base):
+            for nid, rows in standings.items():
+                nd = nodes.get(nid, {})
+                if only_base and _sibling_label(nd) is not None:
                     continue
-                cur = out.get(cid)
-                if cur is None or (_lvl(lv) or 9999) < (_lvl(cur) or 9999):
-                    out[cid] = lv
+                lv = nodes.get(_root_of(nodes, nid), {}).get('level', '') or nd.get('level', '')
+                for r in rows:
+                    cid = r['cid']
+                    if not cid:
+                        continue
+                    cur = out.get(cid)
+                    if cur is None or (_lvl(lv) or 9999) < (_lvl(cur) or 9999):
+                        out[cid] = lv
+
+        consider(only_base=True)
+        # týmy, co byly jen v play off / kvalifikaci (bez základní tabulky)
+        leftover = {r['cid'] for rows in standings.values() for r in rows if r['cid']} - set(out)
+        if leftover:
+            saved = dict(out)
+            consider(only_base=False)
+            for k in list(out):
+                if k in saved:
+                    out[k] = saved[k]
         return out
 
     @staticmethod
@@ -1113,15 +1143,68 @@ class ChainEditor(tk.Toplevel):
         self.next_clubs = self._read_clubs(self.next_sid)
         self.next_occ = self._read(self.next_sid)[2] if self.next_sid else collections.defaultdict(list)
         self._rebuild_succ()
-        comps = [(nid, self.nodes.get(nid, {}).get('name', nid), self.nodes.get(nid, {}).get('level', ''))
-                 for nid in self.standings if self.standings[nid]]
-        comps.sort(key=lambda x: (_lvl(x[2]) or 9999, str(x[1])))
-        self.comp_map = {f'{nm}  ({lv})': nid for nid, nm, lv in comps}
+        self._build_comps()
         self.comp_cb['values'] = list(self.comp_map)
         self.hint.config(text=f"← {self.prev_sid.replace('_','/') if self.prev_sid else '(nic)'}   "
                               f"|   {self.next_sid.replace('_','/') if self.next_sid else '(nic)'} →")
-        if comps:
+        if self.comp_map:
             self.comp_var.set(list(self.comp_map)[0]); self.fill()
+
+    def _build_comps(self):
+        """Seskup fáze do JEDNÉ vícefázové soutěže (dle kořene). V rozbalovátku je
+        pak jeden řádek na soutěž (extraliga, ne zvlášť ZČ + play off + udržení)."""
+        groups = collections.defaultdict(list)
+        for nid in self.standings:
+            if self.standings[nid]:
+                groups[_root_of(self.nodes, nid)].append(nid)
+        comps = []
+        self.comp_rows = {}
+        for root, nids in groups.items():
+            rows = self._comp_table(root, nids)
+            if not rows:
+                continue
+            nm = self.nodes.get(root, {}).get('name', root)
+            lv = self.nodes.get(root, {}).get('level', '')
+            comps.append((root, nm, lv, rows))
+        comps.sort(key=lambda x: (_lvl(x[2]) or 9999, str(x[1])))
+        self.comp_map = {}
+        for root, nm, lv, rows in comps:
+            label = f'{nm}  ({lv})'
+            if label in self.comp_map:                 # kolize názvů → odliš
+                k = 2
+                while f'{label}  #{k}' in self.comp_map:
+                    k += 1
+                label = f'{label}  #{k}'
+            self.comp_map[label] = root
+            self.comp_rows[root] = rows
+
+    def _comp_table(self, root, nids):
+        """Tabulka soutěže přes všechny fáze: každý klub jednou. Bere základní
+        fázi/skupiny (ne play off / o umístění / kvalifikaci); když klub hrál víc
+        fází, nechá řádek s nejvíc odehranými zápasy (tj. tu hlavní tabulku)."""
+        base = [p for p in nids if _sibling_label(self.nodes.get(p, {})) is None]
+        if root in nids and self.standings.get(root):
+            primary = [root]
+        elif base:
+            primary = base
+        else:
+            primary = nids
+        primary.sort(key=lambda p: str(self.nodes.get(p, {}).get('name', p)))
+        def gpn(v):
+            try:
+                return int(re.match(r'\d+', str(v)).group())
+            except Exception:
+                return 0
+        seen = {}; order = []
+        for p in primary:
+            for r in sorted(self.standings[p], key=lambda x: _poskey(x['pos'])):
+                key = r['cid'] if r['cid'] else f'_{id(r)}'
+                if key in seen:
+                    if gpn(r['gp']) > gpn(seen[key]['gp']):
+                        seen[key].update(r)
+                    continue
+                seen[key] = dict(r); order.append(key)
+        return [seen[k] for k in order]
 
     def _rebuild_succ(self):
         self.succ = {}
@@ -1132,10 +1215,10 @@ class ChainEditor(tk.Toplevel):
     def fill(self):
         self.tree.delete(*self.tree.get_children())
         self.iid_row = {}
-        nid = self.comp_map.get(self.comp_var.get())
-        if not nid:
+        root = self.comp_map.get(self.comp_var.get())
+        if not root:
             return
-        for i, r in enumerate(sorted(self.standings[nid], key=lambda x: _poskey(x['pos'])), 1):
+        for i, r in enumerate(self.comp_rows.get(root, []), 1):
             cid = r['cid']
             pid = self.cur_clubs.get(cid, {}).get('prev')
             prevn = (self._withlv(self.prev_names.get(pid, ''), self.prev_levels.get(pid, ''))
