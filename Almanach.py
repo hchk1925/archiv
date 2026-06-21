@@ -20,6 +20,10 @@ from tkinter import ttk, filedialog, messagebox
 import solve_flags_gui as flags
 import edit_system_gui as sysed
 try:
+    import kosilka
+except Exception:
+    kosilka = None
+try:
     import viewer
 except Exception:
     viewer = None
@@ -50,11 +54,12 @@ class Hub(tk.Tk):
         def big(txt, cmd):
             ttk.Button(frm, text=txt, width=48, command=cmd).pack(pady=6, ipady=4)
 
+        big('📋   Košilky soutěží — osud + návaznost (x-1 ↔ x+1)', self.open_kosilka)
         big('🧩   Dořešit flagy (osudy týmů, neúplné tabulky)', self.open_flags)
         big('🏷   Opravit názvy klubů (překlepy)', self.open_clubs)
-        big('🔗   Návaznost klubů (sezóna → sezóna)', self.open_continuity)
         big('📄   Prohlížeč sezón (zobrazit tabulky v PDF)', self.open_viewer)
         big('🗂   Editor soutěží (úrovně / názvy / hierarchie)', self.open_sys)
+        big('♻   Přegenerovat košilky z dat', self.regen_kosilka)
         if not getattr(sys, 'frozen', False) and balic is not None:
             big('📦   Vytvořit balíček / .exe pro kolegu', self.open_balic)
         ttk.Separator(frm, orient='horizontal').pack(fill='x', pady=8)
@@ -95,9 +100,26 @@ class Hub(tk.Tk):
         if self._need_data():
             flags.ClubEditor(self, self.data_dir)
 
-    def open_continuity(self):
+    def open_kosilka(self):
         if self._need_data():
-            flags.ChainEditor(self, self.data_dir)
+            flags.KosilkaEditor(self, self.data_dir)
+
+    def regen_kosilka(self):
+        if kosilka is None:
+            messagebox.showinfo('Košilky', 'Modul kosilka.py není k dispozici.')
+            return
+        if not self._need_data():
+            return
+        if not messagebox.askyesno('Přegenerovat košilky',
+                                   'Přepočítá KOŠILKY (osud + návaznost) ve VŠECH sezónách '
+                                   'z aktuálních dat.\n\nRuční úpravy osudu/cíle v košilce se '
+                                   'mohou přepsat odvozenými hodnotami. Pokračovat?'):
+            return
+        try:
+            kosilka.build_all(self.data_dir)
+            messagebox.showinfo('Košilky', 'Hotovo — košilky přegenerovány ve všech sezónách.')
+        except Exception as e:
+            messagebox.showerror('Košilky', f'Nepodařilo se přegenerovat:\n{e}')
 
     def open_viewer(self):
         if viewer is None:
@@ -116,14 +138,17 @@ class Hub(tk.Tk):
     def help(self):
         messagebox.showinfo('Nápověda', (
             'JAK NA TO:\n\n'
-            '1) „Dořešit flagy" — procházíš situace, kde si počítač nebyl jistý\n'
-            '   (osud týmu / neúplná tabulka). Klikneš správnou variantu.\n'
-            '2) „Opravit názvy klubů" — najdeš klub, opravíš překlep, uložíš.\n'
-            '3) „Editor soutěží" — měníš úrovně, názvy, nadřazenost (pokročilé).\n'
-            '4) „Vytvořit balíček pro kolegu" — z vybraných složek udělá jeden\n'
-            '   .exe, který pošleš mailem; kolega ho otevře a vše se rozbalí.\n\n'
-            'Vše se ukládá průběžně. Můžeš kdykoliv zavřít a vrátit se.\n'
-            'V řešítku flagů je na konci „Hotovo → zabalit do ZIP".'))
+            '1) „Košilky soutěží" — HLAVNÍ nástroj. Pro každou soutěž vidíš\n'
+            '   všechny týmy, jejich OSUD (setrval / postup / sestup / zánik /\n'
+            '   reorganizace) a NÁVAZNOST x-1 ↔ x+1. Nahoře je seznam a pořadí\n'
+            '   fází soutěže. Klikneš na buňku Osud / ← předch. / násl. → a změníš.\n'
+            '2) „Dořešit flagy" — situace, kde si počítač nebyl jistý.\n'
+            '3) „Opravit názvy klubů" — najdeš klub, opravíš překlep, uložíš.\n'
+            '4) „Editor soutěží" — měníš úrovně, názvy, nadřazenost (pokročilé).\n'
+            '5) „Přegenerovat košilky" — přepočítá košilky z dat (po větších\n'
+            '   úpravách). Ruční osudy se mohou přepsat odvozenými.\n'
+            '6) „Vytvořit balíček pro kolegu" — udělá jeden .exe pro kolegu.\n\n'
+            'Vše se ukládá průběžně. Můžeš kdykoliv zavřít a vrátit se.'))
 
 
 def main():

@@ -30,7 +30,7 @@ from tkinter import ttk, filedialog, messagebox
 import collections
 import openpyxl
 
-NON_DATA = {'META', 'CLUBS', 'SYSTEM', 'NOTES', 'TODO', 'CHANGES', 'README'}
+NON_DATA = {'META', 'CLUBS', 'SYSTEM', 'NOTES', 'TODO', 'CHANGES', 'README', 'KOSILKA'}
 PLAYOFF_T = {'playoff_round', 'playoff', 'final_group', 'final_series', 'series'}
 RELEG_T = {'relegation_group', 'relegation_playoff', 'relegation_series'}
 CLASS_T = {'classification'}
@@ -1328,6 +1328,384 @@ class ChainEditor(tk.Toplevel):
         except Exception:
             pass
         self.status.config(text=f'Oflagováno: {name} ({d}) → navaznost_k_overeni.txt')
+
+    def _on_close(self):
+        for s, wb in self.wbcache.items():
+            try:
+                wb.save(self._path(s)); wb.close()
+            except Exception:
+                pass
+        self.destroy()
+
+
+KOSILKA_SHEET = 'KOSILKA'
+FATES = ['setrval', 'postup', 'sestup', 'zánik', 'reorganizace']
+KOS_COLS = ['row_type', 'comp_id', 'comp_name', 'level', 'phase_order', 'phase_name',
+            'club_id', 'club_name', 'pos', 'fate', 'fate_target',
+            'prev_club_id', 'next_club_id', 'note']
+
+
+class KosilkaEditor(tk.Toplevel):
+    """KOŠILKA soutěže: jedno místo pro OSUD týmů (setrval/postup/sestup/zánik/
+    reorganizace) a NÁVAZNOST x-1 ↔ x+1. Nahoře seznam a pořadí fází soutěže;
+    dole tabulka týmů. Klik na buňku Osud / ← předch. / násl. → ji změní."""
+    def __init__(self, master, data_dir):
+        super().__init__(master)
+        self.title('Košilky soutěží — osud týmů + návaznost (x-1 ↔ x+1)')
+        self.geometry('1280x760')
+        self.data_dir = data_dir
+        self.seasons = season_ids(data_dir)
+        self.wbcache = {}
+        self._build()
+        self.protocol('WM_DELETE_WINDOW', self._on_close)
+        if self.seasons:
+            self.season_var.set(self.seasons[0]); self.load(self.seasons[0])
+
+    def _path(self, sid):
+        return os.path.join(self.data_dir, f'S{sid}_FINAL.xlsx')
+
+    def _wb(self, sid):
+        if sid and sid not in self.wbcache and os.path.exists(self._path(sid)):
+            self.wbcache[sid] = openpyxl.load_workbook(self._path(sid))
+        return self.wbcache.get(sid)
+
+    def _club_index(self, sid):
+        """{club_id: {'name','level','prev'}}: jméno + prev z CLUBS (autoritativní),
+        level z KOŠILKY (základní úroveň soutěže). Pro zobrazení x-1/x+1."""
+        out = {}
+        if not sid or not os.path.exists(self._path(sid)):
+            return out
+        wb = openpyxl.load_workbook(self._path(sid), data_only=True)
+        if 'CLUBS' in wb.sheetnames:
+            cw = list(wb['CLUBS'].iter_rows(values_only=True))
+            H = {c: j for j, c in enumerate(cw[0]) if c}
+            for r in cw[1:]:
+                cid = r[H['club_id']] if 'club_id' in H else None
+                if cid:
+                    out[cid] = {'name': r[H.get('clean_name', -1)] if 'clean_name' in H else '',
+                                'level': '',
+                                'prev': r[H.get('prev_club_id', -1)] if 'prev_club_id' in H else None}
+        if KOSILKA_SHEET in wb.sheetnames:
+            rr = list(wb[KOSILKA_SHEET].iter_rows(values_only=True))
+            H = {c: j for j, c in enumerate(rr[0]) if c}
+            for r in rr[1:]:
+                if r[H['row_type']] != 'T':
+                    continue
+                cid = r[H['club_id']]
+                if cid in out and not out[cid].get('level'):
+                    out[cid]['level'] = r[H.get('level', -1)]
+                elif cid and cid not in out:
+                    out[cid] = {'name': r[H.get('club_name', -1)],
+                                'level': r[H.get('level', -1)], 'prev': None}
+        wb.close()
+        return out
+
+    def _load_kosilka(self, sid):
+        """Načti KOŠILKU: {root: {name, level, phases:[(po,name)], teams:[...]}}.
+        U každého týmu si pamatuj číslo řádku v listu KOSILKA pro zápis zpět."""
+        comps = collections.OrderedDict()
+        if not sid or not os.path.exists(self._path(sid)):
+            return comps
+        wb = openpyxl.load_workbook(self._path(sid), data_only=True)
+        if KOSILKA_SHEET not in wb.sheetnames:
+            wb.close(); return comps
+        rr = list(wb[KOSILKA_SHEET].iter_rows(values_only=True))
+        H = {c: j for j, c in enumerate(rr[0]) if c}
+        g = lambda r, k: (r[H[k]] if k in H and H[k] < len(r) else None)
+        for i, r in enumerate(rr[1:], start=2):       # řádek 1 = hlavička
+            rt = g(r, 'row_type')
+            cid_comp = g(r, 'comp_id')
+            if rt == 'C':
+                comps[cid_comp] = {'name': g(r, 'comp_name'), 'level': g(r, 'level'),
+                                   'phases': [], 'teams': []}
+            elif rt == 'P' and cid_comp in comps:
+                comps[cid_comp]['phases'].append((g(r, 'phase_order'), g(r, 'phase_name')))
+            elif rt == 'T' and cid_comp in comps:
+                comps[cid_comp]['teams'].append({
+                    'krow': i, 'cid': g(r, 'club_id'), 'name': g(r, 'club_name'),
+                    'pos': g(r, 'pos'), 'fate': g(r, 'fate') or '',
+                    'target': g(r, 'fate_target') or '', 'prev': g(r, 'prev_club_id'),
+                    'next': g(r, 'next_club_id'), 'note': g(r, 'note') or ''})
+        wb.close()
+        return comps
+
+    def _build(self):
+        top = ttk.Frame(self); top.pack(fill='x', padx=8, pady=6)
+        ttk.Label(top, text='Sezóna:').pack(side='left')
+        self.season_var = tk.StringVar()
+        cb = ttk.Combobox(top, textvariable=self.season_var, values=self.seasons,
+                          width=11, state='readonly'); cb.pack(side='left', padx=4)
+        cb.bind('<<ComboboxSelected>>', lambda e: self.load(self.season_var.get()))
+        ttk.Label(top, text='   Soutěž:').pack(side='left')
+        self.comp_var = tk.StringVar()
+        self.comp_cb = ttk.Combobox(top, textvariable=self.comp_var, width=44, state='readonly')
+        self.comp_cb.pack(side='left', padx=4)
+        self.comp_cb.bind('<<ComboboxSelected>>', lambda e: self.fill())
+        self.hint = ttk.Label(top, text='', foreground='#555'); self.hint.pack(side='left', padx=10)
+
+        self.phase_lbl = ttk.Label(self, text='', foreground='#1a3050',
+                                   font=('TkDefaultFont', 9, 'bold'))
+        self.phase_lbl.pack(anchor='w', padx=10, pady=(2, 0))
+        ttk.Label(self, foreground='#777',
+                  text='Klik na „Osud" = setrval/postup/sestup/zánik/reorganizace. '
+                       'Klik na „← předch." / „násl. →" = návaznost klubu. '
+                       '„— (klik)" = nevyplněno.').pack(anchor='w', padx=10)
+
+        cols = ('prev', 'pos', 'klub', 'osud', 'cil', 'next')
+        heads = ('← předch. (x-1)', '#', 'Klub', 'Osud', 'cíl / pozn.', 'násl. (x+1) →')
+        widths = (220, 34, 230, 110, 170, 220)
+        self.tree = ttk.Treeview(self, columns=cols, show='headings', height=24)
+        for c, h, w in zip(cols, heads, widths):
+            self.tree.heading(c, text=h); self.tree.column(c, width=w, anchor='w')
+        self.tree.column('pos', anchor='center')
+        self.tree.tag_configure('phase', background='#e8edf5', font=('TkDefaultFont', 9, 'bold'))
+        self.tree.tag_configure('todo', background='#fff6e6')
+        self.tree.tag_configure('zanik', background='#fde8e8')
+        sb = ttk.Scrollbar(self, command=self.tree.yview); sb.pack(side='right', fill='y')
+        self.tree.configure(yscrollcommand=sb.set)
+        self.tree.pack(fill='both', expand=True, padx=8, pady=4)
+        self.tree.bind('<Button-1>', self.on_click)
+        bar = ttk.Frame(self); bar.pack(fill='x', side='bottom')
+        self.status = ttk.Label(bar, text='', relief='sunken', anchor='w'); self.status.pack(fill='x')
+
+    def load(self, sid):
+        for s, wb in self.wbcache.items():
+            try:
+                wb.save(self._path(s))
+            except Exception:
+                pass
+        self.wbcache = {}
+        i = self.seasons.index(sid) if sid in self.seasons else -1
+        self.sid = sid
+        self.prev_sid = self.seasons[i - 1] if i > 0 else None
+        self.next_sid = self.seasons[i + 1] if 0 <= i < len(self.seasons) - 1 else None
+        self.kos = self._load_kosilka(sid)
+        self.prev_idx = self._club_index(self.prev_sid)
+        self.next_idx = self._club_index(self.next_sid)
+        self.comp_labels = collections.OrderedDict()
+        for root, c in self.kos.items():
+            lab = f"{c['name']}  ({c['level']})"
+            if lab in self.comp_labels:
+                k = 2
+                while f'{lab}  #{k}' in self.comp_labels:
+                    k += 1
+                lab = f'{lab}  #{k}'
+            self.comp_labels[lab] = root
+        self.comp_cb['values'] = list(self.comp_labels)
+        self.hint.config(text=f"← {self.prev_sid.replace('_','/') if self.prev_sid else '(nic)'}   "
+                              f"|   {self.next_sid.replace('_','/') if self.next_sid else '(nic)'} →")
+        if self.comp_labels:
+            self.comp_var.set(list(self.comp_labels)[0]); self.fill()
+
+    def fill(self):
+        self.tree.delete(*self.tree.get_children())
+        self.iid_team = {}
+        root = self.comp_labels.get(self.comp_var.get())
+        if not root or root not in self.kos:
+            return
+        c = self.kos[root]
+        phs = ' → '.join(str(n) for _, n in c['phases'])
+        self.phase_lbl.config(text=f"Fáze soutěže:  {phs}" if phs else '')
+        for t in c['teams']:
+            prevn = self._idx_label(self.prev_idx, t['prev'])
+            nextn = self._idx_label(self.next_idx, t['next'])
+            cil = t['target'] or t['note']
+            vals = (prevn or '— (klik)', t['pos'], t['name'], t['fate'] or '— (klik)',
+                    cil, nextn or '— (klik)')
+            tag = ()
+            if t['fate'] == 'zánik':
+                tag = ('zanik',)
+            elif not t['fate']:
+                tag = ('todo',)
+            iid = self.tree.insert('', 'end', values=vals, tags=tag)
+            self.iid_team[iid] = t
+
+    @staticmethod
+    def _idx_label(idx, cid):
+        if not cid:
+            return ''
+        info = idx.get(cid)
+        if not info:
+            return f'? [{cid}]'
+        lv = info.get('level')
+        return f"{info.get('name')}  ({lv})" if lv else str(info.get('name'))
+
+    # ---- klikání ----
+    def on_click(self, e):
+        col = self.tree.identify_column(e.x); rowid = self.tree.identify_row(e.y)
+        t = self.iid_team.get(rowid)
+        if not t:
+            return
+        if col == '#4':
+            self.edit_fate(t)
+        elif col == '#5':
+            self.edit_target(t)
+        elif col == '#1':
+            self.edit_link(t, 'prev')
+        elif col == '#6':
+            self.edit_link(t, 'next')
+
+    def _ask_fate(self, t):
+        top = tk.Toplevel(self); top.title('Osud týmu'); top.geometry('360x250')
+        top.transient(self); top.grab_set()
+        ttk.Label(top, text=f"Osud: „{t['name']}\"", font=('TkDefaultFont', 10, 'bold')).pack(pady=8)
+        res = {'v': None}
+        def choose(v):
+            res['v'] = v; top.destroy()
+        for f in FATES:
+            ttk.Button(top, text=f, width=24, command=lambda v=f: choose(v)).pack(pady=2)
+        ttk.Button(top, text='(smazat osud)', width=24, command=lambda: choose('')).pack(pady=2)
+        ttk.Button(top, text='Zrušit', width=24, command=top.destroy).pack(pady=2)
+        self.wait_window(top)
+        return res['v']
+
+    def _ask_text(self, title, prompt, initial=''):
+        top = tk.Toplevel(self); top.title(title); top.geometry('460x150')
+        top.transient(self); top.grab_set()
+        ttk.Label(top, text=prompt, wraplength=440).pack(padx=10, pady=8)
+        var = tk.StringVar(value=initial or '')
+        ent = ttk.Entry(top, textvariable=var, width=54); ent.pack(padx=10); ent.focus_set()
+        res = {'v': None}
+        def ok():
+            res['v'] = var.get().strip(); top.destroy()
+        bf = ttk.Frame(top); bf.pack(pady=12)
+        ttk.Button(bf, text='OK', command=ok).pack(side='left', padx=4)
+        ttk.Button(bf, text='Zrušit', command=top.destroy).pack(side='left', padx=4)
+        ent.bind('<Return>', lambda e: ok())
+        self.wait_window(top)
+        return res['v']
+
+    def edit_fate(self, t):
+        v = self._ask_fate(t)
+        if v is None:
+            return
+        target = t['target']
+        if v == 'reorganizace':
+            target = self._ask_text('Reorganizace', f"„{t['name']}\" → do koho/čeho "
+                                    '(klub / soutěž, kam tým přešel):', t['target']) or ''
+        elif v in ('', 'setrval', 'zánik'):
+            target = '' if v in ('', 'zánik') else target
+        t['fate'] = v; t['target'] = target
+        self._write_cell(self.sid, t['krow'], 'fate', v)
+        self._write_cell(self.sid, t['krow'], 'fate_target', target)
+        self._wb(self.sid).save(self._path(self.sid))
+        self.fill(); self.status.config(text=f"Osud „{t['name']}\" = {v or '—'}")
+
+    def edit_target(self, t):
+        v = self._ask_text('Cíl / poznámka', f"Cíl / poznámka pro „{t['name']}\":",
+                           t['target'] or t['note'])
+        if v is None:
+            return
+        t['target'] = v
+        self._write_cell(self.sid, t['krow'], 'fate_target', v)
+        self._wb(self.sid).save(self._path(self.sid))
+        self.fill(); self.status.config(text='Cíl/poznámka uloženo.')
+
+    def _pick_club(self, idx, title, current):
+        top = tk.Toplevel(self); top.title('Vyber klub'); top.geometry('540x170')
+        top.transient(self); top.grab_set()
+        ttk.Label(top, text=title, wraplength=520).pack(padx=10, pady=8)
+        name_map = {cid: info.get('name') for cid, info in idx.items()}
+        labels = ['(žádný)'] + [f'{n}  [{i}]' for i, n in
+                                sorted(name_map.items(), key=lambda x: str(x[1]))]
+        lab2id = {f'{n}  [{i}]': i for i, n in name_map.items()}
+        var = tk.StringVar(value=(f'{name_map[current]}  [{current}]'
+                                  if current in name_map else '(žádný)'))
+        ttk.Combobox(top, textvariable=var, values=labels, width=60).pack(padx=10)
+        res = {'v': ('cancel',)}
+        def setv():
+            lab = var.get().strip()
+            if lab in lab2id:
+                res['v'] = ('set', lab2id[lab])
+            else:
+                m = re.search(r'\[([^\]]+)\]\s*$', lab)
+                res['v'] = ('set', m.group(1)) if (m and m.group(1) in name_map) else ('none',)
+            top.destroy()
+        bf = ttk.Frame(top); bf.pack(pady=12)
+        ttk.Button(bf, text='Nastavit', command=setv).pack(side='left', padx=4)
+        ttk.Button(bf, text='Vymazat', command=lambda: (res.update(v=('none',)), top.destroy())).pack(side='left', padx=4)
+        ttk.Button(bf, text='Zrušit', command=top.destroy).pack(side='left', padx=4)
+        self.wait_window(top)
+        return res['v']
+
+    def edit_link(self, t, direction):
+        if direction == 'prev':
+            if not self.prev_sid:
+                messagebox.showinfo('Návaznost', 'Není předchozí sezóna.'); return
+            res = self._pick_club(self.prev_idx, f"PŘEDCHOZÍ ({self.prev_sid.replace('_','/')}) "
+                                  f"pro „{t['name']}\":", t['prev'])
+            if res[0] == 'cancel':
+                return
+            target = res[1] if res[0] == 'set' else None
+            self._apply_prev(self.sid, t['cid'], target)        # tento klub → kdo byl loni
+            t['prev'] = target
+            self._wb(self.sid).save(self._path(self.sid))
+            self.status.config(text='Návaznost x-1 uložena.')
+        else:
+            if not self.next_sid:
+                messagebox.showinfo('Návaznost', 'Není následující sezóna.'); return
+            res = self._pick_club(self.next_idx, f"NÁSLEDUJÍCÍ ({self.next_sid.replace('_','/')}) "
+                                  f"pro „{t['name']}\":", t['next'])
+            if res[0] == 'cancel':
+                return
+            target = res[1] if res[0] == 'set' else None
+            # zruš staré nástupce, nastav nového: v PŘÍŠTÍ sezóně prev_club_id = tento klub
+            self._set_next(t['cid'], target)
+            t['next'] = target
+            # osud auto-návrh dle úrovní (nepřepisuj ruční zánik/reorganizaci)
+            if target and t['fate'] in ('', 'setrval', 'postup', 'sestup'):
+                f = self._level_fate(self.kos[self.comp_labels[self.comp_var.get()]]['level'],
+                                     self.next_idx.get(target, {}).get('level'))
+                t['fate'] = f
+                self._write_cell(self.sid, t['krow'], 'fate', f)
+            self._write_cell(self.sid, t['krow'], 'next_club_id', target)
+            self._wb(self.sid).save(self._path(self.sid))
+            self._wb(self.next_sid).save(self._path(self.next_sid))
+            self.status.config(text='Návaznost x+1 uložena.')
+        self.fill()
+
+    @staticmethod
+    def _level_fate(cur_level, next_level):
+        cl = _lvl(cur_level) or 9999; nl = _lvl(next_level) or 9999
+        return 'postup' if nl < cl else ('sestup' if nl > cl else 'setrval')
+
+    def _set_next(self, cid, next_cid):
+        """V příští sezóně: zruš prev u dosavadních nástupců cid, nastav u zvoleného."""
+        for ncid, info in self.next_idx.items():
+            if info.get('prev') == cid and ncid != next_cid:
+                self._apply_prev(self.next_sid, ncid, None)
+                info['prev'] = None
+        if next_cid:
+            self._apply_prev(self.next_sid, next_cid, cid)
+            if next_cid in self.next_idx:
+                self.next_idx[next_cid]['prev'] = cid
+
+    def _apply_prev(self, sid, cid, prev_val):
+        """Zapiš prev_club_id pro klub cid v sezóně sid do CLUBS, všech tabulek i KOSILKY."""
+        wb = self._wb(sid)
+        if not wb:
+            return
+        for sh in wb.sheetnames:
+            ws = wb[sh]
+            head = [c.value for c in ws[1]]
+            if 'club_id' not in head or 'prev_club_id' not in head:
+                continue
+            ci = head.index('club_id'); pi = head.index('prev_club_id')
+            for row in ws.iter_rows(min_row=2):
+                if ci < len(row) and row[ci].value == cid:
+                    row[pi].value = prev_val
+        # poznač i do našeho indexu pro zobrazení
+        if sid == self.prev_sid and cid in self.prev_idx:
+            pass
+
+    def _write_cell(self, sid, krow, col, val):
+        wb = self._wb(sid)
+        if not wb or KOSILKA_SHEET not in wb.sheetnames:
+            return
+        ws = wb[KOSILKA_SHEET]
+        head = [c.value for c in ws[1]]
+        if col in head:
+            ws.cell(row=krow, column=head.index(col) + 1).value = val
 
     def _on_close(self):
         for s, wb in self.wbcache.items():

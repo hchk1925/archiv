@@ -15,7 +15,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import openpyxl
 
-NON_DATA = {'META', 'CLUBS', 'SYSTEM', 'NOTES', 'TODO', 'CHANGES', 'README'}
+NON_DATA = {'META', 'CLUBS', 'SYSTEM', 'NOTES', 'TODO', 'CHANGES', 'README', 'KOSILKA'}
 
 
 def _open_file(path):
