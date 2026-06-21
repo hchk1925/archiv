@@ -222,11 +222,21 @@ CHAT = '__chat__'
 
 
 def find_data_dir():
-    here = os.path.abspath(os.path.dirname(__file__))
-    for cand in (os.path.join(here, 'data'), here, os.getcwd()):
+    # funguje i jako .exe (PyInstaller): hledá vedle exe / skriptu i v podsložce data/
+    if getattr(sys, 'frozen', False):
+        base = os.path.dirname(sys.executable)
+    else:
+        base = os.path.abspath(os.path.dirname(__file__))
+    for cand in (os.path.join(base, 'data'), base, os.getcwd(),
+                 os.path.join(os.getcwd(), 'data')):
         if glob.glob(os.path.join(cand, 'S*_FINAL.xlsx')):
             return cand
     return None
+
+
+def season_ids(data_dir):
+    return [re.search(r'S(\d{4}_\d{2})', os.path.basename(p)).group(1)
+            for p in sorted(glob.glob(os.path.join(data_dir, 'S*_FINAL.xlsx')))]
 
 
 def build_queue(data_dir):
@@ -296,8 +306,11 @@ class FlagSolver(tk.Tk):
     # -- UI --
     def _build_ui(self):
         top = ttk.Frame(self); top.pack(fill='x', padx=8, pady=6)
-        ttk.Label(top, text=f'Složka: {self.data_dir}', foreground='#555').pack(side='left')
-        ttk.Button(top, text='Zabalit do ZIP ▸', command=self.export_zip).pack(side='right')
+        ttk.Button(top, text='❓ Nápověda', command=self.show_help).pack(side='left')
+        ttk.Button(top, text='🏷 Opravit názvy klubů',
+                   command=self.open_clubs).pack(side='left', padx=8)
+        ttk.Button(top, text='💾 Hotovo → zabalit do ZIP',
+                   command=self.export_zip).pack(side='right')
         self.count_lbl = ttk.Label(top, text='', font=('TkDefaultFont', 10, 'bold'))
         self.count_lbl.pack(side='right', padx=12)
 
@@ -603,6 +616,24 @@ class FlagSolver(tk.Tk):
         messagebox.showinfo('ZIP', f'Hotovo:\n{out}\n\n{done} rozhodnutí, '
                                    f'{chat} do chatu, {skipped} přeskočeno.')
 
+    def show_help(self):
+        messagebox.showinfo('Nápověda — jak na to', (
+            'CO TADY DĚLÁŠ:\n'
+            'Procházíš situace (flagy), kde si počítač nebyl jistý, a rozhodneš je.\n\n'
+            '1) OSUD TÝMU — nahoře vidíš celé tabulky soutěže. U otázky („→ tým …")\n'
+            '   klikni na správnou variantu (postup, sestup, udržel se, …).\n'
+            '2) TORZO — neúplná tabulka. Vyber „Ponechat pořadí" nebo „Odstranit pořadí".\n'
+            '3) NEVÍŠ? Napiš poznámku a dej „➜ Do promptu pro chat", nebo „Přeskočit".\n\n'
+            'POHYB: „◀ zpět" a „další ▶" listují. „další nevyřešený" skočí na to,\n'
+            'co ještě nemá rozhodnutí. Rozhodnutí jednoho týmu NEMĚNÍ ostatní.\n\n'
+            'NÁZVY KLUBŮ: tlačítko „🏷 Opravit názvy klubů" — najdeš klub, opravíš\n'
+            'překlep, uložíš (opraví se všude v té sezóně).\n\n'
+            'UKLÁDÁNÍ: vše se ukládá průběžně. Můžeš kdykoliv zavřít a vrátit se.\n'
+            'NA KONCI: „💾 Hotovo → zabalit do ZIP" a ten zip pošli zpět.'))
+
+    def open_clubs(self):
+        ClubEditor(self, self.data_dir)
+
     def _on_close(self):
         self._save_progress()
         for wb in self.wbcache.values():
@@ -611,6 +642,128 @@ class FlagSolver(tk.Tk):
             except Exception:
                 pass
         self.destroy()
+
+
+class ClubEditor(tk.Toplevel):
+    """Jednoduchá oprava názvů klubů (překlepy) v jedné sezóně.
+    Najdeš klub → napíšeš správný název → Ulož: opraví se v CLUBS i ve všech tabulkách."""
+    def __init__(self, master, data_dir):
+        super().__init__(master)
+        self.title('Opravit názvy klubů')
+        self.geometry('780x640')
+        self.data_dir = data_dir
+        self.seasons = season_ids(data_dir)
+        self.wb = None
+        self.path = None
+        self.clubs = []          # [(club_id, name, city, clubs_row, [(sheet,row)])]
+        self._build()
+        if self.seasons:
+            self.season_var.set(self.seasons[0])
+            self.load(self.seasons[0])
+
+    def _build(self):
+        top = ttk.Frame(self); top.pack(fill='x', padx=8, pady=6)
+        ttk.Label(top, text='Sezóna:').pack(side='left')
+        self.season_var = tk.StringVar()
+        cb = ttk.Combobox(top, textvariable=self.season_var, values=self.seasons,
+                          width=12, state='readonly'); cb.pack(side='left', padx=4)
+        cb.bind('<<ComboboxSelected>>', lambda e: self.load(self.season_var.get()))
+        ttk.Label(top, text='   Hledat:').pack(side='left')
+        self.q = ttk.Entry(top, width=26); self.q.pack(side='left', padx=4)
+        self.q.bind('<KeyRelease>', lambda e: self.refresh())
+
+        cols = ('klub', 'mesto', 'vyskytu')
+        self.lst = ttk.Treeview(self, columns=cols, show='headings', height=20)
+        for c, w in zip(cols, (380, 200, 80)):
+            self.lst.heading(c, text=c.upper()); self.lst.column(c, width=w, anchor='w')
+        self.lst.column('vyskytu', anchor='center')
+        self.lst.pack(fill='both', expand=True, padx=8, pady=4)
+        self.lst.bind('<<TreeviewSelect>>', self.on_pick)
+
+        ed = ttk.LabelFrame(self, text='Oprava názvu'); ed.pack(fill='x', padx=8, pady=6)
+        self.sel = ttk.Label(ed, text='(vyber klub v seznamu)', foreground='#555')
+        self.sel.pack(anchor='w', padx=6, pady=2)
+        row = ttk.Frame(ed); row.pack(fill='x', padx=6, pady=4)
+        ttk.Label(row, text='Správný název:').pack(side='left')
+        self.newname = ttk.Entry(row); self.newname.pack(side='left', fill='x', expand=True, padx=4)
+        self.newname.bind('<Return>', lambda e: self.save())
+        ttk.Button(row, text='Uložit opravu', command=self.save).pack(side='left')
+        self.status = ttk.Label(self, text='', relief='sunken', anchor='w')
+        self.status.pack(fill='x', side='bottom')
+
+    def load(self, sid):
+        self.path = os.path.join(self.data_dir, f'S{sid}_FINAL.xlsx')
+        wb = openpyxl.load_workbook(self.path, data_only=True)
+        occ = collections.defaultdict(list)
+        for sh in wb.sheetnames:
+            if sh in NON_DATA:
+                continue
+            rr = list(wb[sh].iter_rows(values_only=True))
+            if not rr:
+                continue
+            H = {c: j for j, c in enumerate(rr[0]) if c}
+            if 'club_id' not in H or 'row_type' not in H:
+                continue
+            for i, r in enumerate(rr[1:], start=2):
+                if r[H['row_type']] in ('T', 'R') and r[H['club_id']]:
+                    occ[r[H['club_id']]].append((sh, i))
+        cw = list(wb['CLUBS'].iter_rows(values_only=True)); CH = {c: j for j, c in enumerate(cw[0]) if c}
+        self.clubs = []
+        for i, r in enumerate(cw[1:], start=2):
+            cid = r[CH['club_id']] if 'club_id' in CH else None
+            if not cid:
+                continue
+            self.clubs.append((cid,
+                               r[CH.get('clean_name', -1)] if 'clean_name' in CH else '',
+                               r[CH.get('city', -1)] if 'city' in CH else '',
+                               i, occ.get(cid, [])))
+        wb.close()
+        self.refresh()
+        self.status.config(text=f'{len(self.clubs)} klubů v sezóně {sid}')
+
+    def refresh(self):
+        q = self.q.get().strip().lower()
+        self.lst.delete(*self.lst.get_children())
+        self.iid_club = {}
+        for c in sorted(self.clubs, key=lambda x: str(x[1])):
+            if q and q not in str(c[1]).lower():
+                continue
+            iid = self.lst.insert('', 'end', values=(c[1], c[2] or '', len(c[4])))
+            self.iid_club[iid] = c
+
+    def on_pick(self, _e=None):
+        sel = self.lst.selection()
+        if not sel:
+            return
+        c = self.iid_club.get(sel[0])
+        if not c:
+            return
+        self.cur = c
+        self.sel.config(text=f'Klub: {c[1]}   ·   {len(c[4])}× v tabulkách   ·   id {c[0]}')
+        self.newname.delete(0, 'end'); self.newname.insert(0, c[1] or '')
+
+    def save(self):
+        c = getattr(self, 'cur', None)
+        new = self.newname.get().strip()
+        if not c or not new or new == c[1]:
+            return
+        if self.wb is None:
+            self.wb = openpyxl.load_workbook(self.path)
+        wb = self.wb
+        # CLUBS.clean_name
+        cws = wb['CLUBS']; ch = [x.value for x in cws[1]]
+        if 'clean_name' in ch:
+            cws.cell(row=c[3], column=ch.index('clean_name') + 1).value = new
+        # všechny výskyty v tabulkách: club_name
+        for (sh, row) in c[4]:
+            head = [x.value for x in wb[sh][1]]
+            if 'club_name' in head:
+                wb[sh].cell(row=row, column=head.index('club_name') + 1).value = new
+        wb.save(self.path)
+        self.status.config(text=f'Opraveno: „{c[1]}" → „{new}"  ({len(c[4])} výskytů)')
+        # aktualizuj v paměti + seznam
+        self.clubs = [(x[0], new, x[2], x[3], x[4]) if x[0] == c[0] else x for x in self.clubs]
+        self.refresh()
 
 
 def main():
