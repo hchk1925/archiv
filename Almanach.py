@@ -20,6 +20,10 @@ from tkinter import ttk, filedialog, messagebox
 import solve_flags_gui as flags
 import edit_system_gui as sysed
 try:
+    import viewer
+except Exception:
+    viewer = None
+try:
     import balic
 except Exception:
     balic = None
@@ -48,6 +52,7 @@ class Hub(tk.Tk):
 
         big('🧩   Dořešit flagy (osudy týmů, neúplné tabulky)', self.open_flags)
         big('🏷   Opravit názvy klubů (překlepy)', self.open_clubs)
+        big('📄   Prohlížeč sezón (zobrazit tabulky v PDF)', self.open_viewer)
         big('🗂   Editor soutěží (úrovně / názvy / hierarchie)', self.open_sys)
         if not getattr(sys, 'frozen', False) and balic is not None:
             big('📦   Vytvořit balíček / .exe pro kolegu', self.open_balic)
@@ -88,6 +93,13 @@ class Hub(tk.Tk):
     def open_clubs(self):
         if self._need_data():
             flags.ClubEditor(self, self.data_dir)
+
+    def open_viewer(self):
+        if viewer is None:
+            messagebox.showinfo('Prohlížeč', 'Prohlížeč není k dispozici.')
+            return
+        if self._need_data():
+            viewer.Viewer(self, self.data_dir)
 
     def open_sys(self):
         if self._need_data():
